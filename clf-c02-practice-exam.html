@@ -23,7 +23,7 @@
   --good-soft: #e1f3e8;
   --bad: #b3372b;
   --bad-soft: #fbe6e3;
-  --flag: #a8660c;
+  --flag: #8a5208;
   --flag-soft: #fcefd9;
   --shadow: 0 1px 2px rgb(22 32 43 / 6%), 0 4px 16px rgb(22 32 43 / 5%);
   --font-display: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
@@ -103,7 +103,7 @@ button { font: inherit; color: inherit; }
 .chip .acc.good { color: var(--good); background: var(--good-soft); }
 .chip .acc.bad { color: var(--bad); background: var(--bad-soft); }
 .chip[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
-.chip[aria-pressed="false"] { opacity: .62; }
+.chip[aria-pressed="false"] { color: var(--muted); }
 .chip .tick { width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid var(--muted); display: inline-grid; place-items: center; flex: none; }
 .chip[aria-pressed="true"] .tick { background: var(--accent); border-color: var(--accent); }
 .chip[aria-pressed="true"] .tick::after { content: ""; width: 8px; height: 4px; border: solid var(--accent-ink); border-width: 0 0 2px 2px; transform: rotate(-45deg) translate(1px, -1px); }
@@ -177,6 +177,7 @@ button { font: inherit; color: inherit; }
 
 .actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; margin-top: 16px; }
 .actions .right { display: flex; gap: 10px; flex-wrap: wrap; margin-left: auto; }
+@media (max-width: 520px) { .actions .right { width: 100%; } .actions .right #next { flex: 1; } }
 .kbd { font-family: var(--font-mono); font-size: 11.5px; color: var(--muted); }
 @media (max-width: 520px) { .kbd { display: none; } }
 
@@ -249,7 +250,7 @@ button { font: inherit; color: inherit; }
       </div>
     </section>
 
-    <section class="panel" aria-labelledby="topics-title">
+    <section class="panel" id="topics-panel" aria-labelledby="topics-title">
       <div class="section-title">
         <h2 id="topics-title">Topics</h2>
         <div class="row"><button class="linkish" id="sel-all">Select all</button><button class="linkish" id="sel-none">Clear</button></div>
@@ -368,9 +369,9 @@ Q("concepts", 0, "A company wants its developers to be able to provision servers
 ]);
 Q("concepts", 0, "Multiple AWS customers run workloads on the same physical hardware, but each customer's data and resources remain isolated and private. Which cloud characteristic is this?", [
   ["Multi-tenancy and resource pooling", "Many customers securely and privately share the same physical infrastructure. That pooling is one reason cloud is cheaper."],
-  ["Rapid elasticity", "Elasticity is about quickly acquiring and releasing resources as demand changes, not about sharing hardware."],
+  ["Rapid elasticity and scalability", "Elasticity is about quickly acquiring and releasing resources as demand changes, not about sharing hardware."],
   ["On-demand self-service", "Self-service is about provisioning without provider interaction, not about sharing hardware."],
-  ["High availability", "High availability is about surviving failures (for example across AZs). It is not one of the five characteristics that describes shared hardware."]
+  ["High availability across AZs", "High availability is about surviving failures, for example across AZs. It is not one of the five characteristics and isn't about sharing hardware."]
 ]);
 Q("concepts", 0, "A company is billed only for the exact number of compute seconds and gigabytes of storage it used each month. Which characteristic of cloud computing makes this possible?", [
   ["Measured service", "Usage is metered, so you pay for exactly what you used. That is measured service."],
@@ -381,7 +382,7 @@ Q("concepts", 0, "A company is billed only for the exact number of compute secon
 Q("concepts", 0, "A startup does not want to spend a large amount of money up front on servers. Instead, it wants to pay only for the IT resources it consumes, as it consumes them. Which advantage of cloud computing does this describe?", [
   ["Trade fixed expense (CAPEX) for variable expense (OPEX)", "Paying on demand instead of buying hardware up front turns capital expenditure into operational expenditure."],
   ["Benefit from massive economies of scale", "Economies of scale is about AWS's size lowering prices for everyone. The scenario is about avoiding upfront investment."],
-  ["Go global in minutes", "Going global is about deploying in many Regions quickly. It has nothing to do with upfront spending."],
+  ["Go global in minutes with AWS Regions", "Going global is about deploying in many Regions quickly. It has nothing to do with upfront spending."],
   ["Increase speed and agility", "Agility is about how quickly you can get resources, not how you pay for them."]
 ]);
 Q("concepts", 0, "Because AWS aggregates usage from hundreds of thousands of customers, it can operate more efficiently and regularly lower its prices. Which advantage of cloud computing does this describe?", [
@@ -402,7 +403,7 @@ Q("concepts", 0, "A media company wants to serve customers in Europe and Asia wi
   ["Trade CAPEX for OPEX", "This is about the payment model, not about geography."],
   ["Multi-tenancy", "Multi-tenancy is a characteristic (shared infrastructure), not an advantage about global reach."]
 ]);
-Q("concepts", 0, "Which statement BEST describes the cloud deployment model of a company that keeps its sensitive customer database in its own data center but runs its public website on AWS, with the two environments connected?", [
+Q("concepts", 0, "A company keeps its sensitive customer database in its own data center but runs its public website on AWS, with the two environments connected. Which cloud deployment model is this company using?", [
   ["Hybrid cloud", "Hybrid means some resources stay on premises and some capabilities are extended to the cloud, connected together."],
   ["Private cloud", "A private cloud is used only by one organization and is not exposed publicly. Here the website runs on a public cloud."],
   ["Public cloud", "In a pure public cloud everything runs on the provider's infrastructure. Here part of the workload stays on premises."],
@@ -481,16 +482,16 @@ Q("concepts", 0, "Which of the following costs does a company STOP paying direct
   ["Compute usage", "You still pay for compute on AWS, per second or per hour."]
 ]);
 Q("concepts", 1, "Which statement correctly describes how on-premises and AWS costs typically differ?", [
-  ["On premises, hardware is a large fixed upfront cost; on AWS, costs are mostly variable and tied to actual usage", "On-premises infrastructure is bought up front and depreciated whether or not it is used. AWS turns most of this into variable, pay-as-you-go spending. The exam guide calls this fixed versus variable costs."],
+  ["On premises, costs are mostly fixed; on AWS, they are mostly variable", "On-premises infrastructure is bought up front and depreciated whether or not it is used. AWS turns most of this into variable, pay-as-you-go spending. The exam guide calls this fixed versus variable costs."],
   ["On AWS, customers pay a fixed monthly fee regardless of usage", "Most AWS services are pay-as-you-go. There is no flat fee for unlimited use."],
   ["On premises, costs rise automatically when usage drops", "On-premises costs are largely fixed. They do not follow usage."],
   ["On AWS, all costs must be paid three years in advance", "Upfront commitments such as Reserved Instances are optional discounts, not a requirement."]
 ]);
 Q("concepts", 0, "A company is in the middle of a long, multi-year migration and must keep some systems on premises for compliance reasons. Which cloud problem does a hybrid model mainly help solve here?", [
-  ["It keeps control over sensitive on-premises assets while still using the flexibility of the public cloud", "Hybrid combines control over sensitive assets with the flexibility and cost-effectiveness of the public cloud."],
-  ["It removes all compliance obligations from the company", "Compliance obligations remain with the customer whatever the deployment model."],
-  ["It makes on-premises servers automatically scale with demand", "On-premises capacity stays fixed. Only the cloud side is elastic."],
-  ["It makes all AWS services free during the migration", "Hybrid is an architecture choice. It has no effect on pricing."]
+  ["Keeping sensitive systems on premises while using the cloud for the rest", "Hybrid combines control over sensitive assets with the flexibility and cost-effectiveness of the public cloud."],
+  ["Making every workload compliant automatically", "Compliance obligations stay with the customer whatever the deployment model."],
+  ["Removing capacity planning for the on-premises systems", "On-premises capacity stays fixed and still has to be planned. Only the cloud side is elastic."],
+  ["Eliminating data transfer charges between on premises and AWS", "Data transferred out of AWS is still billed in a hybrid setup."]
 ]);
 
 // Global infrastructure
@@ -507,31 +508,31 @@ Q("infra", 0, "Which of the following is NOT one of the main factors to consider
   ["Pricing", "Prices differ between Regions. This is one of the four factors."]
 ]);
 Q("infra", 0, "What is an AWS Availability Zone (AZ)?", [
-  ["One or more discrete data centers with redundant power, networking and connectivity, located within a Region", "Each AZ is one or more physically separate data centers. AZs in a Region are linked by high-bandwidth, low-latency networking."],
-  ["A geographic area that contains several AWS Regions", "It's the other way around: a Region contains multiple AZs."],
-  ["A location used only to cache content for Amazon CloudFront", "That describes an edge location (point of presence)."],
-  ["A single rack of servers inside a data center", "An AZ is far larger than a rack. It is at least one full data center."]
+  ["One or more discrete data centers with redundant power and networking, inside a Region", "Each AZ is one or more physically separate data centers. AZs in a Region are linked by high-bandwidth, low-latency networking."],
+  ["A geographic area that contains several AWS Regions and their networks", "It's the other way around: a Region contains multiple AZs."],
+  ["A location used only to cache content for Amazon CloudFront users", "That describes an edge location (point of presence)."],
+  ["A single rack of servers inside one AWS data center building", "An AZ is far larger than a rack. It is at least one full data center."]
 ]);
 Q("infra", 0, "How many Availability Zones does an AWS Region usually have?", [
-  ["Usually three (minimum 3, maximum 6)", "Regions typically have 3 AZs, with a minimum of 3 and a maximum of 6."],
-  ["Exactly one", "A single AZ would give no isolation from data center failures."],
-  ["Exactly two", "AWS Regions are designed with at least three AZs."],
-  ["At least 20", "No Region has that many AZs. Numbers like 400+ refer to edge locations."]
+  ["Usually 3 (min 3, max 6)", "Regions typically have 3 AZs, with a minimum of 3 and a maximum of 6."],
+  ["Exactly 1 per Region", "A single AZ would give no isolation from data center failures."],
+  ["Usually 2 (min 1, max 2)", "AWS Regions are designed with at least three AZs."],
+  ["At least 20 per Region", "No Region has that many AZs. Numbers like 400+ refer to edge locations."]
 ]);
 Q("infra", 0, "Why are Availability Zones within a Region physically separated from each other?", [
-  ["To isolate them from disasters such as fire, flooding or power loss, so a failure in one AZ does not affect the others", "AZs are separated for disaster isolation but close enough for low-latency networking. That is why multi-AZ designs are highly available."],
+  ["So that a disaster in one AZ does not affect the others", "AZs are separated from each other to isolate disasters such as fire, flooding or power loss. They are but close enough for low-latency networking. That is why multi-AZ designs are highly available."],
   ["To reduce the price of data transfer between them to zero", "Physical separation is about failure isolation, not pricing."],
   ["To meet IAM requirements for global services", "IAM has nothing to do with AZ placement."],
   ["So that each AZ can serve a different country", "All AZs of a Region are in the same geographic area."]
 ]);
 Q("infra", 0, "Which AWS infrastructure component caches content close to end users to deliver it with lower latency?", [
-  ["Edge locations (points of presence)", "AWS has 400+ points of presence in 90+ cities. CloudFront uses them to serve content close to users."],
+  ["Edge locations", "Edge locations are also called points of presence. AWS has 400+ of them in 90+ cities. CloudFront uses them to serve content close to users."],
   ["Availability Zones", "AZs host your resources inside a Region. They are not a global caching layer."],
   ["Regions", "A Region is a cluster of AZs where you deploy workloads. There are far fewer Regions than edge locations."],
   ["Amazon VPC", "A VPC is a private network for your resources, not a content cache."]
 ]);
 Q("infra", 0, "Which of the following AWS services is GLOBAL rather than Region-scoped?", [
-  ["AWS Identity and Access Management (IAM)", "IAM is global, along with Route 53, CloudFront and WAF. Users and policies are not tied to a Region."],
+  ["AWS IAM", "IAM is global, along with Route 53, CloudFront and WAF. Users and policies are not tied to a Region."],
   ["Amazon EC2", "EC2 is Region-scoped. Instances live in a specific Region and AZ."],
   ["AWS Elastic Beanstalk", "Elastic Beanstalk is Region-scoped."],
   ["AWS Lambda", "Lambda functions are created in a specific Region."]
@@ -543,8 +544,8 @@ Q("infra", 1, "A company wants its application to keep running even if an ENTIRE
   ["Use Dedicated Hosts", "Dedicated Hosts address licensing and compliance, not Region failure."]
 ]);
 Q("infra", 0, "A company notices that a feature it needs is available in us-east-1 but not in the Region closest to its users. What does this illustrate?", [
-  ["Service and feature availability varies by Region, so it is a factor in Region selection", "Not every service or feature launches in every Region at once. Check the Regional services list before choosing."],
-  ["All AWS services are available in all Regions at all times", "This is false. Availability differs between Regions."],
+  ["Service availability varies by Region and affects Region choice", "Not every service or feature launches in every Region at once. Check the Regional services list before choosing."],
+  ["Features are released to all Regions on the same day", "Launches often reach some Regions first. Availability differs between Regions."],
   ["Features are tied to Availability Zones, not Regions", "Service availability is published per Region."],
   ["The feature must be enabled in IAM first", "IAM controls permissions. It cannot make a service available in a Region."]
 ]);
@@ -594,8 +595,8 @@ Q("wa", 0, "Which of the following is NOT one of the six pillars of the AWS Well
 ]);
 Q("wa", 0, "Which FREE AWS tool lets a company answer questions about a workload and review it against the six Well-Architected pillars, then receive improvement advice?", [
   ["AWS Well-Architected Tool", "The Well-Architected Tool is free. You define a workload, answer questions, and get a report and dashboard measured against the six pillars."],
-  ["AWS Config", "Config records resource configurations and compliance. It does not run Well-Architected reviews."],
-  ["AWS Artifact", "Artifact gives access to AWS compliance reports and agreements."],
+  ["AWS Config rules", "Config records resource configurations and compliance. It does not run Well-Architected reviews."],
+  ["AWS Artifact reports", "Artifact gives access to AWS compliance reports and agreements."],
   ["Amazon Inspector", "Inspector scans for software vulnerabilities."]
 ]);
 Q("wa", 0, "A company breaks its monolithic application into smaller components so that a failure or change in one component does not cascade to the others. Which cloud design principle is this?", [
@@ -612,9 +613,9 @@ Q("wa", 0, "Which design principle encourages customers to use managed AWS servi
 ]);
 Q("wa", 0, "Which AWS tool helps a company track, measure, review and forecast the carbon emissions produced by its AWS usage?", [
   ["AWS Customer Carbon Footprint Tool", "It shows emissions by geography, by service and over time, and forecasts the path to 100% renewable energy."],
-  ["AWS Cost Explorer", "Cost Explorer shows spending, not carbon emissions."],
+  ["AWS Cost Explorer reports", "Cost Explorer shows spending, not carbon emissions."],
   ["AWS Well-Architected Tool", "It reviews workloads against pillars but does not measure emissions."],
-  ["AWS Config", "Config tracks resource configuration changes."]
+  ["AWS Config rules", "Config tracks resource configuration changes."]
 ]);
 Q("wa", 0, "Before a big product launch, a company runs a planned event that simulates flash-sale traffic in order to test how its systems and teams respond. Which Well-Architected general design principle is this?", [
   ["Improve through game days", "Game days simulate real events (such as a flash-sale day) to test systems and procedures."],
@@ -674,51 +675,51 @@ Q("caf", 1, "According to AWS, which of the following is a business outcome that
 ]);
 Q("caf", 0, "A company wants to move an application to Amazon EC2 exactly as it is, without making any changes, to exit its data center quickly. Which migration strategy is this?", [
   ["Rehost (lift and shift)", "Rehost moves applications as they are, without cloud optimization. It can still save around 30%. AWS Application Migration Service helps with this."],
-  ["Replatform", "Replatform makes a few cloud optimizations (such as moving to RDS). The scenario makes no changes."],
-  ["Refactor", "Refactor re-architects the application to use cloud-native features."],
-  ["Repurchase", "Repurchase replaces the application with a different product, often SaaS."]
+  ["Replatform (lift and reshape)", "Replatform makes a few cloud optimizations (such as moving to RDS). The scenario makes no changes."],
+  ["Refactor / re-architect", "Refactor re-architects the application to use cloud-native features."],
+  ["Repurchase (drop and shop)", "Repurchase replaces the application with a different product, often SaaS."]
 ]);
 Q("caf", 0, "A company migrates its self-managed MySQL database to Amazon RDS but does not change the core architecture of its application. Which migration strategy is this?", [
   ["Replatform (lift and reshape)", "Replatform keeps the core architecture but adopts some cloud optimizations, such as a managed database."],
-  ["Rehost", "Rehost would move the database server unchanged, for example to EC2."],
-  ["Refactor", "Refactor would redesign the application, for example into microservices or serverless."],
-  ["Retain", "Retain means leaving the workload where it is for now."]
+  ["Rehost (lift and shift)", "Rehost would move the database server unchanged, for example to EC2."],
+  ["Refactor / re-architect", "Refactor would redesign the application, for example into microservices or serverless."],
+  ["Retain (revisit later)", "Retain means leaving the workload where it is for now."]
 ]);
 Q("caf", 0, "A company replaces its on-premises CRM system with Salesforce, a SaaS product. Which migration strategy is this?", [
   ["Repurchase (drop and shop)", "Repurchase switches to a different product, often SaaS. It can cost more in the short term but is fast to deploy."],
-  ["Rehost", "Rehost moves the same application to the cloud unchanged."],
-  ["Relocate", "Relocate moves workloads to a cloud version of the same platform (for example VMware Cloud on AWS)."],
-  ["Refactor", "Refactor rewrites the existing application to be cloud-native."]
+  ["Rehost (lift and shift)", "Rehost moves the same application to the cloud unchanged."],
+  ["Relocate (hypervisor-level move)", "Relocate moves workloads to a cloud version of the same platform (for example VMware Cloud on AWS)."],
+  ["Refactor / re-architect", "Refactor rewrites the existing application to be cloud-native."]
 ]);
 Q("caf", 0, "A company redesigns a monolithic application into microservices and serverless components to gain scalability and agility it could not get before. Which migration strategy is this?", [
-  ["Refactor / Re-architect", "Refactoring is driven by needs for features, scale, performance or agility that the current architecture can't provide."],
-  ["Replatform", "Replatform only makes a few optimizations and keeps the core architecture."],
-  ["Rehost", "Rehost changes nothing about the application."],
-  ["Retire", "Retire turns the application off."]
+  ["Refactor / re-architect", "Refactoring is driven by needs for features, scale, performance or agility that the current architecture can't provide."],
+  ["Replatform (lift and reshape)", "Replatform only makes a few optimizations and keeps the core architecture."],
+  ["Rehost (lift and shift)", "Rehost changes nothing about the application."],
+  ["Retire (decommission)", "Retire turns the application off."]
 ]);
 Q("caf", 0, "During migration planning, a company discovers several applications that nobody uses anymore. It decides to turn them off. Which migration strategy is this?", [
-  ["Retire", "Retire removes what you don't need. That reduces the attack surface and often saves 10 to 20%."],
-  ["Retain", "Retain keeps an application running as it is for now. It does not shut anything down."],
-  ["Relocate", "Relocate moves workloads to the cloud version of the same platform."],
-  ["Repurchase", "Repurchase replaces an application with a different product."]
+  ["Retire (decommission)", "Retire removes what you don't need. That reduces the attack surface and often saves 10 to 20%."],
+  ["Retain (revisit later)", "Retain keeps an application running as it is for now. It does not shut anything down."],
+  ["Relocate (hypervisor-level move)", "Relocate moves workloads to the cloud version of the same platform."],
+  ["Repurchase (drop and shop)", "Repurchase replaces an application with a different product."]
 ]);
 Q("caf", 0, "A company decides to keep its mainframe application on premises for now because of unresolved dependencies and compliance concerns. Which migration strategy is this?", [
-  ["Retain", "Retain is doing nothing for now, which is still a decision. It is common for mainframes, unresolved dependencies, or apps with no business value in migrating."],
-  ["Retire", "Retire means decommissioning the application."],
-  ["Rehost", "Rehost moves the application to the cloud."],
-  ["Refactor", "Refactor rebuilds the application for the cloud."]
+  ["Retain (revisit later)", "Retain is doing nothing for now, which is still a decision. It is common for mainframes, unresolved dependencies, or apps with no business value in migrating."],
+  ["Retire (decommission)", "Retire means decommissioning the application."],
+  ["Rehost (lift and shift)", "Rehost moves the application to the cloud."],
+  ["Refactor / re-architect", "Refactor rebuilds the application for the cloud."]
 ]);
 Q("caf", 0, "A company moves its VMware vSphere-based workloads to VMware Cloud on AWS without buying new hardware or rewriting applications. Which migration strategy is this?", [
-  ["Relocate", "Relocate moves applications to the cloud version of their platform, for example VMware SDDC to VMware Cloud on AWS."],
-  ["Replatform", "Replatform changes part of the platform, such as moving to a managed database."],
-  ["Repurchase", "Repurchase switches to a different product."],
-  ["Retain", "Retain leaves the workload where it is."]
+  ["Relocate (hypervisor-level move)", "Relocate moves applications to the cloud version of their platform, for example VMware SDDC to VMware Cloud on AWS."],
+  ["Replatform (lift and reshape)", "Replatform changes part of the platform, such as moving to a managed database."],
+  ["Repurchase (drop and shop)", "Repurchase switches to a different product."],
+  ["Retain (revisit later)", "Retain leaves the workload where it is."]
 ]);
 Q("caf", 0, "Which AWS service is designed to simplify rehost (lift-and-shift) migrations of servers from physical, virtual or other cloud environments to AWS?", [
   ["AWS Application Migration Service", "Application Migration Service is the recommended rehost tool. It replicates servers into AWS with minimal changes."],
   ["AWS Elastic Beanstalk", "Elastic Beanstalk is a PaaS for deploying application code. It does not replicate existing servers."],
   ["AWS Storage Gateway", "Storage Gateway connects on-premises storage to AWS. It does not migrate servers."],
-  ["Amazon Rekognition", "Rekognition is an image and video analysis service."]
+  ["AWS Database Migration Service", "DMS migrates databases, not whole servers."]
 ]);
 Q("caf", 0, "When should a company perform right sizing of its EC2 instances?", [
   ["Before migrating to the cloud, and continuously afterwards as requirements change", "Right sizing is done before a migration and continuously after it, because workloads change over time."],
@@ -732,6 +733,12 @@ Q("caf", 0, "CloudWatch metrics show that a company's EC2 instances average only
   ["Add more instances to spread the load", "Adding instances increases cost when utilization is already very low."],
   ["Move the instances to Dedicated Hosts", "Dedicated Hosts are the most expensive option and don't fix low utilization."]
 ]);
+Q("concepts", 1, "A company already owns Microsoft SQL Server licenses for its data center and wants to reuse them on AWS to lower costs. What is this licensing approach called?", [
+  ["Bring your own license (BYOL)", "With BYOL you apply existing, eligible licenses to AWS resources instead of paying for them again. Server-bound licenses often need Dedicated Hosts."],
+  ["License-included pricing", "License-included means AWS charges for the software license in the hourly instance price, so the company would pay for a license it already owns."],
+  ["Spot Instance pricing", "Spot is a pricing option for spare capacity. It has nothing to do with software licenses."],
+  ["An AWS Marketplace subscription", "Marketplace sells third-party software. It doesn't reuse licenses the company already owns."]
+]);
 
 // Domain 2 — Security & Compliance
 Q("srm", 0, "According to the AWS shared responsibility model, which task is the CUSTOMER's responsibility when using Amazon EC2?", [
@@ -741,7 +748,7 @@ Q("srm", 0, "According to the AWS shared responsibility model, which task is the
   ["Patching the hypervisor that isolates instances", "The virtualization layer and host isolation are AWS's responsibility."]
 ]);
 Q("srm", 0, "According to the AWS shared responsibility model, which of the following is AWS's responsibility?", [
-  ["Protecting the global infrastructure (hardware, software, facilities and networking) that runs AWS services", "AWS is responsible for security OF the cloud: the infrastructure that runs every AWS service."],
+  ["Protecting the physical infrastructure that runs AWS services", "AWS is responsible for security OF the cloud: the hardware, software, facilities and networking that run every AWS service."],
   ["Configuring security group rules for EC2 instances", "Security group rules are customer configuration (security IN the cloud)."],
   ["Encrypting the customer's application data", "Encrypting your data is the customer's responsibility. AWS provides the tools."],
   ["Creating IAM users and assigning least-privilege permissions", "Managing IAM users, groups, roles and policies is the customer's responsibility."]
@@ -753,7 +760,7 @@ Q("srm", 0, "Which of the following is a SHARED control under the AWS shared res
   ["Replacing failed disks in AWS data centers", "Hardware replacement is AWS's job."]
 ]);
 Q("srm", 0, "A company uses Amazon RDS. Under the shared responsibility model, which task is the CUSTOMER's responsibility?", [
-  ["Configuring the DB security group inbound rules and the database users and permissions", "With RDS, customers manage security group rules, in-database users, public vs. private access, enforcing SSL, and whether the database is encrypted."],
+  ["Configuring the DB security group rules and database users", "With RDS, customers manage security group rules, in-database users, public vs. private access, enforcing SSL, and whether the database is encrypted."],
   ["Patching the operating system of the database host", "AWS applies automated OS and database patching for RDS."],
   ["Managing the underlying EC2 instance, including SSH access", "AWS manages the underlying instance, and SSH is disabled."],
   ["Auditing the physical disks of the database host", "AWS audits the underlying instance and disks."]
@@ -833,16 +840,16 @@ Q("iam", 1, "An IAM user belongs to a group whose policy allows all Amazon S3 ac
   ["The result is random", "Policy evaluation is deterministic, and explicit Deny always wins."]
 ]);
 Q("iam", 0, "What should a company do with its AWS account root user right after creating the account?", [
-  ["Enable MFA on it, lock away its credentials, and create IAM identities for everyday administrative work", "Use the root user only for account setup and root-only tasks. Protect it with MFA and never share it."],
+  ["Enable MFA, lock it away, and use IAM identities for daily work", "Use the root user only for account setup and root-only tasks. Protect it with MFA and never share it."],
   ["Share the root credentials with all administrators so they have full access", "One person should have one identity. Root credentials must never be shared."],
   ["Create root access keys for day-to-day CLI use", "Root access keys should be locked away or not created at all. Use IAM identities for programmatic access."],
   ["Delete the root user so it cannot be compromised", "The root user cannot be deleted. It is the account owner."]
 ]);
 Q("iam", 0, "Which task can ONLY be performed by the AWS account root user?", [
-  ["Changing or canceling the AWS Support plan", "Changing or canceling the Support plan is on the root-only list, along with closing the account and changing account settings."],
-  ["Creating an IAM user", "An IAM user with the right permissions can create other IAM users."],
-  ["Launching an EC2 instance", "Any IAM identity with EC2 permissions can launch instances."],
-  ["Creating an S3 bucket", "Any IAM identity with S3 permissions can create buckets."]
+  ["Changing the root user's email address", "Changing account settings (account name, root email, root password, root access keys) is root-only. Note: your notes list changing or canceling the Support plan as root-only too, but AWS now lets IAM users with the right permissions do that, so it is unlikely to be the answer on a current exam."],
+  ["Creating an IAM user with admin rights", "An IAM user with the right permissions can create other IAM users."],
+  ["Launching an EC2 instance in a new Region", "Any IAM identity with EC2 permissions can launch instances."],
+  ["Creating an S3 bucket with versioning", "Any IAM identity with S3 permissions can create buckets."]
 ]);
 Q("iam", 0, "Which of the following actions requires the AWS account root user?", [
   ["Closing the AWS account", "Closing the account is a root-only task. Others include changing the account name, email or root password, and restoring IAM user permissions."],
@@ -852,15 +859,15 @@ Q("iam", 0, "Which of the following actions requires the AWS account root user?"
 ]);
 Q("iam", 0, "Which task requires the root user?", [
   ["Registering as a seller in the Reserved Instance Marketplace", "Registering as an RI Marketplace seller is a root-only action."],
-  ["Buying a Reserved Instance", "IAM users with the right permissions can buy Reserved Instances."],
-  ["Creating an IAM password policy", "IAM administrators can set the password policy."],
-  ["Enabling MFA for an IAM user", "IAM administrators or the users themselves can do this."]
+  ["Buying a Reserved Instance for a 3-year term", "IAM users with the right permissions can buy Reserved Instances."],
+  ["Creating an IAM password policy for all users", "IAM administrators can set the password policy."],
+  ["Enabling MFA for an existing IAM user", "IAM administrators or the users themselves can do this."]
 ]);
 Q("iam", 0, "What does multi-factor authentication (MFA) combine?", [
-  ["Something you know (a password) and something you have (a device)", "MFA = a password you know + a device you own. A stolen password alone isn't enough."],
-  ["Two different passwords", "Two passwords are still only one factor: something you know."],
+  ["A password you know and a device you have", "MFA = a password you know + a device you own. A stolen password alone isn't enough."],
+  ["Two different passwords you know", "Two passwords are still only one factor: something you know."],
   ["An access key ID and a secret access key", "These are the two parts of one programmatic credential, not MFA."],
-  ["A username and an email address", "Neither is a second authentication factor."]
+  ["A username and an email address you know", "Neither is a second authentication factor."]
 ]);
 Q("iam", 0, "Which of the following is a U2F (Universal 2nd Factor) physical security key that can be used for MFA with AWS?", [
   ["YubiKey", "YubiKey (by Yubico, a third party) is a U2F security key. One key can serve several root and IAM users."],
@@ -881,7 +888,7 @@ Q("iam", 0, "An access key is made up of an access key ID and a secret access ke
   ["A security group", "A security group is a firewall, not a credential."]
 ]);
 Q("iam", 0, "A developer wants to call AWS services directly from a Python application's code. What should they use?", [
-  ["An AWS SDK (for example, Boto3 for Python)", "SDKs are language-specific libraries you embed in your application to call AWS APIs."],
+  ["An AWS SDK", "For Python that is Boto3. SDKs are language-specific libraries you embed in your application to call AWS APIs."],
   ["The AWS Management Console", "The console is a web UI for people, not for application code."],
   ["AWS Artifact", "Artifact provides compliance reports."],
   ["An IAM Credentials Report", "This is an audit report of user credentials."]
@@ -929,7 +936,7 @@ Q("iam", 0, "A company is building a mobile app that will have millions of users
   ["AWS IAM Identity Center", "Identity Center provides workforce single sign-on to AWS accounts and business apps."]
 ]);
 Q("iam", 0, "A company uses AWS Organizations with 40 accounts. Employees should sign in once to reach all of their AWS accounts and business apps such as Salesforce and Microsoft 365. Which service meets this need?", [
-  ["AWS IAM Identity Center (successor to AWS SSO)", "IAM Identity Center gives one login for all accounts in an organization, business cloud apps, SAML 2.0 apps and EC2 Windows instances."],
+  ["AWS IAM Identity Center", "IAM Identity Center (the successor to AWS SSO) gives one login for all accounts in an organization, business cloud apps, SAML 2.0 apps and EC2 Windows instances."],
   ["Amazon Cognito", "Cognito is for customer-facing app users."],
   ["AWS STS", "STS issues temporary credentials but isn't a single sign-on portal."],
   ["IAM Access Advisor", "Access Advisor shows last-accessed services."]
@@ -960,8 +967,8 @@ Q("netsec", 0, "Which AWS service provides FREE, automatic protection for all cu
   ["AWS WAF", "WAF is a layer 7 web application firewall. You pay for it and configure its rules."],
   ["AWS Firewall Manager", "Firewall Manager centrally manages rules across accounts. It is not free DDoS protection."]
 ]);
-Q("netsec", 0, "A company wants 24/7 access to the AWS DDoS Response Team and protection against unexpected cost spikes caused by DDoS attacks on its CloudFront and Route 53 resources. Which service should it use?", [
-  ["AWS Shield Advanced", "Shield Advanced adds protection against sophisticated attacks, 24/7 access to the DDoS Response Team, and protection against DDoS-related fee spikes."],
+Q("netsec", 0, "A company wants 24/7 access to the AWS Shield Response Team (SRT) and protection against unexpected cost spikes caused by DDoS attacks on its CloudFront and Route 53 resources. Which service should it use?", [
+  ["AWS Shield Advanced", "Shield Advanced adds protection against sophisticated attacks, 24/7 access to the Shield Response Team (SRT, called the DDoS Response Team in your notes), and protection against DDoS-related fee spikes."],
   ["AWS Shield Standard", "Shield Standard gives basic automatic protection but no response team and no cost protection."],
   ["Amazon GuardDuty", "GuardDuty is threat detection, not DDoS mitigation."],
   ["Amazon Inspector", "Inspector scans for vulnerabilities."]
@@ -973,10 +980,10 @@ Q("netsec", 0, "A company wants to protect its web application from SQL injectio
   ["Amazon Macie", "Macie finds sensitive data in S3."]
 ]);
 Q("netsec", 0, "A company wants to block all HTTP requests that come from certain countries and limit how many requests a single IP address can send to its Application Load Balancer. What should it use?", [
-  ["AWS WAF with geo-match conditions and rate-based rules", "WAF web ACLs support geo-match (block countries) and rate-based rules (limit requests per IP, which also helps against DDoS)."],
+  ["AWS WAF", "WAF web ACLs support geo-match (block countries) and rate-based rules (limit requests per IP, which also helps against DDoS)."],
   ["Security group deny rules", "Security groups only have allow rules. They cannot deny or rate-limit."],
   ["AWS Shield Standard", "Shield Standard has no configurable country or rate rules."],
-  ["Amazon Inspector", "Inspector does not filter traffic."]
+  ["Amazon GuardDuty", "GuardDuty detects threats but does not block or rate-limit requests."]
 ]);
 Q("netsec", 0, "AWS WAF can be deployed on all of the following resources EXCEPT which one?", [
   ["Network Load Balancer", "WAF works at layer 7 and deploys on Application Load Balancers, API Gateway and CloudFront. An NLB works at layer 4."],
@@ -1015,13 +1022,13 @@ Q("netsec", 0, "A company notices that EC2 instances with AWS-owned IP addresses
   ["Do nothing, because AWS allows port scanning from its IP addresses", "Port scanning others is abuse and against the Acceptable Use Policy."]
 ]);
 Q("netsec", 0, "Which combination of AWS services helps absorb and mitigate DDoS attacks at the edge, before traffic reaches the application?", [
-  ["Amazon CloudFront and Amazon Route 53, protected by AWS Shield", "CloudFront and Route 53 use the global edge network. Together with Shield, attacks are mitigated at the edge."],
-  ["A single EC2 instance with an Elastic IP address", "A single instance is easy to overwhelm and has no edge protection."],
-  ["Amazon EBS snapshots", "Snapshots are backups. They do not mitigate traffic."],
-  ["S3 One Zone-IA", "This is a storage class, not a network protection."]
+  ["Amazon CloudFront and Amazon Route 53 with AWS Shield", "CloudFront and Route 53 use the global edge network. Together with Shield, attacks are mitigated at the edge."],
+  ["Amazon Inspector and Amazon GuardDuty", "Inspector finds vulnerabilities and GuardDuty detects threats. Neither absorbs attack traffic."],
+  ["AWS Config and AWS Security Hub", "These record configurations and aggregate findings. They don't sit in the traffic path."],
+  ["Amazon EBS snapshots and AWS Backup", "Backups help you recover data. They do not mitigate traffic."]
 ]);
 Q("netsec", 0, "At which OSI layer does AWS WAF operate?", [
-  ["Layer 7 (application, HTTP)", "WAF inspects HTTP requests: headers, body, URI strings and IPs."],
+  ["Layer 7 (application)", "WAF inspects HTTP requests: headers, body, URI strings and IPs."],
   ["Layer 3 (network)", "Layer 3/4 DDoS protection is Shield's area. The Gateway Load Balancer also works at layer 3."],
   ["Layer 4 (transport)", "Layer 4 is TCP/UDP. The Network Load Balancer works there, not WAF."],
   ["Layer 1 (physical)", "No AWS security service a customer configures works at the physical layer."]
@@ -1041,14 +1048,14 @@ Q("crypto", 0, "A company needs a managed service to create and control the encr
   ["Amazon Macie", "Macie discovers sensitive data. It does not manage keys."]
 ]);
 Q("crypto", 0, "A company's regulations require encryption keys to be stored on dedicated, single-tenant hardware validated to FIPS 140-2 Level 3, with the company, not AWS, managing the keys. Which service meets this requirement?", [
-  ["AWS CloudHSM", "CloudHSM gives you dedicated, tamper-resistant hardware security modules (FIPS 140-2 Level 3). AWS manages the hardware and you fully manage the keys."],
+  ["AWS CloudHSM", "CloudHSM gives you dedicated, tamper-resistant hardware security modules (FIPS 140-2 Level 3). AWS manages the hardware and you fully manage the keys. (Newer HSM types are validated to FIPS 140-3 Level 3.)"],
   ["AWS KMS with AWS managed keys", "With AWS managed keys, AWS creates and manages the keys."],
   ["AWS Certificate Manager", "ACM manages TLS certificates, not dedicated key hardware."],
   ["AWS Secrets Manager", "Secrets Manager stores secrets, encrypted with KMS."]
 ]);
 Q("crypto", 0, "A company needs free public SSL/TLS certificates for HTTPS on its Application Load Balancer and CloudFront distribution, and it wants them renewed automatically. Which service should it use?", [
   ["AWS Certificate Manager (ACM)", "ACM provisions and deploys SSL/TLS certificates, is free for public certificates, renews them automatically, and integrates with ELB, CloudFront and API Gateway."],
-  ["AWS KMS", "KMS manages encryption keys, not TLS certificates."],
+  ["AWS Key Management Service (KMS)", "KMS manages encryption keys, not TLS certificates."],
   ["AWS CloudHSM", "CloudHSM is dedicated key hardware."],
   ["AWS Secrets Manager", "Secrets Manager stores secrets such as database credentials."]
 ]);
@@ -1059,7 +1066,7 @@ Q("crypto", 0, "A company wants to store its Amazon RDS database credentials sec
   ["IAM Credentials Report", "This reports on IAM user credentials. It does not store or rotate secrets."]
 ]);
 Q("crypto", 0, "For which of the following is encryption ALWAYS enabled and not something the customer needs to turn on?", [
-  ["Amazon S3 Glacier", "In the course material, encryption is always on for CloudTrail logs, S3 Glacier and Storage Gateway."],
+  ["Amazon S3 Glacier", "In the course material, encryption is always on for CloudTrail logs, S3 Glacier and Storage Gateway. (Today every new S3 object, in every storage class, is also encrypted by default.)"],
   ["Amazon EBS volumes", "EBS encryption is opt-in."],
   ["Amazon RDS databases", "RDS encryption is opt-in and chosen when the database is created."],
   ["Amazon EFS file systems", "EFS encryption is opt-in."]
@@ -1071,13 +1078,13 @@ Q("crypto", 0, "Which type of KMS key is created and managed by AWS on your beha
   ["CloudHSM key", "CloudHSM keys are generated on your own CloudHSM cluster."]
 ]);
 Q("crypto", 0, "A company needs full control over its KMS keys, including the ability to enable, disable and schedule rotation of each key. Which type of KMS key should it use?", [
-  ["Customer managed key", "Customer managed keys are created, managed and used by you, with enable/disable and optional yearly rotation. You can even bring your own key material."],
+  ["Customer managed key", "Customer managed keys are created, managed and used by you, with enable/disable and optional automatic rotation (every 365 days by default, configurable from 90 to 2,560 days). You can even bring your own key material."],
   ["AWS managed key", "AWS manages these for you, and you cannot disable them."],
   ["AWS owned key", "You cannot see or manage AWS owned keys."],
   ["An ACM certificate", "Certificates are for TLS, not KMS key management."]
 ]);
 Q("crypto", 0, "What does encryption IN TRANSIT protect?", [
-  ["Data moving across a network, for example between a client and a server using TLS", "In transit means data moving across the network, such as on-premises to AWS or EC2 to DynamoDB."],
+  ["Data moving across a network", "In transit means data moving across the network, such as on-premises to AWS or EC2 to DynamoDB. TLS (HTTPS) is the usual protection."],
   ["Data stored on a hard disk", "That is data at rest."],
   ["Data in an archived S3 Glacier object", "That is data at rest."],
   ["The physical servers in an AWS data center", "Physical security is a different control."]
@@ -1144,8 +1151,8 @@ Q("detect", 0, "A security team wants a single dashboard that aggregates finding
   ["AWS Firewall Manager", "Firewall Manager manages firewall rules across accounts."],
   ["AWS Artifact", "Artifact provides compliance documents."]
 ]);
-Q("detect", 0, "Which service must be enabled before you can use AWS Security Hub?", [
-  ["AWS Config", "Security Hub requires AWS Config to be enabled, because its automated checks rely on Config."],
+Q("detect", 0, "AWS Security Hub runs automated security checks against standards such as CIS. Which service must be enabled for these checks to work?", [
+  ["AWS Config", "Security Hub's automated checks rely on AWS Config, so Config must be enabled. (In December 2025 AWS renamed this original Security Hub to Security Hub CSPM and gave the Security Hub name to a new unified service.)"],
   ["Amazon Macie", "Macie is an optional source of findings."],
   ["AWS Shield Advanced", "Shield Advanced is not a prerequisite."],
   ["AWS CloudHSM", "CloudHSM is unrelated to Security Hub."]
@@ -1162,17 +1169,17 @@ Q("detect", 0, "A company wants to find which of its resources, such as S3 bucke
   ["IAM Credentials Report", "This lists user credential status."],
   ["Amazon GuardDuty", "GuardDuty detects threats, not resource-sharing configurations."]
 ]);
-Q("detect", 0, "What is required to start using Amazon GuardDuty?", [
-  ["Enable it with one click; there is no software or agent to install", "GuardDuty is one click to enable with a 30-day trial. It reads data sources such as CloudTrail, VPC Flow Logs and DNS logs on its own."],
-  ["Install the GuardDuty agent on every EC2 instance", "No agent is required for core GuardDuty."],
-  ["Buy a license from AWS Marketplace", "GuardDuty is a native AWS service."],
-  ["Deploy a Gateway Load Balancer in front of the VPC", "No network appliances are needed."]
+Q("detect", 0, "GuardDuty detects that an EC2 instance is sending data out through unusual DNS queries. The company wants an automatic response, such as notifying the security team, whenever GuardDuty raises a finding. How is this typically done?", [
+  ["Send findings to Amazon EventBridge to trigger SNS or Lambda", "GuardDuty findings go to EventBridge, where rules can trigger Lambda or SNS for automated response."],
+  ["Add a security group rule that emails the team", "Security groups filter traffic. They can't send notifications."],
+  ["Enable S3 Versioning on the GuardDuty findings", "Versioning protects S3 objects. It doesn't trigger any response."],
+  ["Use AWS Artifact to forward findings to the team", "Artifact provides compliance documents, not alerts."]
 ]);
-Q("detect", 0, "Which service gives an organization on-demand access to AWS security and compliance documentation to support its INTERNAL audits?", [
-  ["AWS Artifact", "Artifact supports internal audit and compliance with on-demand AWS reports and agreements."],
-  ["Amazon GuardDuty", "GuardDuty is threat detection."],
-  ["IAM Access Analyzer", "Access Analyzer finds externally shared resources."],
-  ["AWS WAF", "WAF is a web application firewall."]
+Q("detect", 0, "A company's compliance team wants to prove to a customer that AWS data centers are ISO 27001 certified. What should the team do?", [
+  ["Download the ISO certification report from AWS Artifact", "Artifact Reports provide AWS's third-party audit documents (ISO, PCI, SOC) on demand. They support both customer requests and internal audits."],
+  ["Run AWS Config rules against the AWS data centers", "Config evaluates YOUR resources, not AWS's facilities."],
+  ["Enable Amazon Inspector on its EC2 instances", "Inspector scans your workloads for vulnerabilities. It says nothing about AWS's certifications."],
+  ["Ask AWS to allow an on-site audit of a data center", "Customers can't tour AWS data centers. Third-party audit reports in Artifact serve this purpose."]
 ]);
 
 // Domain 3 — Cloud Technology & Services (EC2 through S3 + data transfer)
@@ -1225,7 +1232,7 @@ Q("ec2", 0, "Which type of rules can an EC2 security group contain?", [
   ["Only rules that reference other AWS accounts", "Rules reference IP ranges (IPv4/IPv6) or security groups."]
 ]);
 Q("ec2", 0, "A user tries to SSH into a newly launched EC2 instance, and the connection TIMES OUT. What is the MOST likely cause?", [
-  ["The security group does not allow inbound traffic on port 22", "A timeout almost always means a security group issue. A 'connection refused' error means the app isn't running or has an error."],
+  ["The security group doesn't allow port 22", "A timeout almost always means a security group issue. A 'connection refused' error means the app isn't running or has an error."],
   ["The application on the instance has crashed", "An application problem gives 'connection refused', not a timeout."],
   ["The instance type is too small", "Instance size doesn't cause SSH timeouts."],
   ["The IAM user has no S3 permissions", "IAM permissions don't affect network connectivity to the instance."]
@@ -1243,14 +1250,14 @@ Q("ec2", 0, "A web server on EC2 must accept secure web traffic from the interne
   ["3389", "Port 3389 is RDP."]
 ]);
 Q("ec2", 0, "A user wants to open an SSH session to an Amazon Linux 2 instance directly from the browser, without managing a key file. Which option should they use, and what is still required?", [
-  ["EC2 Instance Connect; port 22 must still be allowed in the security group", "Instance Connect pushes a temporary key for you, but it still uses SSH, so port 22 must be open."],
+  ["EC2 Instance Connect; port 22 must be open", "Instance Connect pushes a temporary key for you, but it still uses SSH, so port 22 must be open."],
   ["EC2 Instance Connect; no ports need to be open", "Instance Connect uses SSH underneath, so port 22 must be open."],
-  ["PuTTY; port 3389 must be open", "PuTTY is a desktop SSH client that needs a key, and 3389 is RDP."],
-  ["AWS CLI; port 443 must be open", "The CLI calls AWS APIs. It doesn't open a shell on the instance."]
+  ["PuTTY; port 3389 must be open for the session", "PuTTY is a desktop SSH client that needs a key, and 3389 is RDP."],
+  ["AWS CLI; port 443 must be open for the session", "The CLI calls AWS APIs. It doesn't open a shell on the instance."]
 ]);
-Q("ec2", 1, "An EC2 security group allows inbound HTTPS (port 443) from anywhere. Is the response traffic back to the client allowed automatically?", [
-  ["Yes, because security groups are stateful, so return traffic for allowed requests is automatically allowed", "Security groups are stateful: if a request is allowed in, the response is allowed out, whatever the outbound rules say."],
-  ["No, an outbound rule for each client IP must be added", "Stateful security groups don't need this."],
+Q("ec2", 1, "An EC2 security group allows inbound HTTPS (port 443) from anywhere and has NO outbound rules. Can the instance still send responses back to clients?", [
+  ["Yes, because security groups are stateful", "Security groups are stateful: if a request is allowed in, the response is allowed out, whatever the outbound rules say."],
+  ["No, an outbound rule allowing port 443 must be added", "Security groups are stateful, so return traffic is allowed even with no outbound rules."],
   ["No, security groups block all return traffic by default", "Return traffic for allowed connections is always permitted."],
   ["Only if AWS WAF is attached to the instance", "WAF cannot be attached to EC2 instances, and it is unrelated to return traffic."]
 ]);
@@ -1273,9 +1280,9 @@ Q("ec2", 0, "A company runs fault-tolerant image-processing batch jobs that can 
   ["On-Demand Capacity Reservations", "Capacity Reservations give no discount."]
 ]);
 Q("ec2", 0, "Which workload is NOT a good fit for EC2 Spot Instances?", [
-  ["A critical production database that must never be interrupted", "Spot capacity can be reclaimed with little warning. Never use it for critical jobs or databases."],
+  ["A critical production database", "Spot capacity can be reclaimed with little warning. Never use it for critical jobs or databases."],
   ["Distributed batch data analysis", "This is a classic Spot use case."],
-  ["Image rendering jobs that can be retried", "Retryable jobs are ideal for Spot."],
+  ["Image rendering jobs", "Retryable jobs are ideal for Spot."],
   ["CI build agents that can be restarted", "Interruptible workers suit Spot."]
 ]);
 Q("ec2", 0, "A company has server-bound software licenses (per-socket and per-core) that it wants to bring to AWS (BYOL). It also has strict regulatory requirements. Which EC2 option should it choose?", [
@@ -1288,7 +1295,7 @@ Q("ec2", 0, "A company needs its EC2 instances to run on hardware that is not sh
   ["Dedicated Instances", "Dedicated Instances run on hardware dedicated to you (possibly shared with your own other instances), without placement control. They are cheaper than Dedicated Hosts."],
   ["Dedicated Hosts", "Hosts give full server control but cost the most. They are more than required here."],
   ["Spot Instances", "Spot instances run on shared hardware."],
-  ["On-Demand Capacity Reservations", "Capacity Reservations reserve capacity on shared hardware."]
+  ["On-Demand Capacity Reservations", "Capacity Reservations guarantee capacity. They don't by themselves give you hardware dedicated to you."]
 ]);
 Q("ec2", 0, "A company must guarantee EC2 capacity in a specific Availability Zone for an important two-week event. It does not want a 1- or 3-year commitment. Which option meets this need?", [
   ["On-Demand Capacity Reservations", "Capacity Reservations reserve On-Demand capacity in a specific AZ for any duration with no commitment. You pay the On-Demand rate whether you use it or not."],
@@ -1322,13 +1329,13 @@ Q("ec2", 0, "Which EC2 purchasing option is generally the MOST expensive?", [
 ]);
 Q("ec2", 0, "How are On-Demand Linux and Windows EC2 instances billed?", [
   ["Per second, after the first minute", "Linux and Windows On-Demand instances are billed per second after a 1-minute minimum. Other operating systems are billed per hour."],
-  ["Per hour, rounded up", "Per-hour billing applies to other operating systems."],
-  ["Per day", "EC2 is not billed per day."],
-  ["A fixed monthly fee", "On-Demand is pay-as-you-go with no fixed fee."]
+  ["Per hour, rounded up to the next hour", "Per-hour billing applies to other operating systems."],
+  ["Per day, with a 24-hour minimum", "EC2 is not billed per day."],
+  ["A fixed monthly fee per instance", "On-Demand is pay-as-you-go with no fixed fee."]
 ]);
 Q("ec2", 0, "A company no longer needs some of its Standard Reserved Instances before the term ends. Where can it try to sell them?", [
   ["The Reserved Instance Marketplace", "Unused Standard RIs can be sold on the RI Marketplace. Registering as a seller is a root-user task."],
-  ["AWS Artifact", "Artifact provides compliance documents."],
+  ["AWS Artifact agreements", "Artifact provides compliance documents."],
   ["The Spot Instance market", "Spot is spare AWS capacity, not a resale market."],
   ["AWS Marketplace for AMIs", "AWS Marketplace sells third-party software, not Reserved Instances."]
 ]);
@@ -1359,13 +1366,13 @@ Q("ec2", 0, "A company wants to automatically build, test and distribute updated
 
 // EC2 storage
 Q("storage", 0, "An application needs a block storage volume for its EC2 instance that keeps its data even after the instance is terminated. Which storage should it use?", [
-  ["Amazon EBS volume (with Delete on Termination disabled)", "EBS is a network drive that can persist independently of the instance. Non-root EBS volumes are kept by default when the instance terminates."],
+  ["Amazon EBS volume", "EBS is a network drive that can persist independently of the instance. Non-root volumes are kept by default when the instance terminates, and you can disable Delete on Termination for the root volume too."],
   ["EC2 instance store", "Instance store is ephemeral. Its data is lost when the instance stops or terminates."],
   ["Amazon S3", "S3 is object storage, not a block volume attached to an instance."],
   ["The instance's RAM", "Memory is lost when the instance stops."]
 ]);
 Q("storage", 0, "An EBS volume was created in us-east-1a. The company needs to use its data with an instance in us-east-1b. What should it do?", [
-  ["Create a snapshot of the volume and restore a new volume from it in us-east-1b", "EBS volumes are locked to one AZ. To move one, snapshot it and create a new volume from the snapshot in the target AZ."],
+  ["Snapshot it and create a new volume from it in us-east-1b", "EBS volumes are locked to one AZ. To move one, snapshot it and create a new volume from the snapshot in the target AZ."],
   ["Attach the volume directly to the instance in us-east-1b", "An EBS volume can only attach to instances in its own AZ."],
   ["Change the volume's AZ setting in the console", "There is no such setting. You must use a snapshot."],
   ["Move it with S3 Cross-Region Replication", "CRR copies S3 objects, not EBS volumes."]
@@ -1383,7 +1390,7 @@ Q("storage", 0, "A company wants to keep EBS snapshots for years for compliance 
   ["Amazon EFS Standard", "EFS is a shared file system and is expensive for this."]
 ]);
 Q("storage", 0, "An administrator accidentally deletes an important EBS snapshot. Which feature could have allowed the company to recover it?", [
-  ["Recycle Bin with a retention rule", "Recycle Bin rules keep deleted snapshots and AMIs for a retention period (1 day to 1 year) so they can be recovered."],
+  ["Recycle Bin", "Recycle Bin retention rules keep deleted snapshots and AMIs for a retention period (1 day to 1 year) so they can be recovered."],
   ["EBS Snapshot Archive", "Archive is a cheaper tier. It doesn't protect against deletion."],
   ["S3 Versioning", "S3 Versioning protects S3 objects, not EBS snapshots that you manage."],
   ["EC2 User Data", "User Data is a boot script."]
@@ -1407,16 +1414,16 @@ Q("storage", 0, "Hundreds of Linux EC2 instances across multiple Availability Zo
   ["S3 Glacier Flexible Retrieval", "Glacier is archival object storage, not a mounted file system."]
 ]);
 Q("storage", 0, "A company stores files on Amazon EFS, but many files are not accessed for months. How can it reduce storage costs automatically without changing the application?", [
-  ["Enable an EFS lifecycle policy to move files to EFS Infrequent Access (EFS-IA)", "EFS-IA is up to 92% cheaper than EFS Standard. A lifecycle policy moves files that haven't been accessed for N days, and applications don't notice."],
+  ["Use an EFS lifecycle policy with EFS-IA", "EFS Infrequent Access (EFS-IA) is up to 92% cheaper than EFS Standard. A lifecycle policy moves files that haven't been accessed for N days, and applications don't notice."],
   ["Move the files to EC2 instance store", "Instance store is ephemeral and not shared."],
   ["Convert the EFS file system to an EBS volume", "EBS isn't a shared file system, and there is no conversion."],
   ["Enable S3 Transfer Acceleration", "Transfer Acceleration speeds up S3 uploads. It has nothing to do with EFS."]
 ]);
 Q("storage", 0, "A company needs a fully managed, Windows-native shared file system that supports the SMB protocol and NTFS and integrates with Microsoft Active Directory. Which service should it use?", [
   ["Amazon FSx for Windows File Server", "FSx for Windows provides SMB, NTFS and AD integration. It can be multi-AZ and reached from AWS or on premises."],
-  ["Amazon EFS", "EFS is NFS for Linux. It is not Windows SMB."],
+  ["Amazon EFS (Elastic File System)", "EFS is NFS for Linux. It is not Windows SMB."],
   ["Amazon FSx for Lustre", "Lustre is a Linux high-performance computing file system."],
-  ["Amazon EBS", "EBS is block storage for one instance."]
+  ["Amazon EBS (Elastic Block Store)", "EBS is block storage for one instance."]
 ]);
 Q("storage", 0, "A research team needs a high-performance file system for HPC and machine learning, with hundreds of GB/s of throughput and sub-millisecond latency, that can link to data in Amazon S3. Which service fits?", [
   ["Amazon FSx for Lustre", "Lustre (Linux + cluster) is built for HPC, ML, analytics and video processing, and it integrates with S3."],
@@ -1448,7 +1455,7 @@ Q("elb", 0, "A company needs a load balancer for its HTTP/HTTPS web application 
   ["Application Load Balancer (ALB)", "The ALB works at layer 7 (HTTP, HTTPS, gRPC) and supports HTTP routing features such as path-based routing."],
   ["Network Load Balancer (NLB)", "The NLB works at layer 4 (TCP/UDP) and doesn't look at URL paths."],
   ["Gateway Load Balancer (GWLB)", "The GWLB sends traffic through security appliances at layer 3."],
-  ["Classic Load Balancer", "The Classic Load Balancer was retired in 2023."]
+  ["Classic Load Balancer", "The Classic Load Balancer is the previous-generation load balancer. It doesn't support path-based routing, and AWS recommends ALB or NLB for new workloads. (Your notes say it was retired in 2023; it was EC2-Classic networking that retired.)"]
 ]);
 Q("elb", 0, "A gaming company needs a load balancer that handles millions of TCP and UDP requests per second with ultra-low latency and a static IP address. Which should it choose?", [
   ["Network Load Balancer (NLB)", "The NLB works at layer 4 (TCP/UDP), offers ultra-high performance, and supports a static IP through an Elastic IP."],
@@ -1463,19 +1470,19 @@ Q("elb", 0, "A company must route all incoming network traffic through a fleet o
   ["Amazon CloudFront", "CloudFront is a CDN."]
 ]);
 Q("elb", 0, "Which of the following is a benefit of using Elastic Load Balancing?", [
-  ["It runs health checks and stops sending traffic to unhealthy instances", "ELB spreads load, exposes one DNS access point, runs health checks, handles instance failures seamlessly, terminates SSL, and provides high availability across AZs."],
+  ["It stops sending traffic to unhealthy instances", "ELB spreads load, exposes one DNS access point, runs health checks, handles instance failures seamlessly, terminates SSL, and provides high availability across AZs."],
   ["It encrypts EBS volumes attached to the instances", "EBS encryption is handled by KMS, not ELB."],
-  ["It stores static website files", "Static files belong in S3."],
-  ["It registers internet domain names", "Domain registration is a DNS function (Route 53)."]
+  ["It stores and serves static website files", "Static files belong in S3."],
+  ["It registers internet domain names for you", "Domain registration is a DNS function (Route 53)."]
 ]);
 Q("elb", 0, "Why would a company choose the managed Elastic Load Balancing service instead of running its own load balancer software on EC2?", [
-  ["AWS guarantees it works and takes care of upgrades, maintenance and high availability", "A managed load balancer reduces operational effort. A self-managed one can be cheaper but takes much more work."],
+  ["AWS handles its upgrades, maintenance and high availability", "AWS guarantees it works. A managed load balancer reduces operational effort. A self-managed one can be cheaper but takes much more work."],
   ["ELB is always free", "ELB is billed per hour and per usage."],
   ["A self-managed load balancer cannot do health checks", "A self-managed one can, but you must build and operate it yourself."],
   ["ELB removes the need for security groups", "Security groups are still used with load balancers."]
 ]);
 Q("elb", 0, "Which AWS feature automatically adds EC2 instances when load increases, removes them when load decreases, and replaces instances that fail health checks?", [
-  ["Amazon EC2 Auto Scaling group (ASG)", "An ASG scales out and in, keeps the instance count between minimum and maximum, registers instances with the load balancer, and replaces unhealthy ones."],
+  ["An Auto Scaling group (ASG)", "An ASG scales out and in, keeps the instance count between minimum and maximum, registers instances with the load balancer, and replaces unhealthy ones."],
   ["Elastic Load Balancing", "ELB distributes traffic but does not launch or terminate instances."],
   ["EC2 Image Builder", "Image Builder creates AMIs."],
   ["AWS Config", "Config records configurations."]
@@ -1499,7 +1506,7 @@ Q("elb", 0, "Which Auto Scaling approach uses machine learning to forecast traff
   ["Manual scaling", "Manual scaling is done by a person."]
 ]);
 Q("elb", 0, "An Auto Scaling policy is configured as 'when a CloudWatch alarm shows CPU above 70%, add 2 instances; when CPU drops below 30%, remove 1 instance'. What type of scaling is this?", [
-  ["Simple/step scaling (dynamic)", "Simple/step scaling triggers on CloudWatch alarms with defined adjustments."],
+  ["Simple/step scaling", "Simple/step scaling triggers on CloudWatch alarms with defined adjustments."],
   ["Predictive scaling", "Predictive scaling uses ML forecasts, not alarm thresholds."],
   ["Scheduled scaling", "Scheduled scaling is based on time."],
   ["Vertical scaling", "Vertical scaling changes instance size. The ASG here adds and removes instances."]
@@ -1519,7 +1526,7 @@ Q("elb", 0, "Which architecture gives a web application both high availability a
 
 // Amazon S3
 Q("s3", 0, "Which statement about Amazon S3 buckets is correct?", [
-  ["Buckets are created in a specific AWS Region, even though the S3 console looks global", "S3 looks global, but every bucket lives in one Region that you choose."],
+  ["Each bucket is created in a specific AWS Region", "S3 looks global in the console, but every bucket lives in one Region that you choose."],
   ["Buckets are global resources with no Region", "Buckets are always created in a Region."],
   ["A bucket spans all Regions automatically", "Data stays in its Region unless you replicate it."],
   ["Buckets must be created in us-east-1", "You choose the Region for each bucket."]
@@ -1542,8 +1549,8 @@ Q("s3", 0, "A company needs to upload a 20 GB video file to Amazon S3. What must
   ["A single PUT request", "A single PUT is limited to 5 GB."],
   ["AWS Snowball", "Snowball is for terabytes to petabytes, not one 20 GB file."]
 ]);
-Q("s3", 1, "What is the MAXIMUM size of a single object in Amazon S3?", [
-  ["50 TB", "In December 2025 AWS raised the S3 maximum object size from 5 TB to 50 TB, and your notes list 50 TB. Older practice material still says 5 TB, so treat that as the previous limit."],
+Q("s3", 0, "What is the MAXIMUM size of a single object in Amazon S3?", [
+  ["50 TB", "In December 2025 AWS raised the maximum object size from 5 TB to 50 TB. Older practice material still says 5 TB."],
   ["5 GB", "5 GB is the maximum for a single PUT request. Anything larger needs multipart upload."],
   ["160 GB", "160 GB is the limit for uploading through the S3 console, not the object size limit."],
   ["Unlimited", "Total bucket storage is unlimited, but each object has a maximum size."]
@@ -1555,9 +1562,9 @@ Q("s3", 0, "An IAM user's identity policy allows s3:GetObject on a bucket, but t
   ["Access is allowed if the object is encrypted", "Encryption doesn't change authorization results."]
 ]);
 Q("s3", 0, "A company hosts a public static website on Amazon S3 and wants anonymous internet users to read its objects. What should it configure?", [
-  ["A bucket policy that allows public read (s3:GetObject), with Block Public Access turned off for that bucket", "Public website visitors are anonymous, so access is granted with a bucket policy. Block Public Access must allow it."],
-  ["An IAM user for each website visitor", "Visitors don't have IAM identities."],
-  ["An IAM role attached to the bucket", "Roles are assumed by principals. They aren't attached to buckets to grant public access."],
+  ["A bucket policy that allows public reads", "Public website visitors are anonymous, so access is granted with a bucket policy (s3:GetObject for everyone). Block Public Access must also be turned off for that bucket."],
+  ["An IAM user for each visitor with read-only S3 permissions", "Anonymous visitors don't have IAM identities."],
+  ["An IAM role attached to the bucket that allows s3:GetObject", "Roles are assumed by principals. They aren't attached to buckets to grant public access."],
   ["Cross-Region Replication", "Replication copies data. It doesn't grant access."]
 ]);
 Q("s3", 0, "A company needs to give another AWS account access to one of its S3 buckets. What is the typical way to do this?", [
@@ -1566,11 +1573,11 @@ Q("s3", 0, "A company needs to give another AWS account access to one of its S3 
   ["Enable S3 Versioning", "Versioning doesn't grant access."],
   ["Use S3 Transfer Acceleration", "Transfer Acceleration speeds up uploads. It doesn't grant access."]
 ]);
-Q("s3", 0, "A company enables static website hosting on an S3 bucket, but visitors receive a 403 Forbidden error. What is the MOST likely fix?", [
-  ["Add a bucket policy that allows public reads (and make sure Block Public Access allows it)", "A 403 on an S3 website usually means the bucket policy doesn't allow public reads."],
-  ["Enable S3 Versioning", "Versioning doesn't affect access."],
-  ["Move the objects to S3 Glacier", "Glacier objects can't be served directly as a website."],
-  ["Enable Cross-Region Replication", "Replication doesn't fix permissions."]
+Q("s3", 0, "A company wants to reject any upload to an S3 bucket that is not encrypted with SSE-KMS. What should it use?", [
+  ["An S3 bucket policy", "A bucket policy with a Deny for PutObject requests that lack SSE-KMS does this. Bucket policies are commonly used to force encryption at upload, grant public access, or allow cross-account access."],
+  ["An IAM Credentials Report", "This lists user credential status. It doesn't enforce anything."],
+  ["S3 Transfer Acceleration", "This speeds up uploads. It doesn't check encryption."],
+  ["An S3 Lifecycle rule", "Lifecycle moves or expires objects after they are stored. It can't reject uploads."]
 ]);
 Q("s3", 0, "A company wants to make sure that NONE of the S3 buckets in its AWS account can ever be made public, even by mistake. What should it enable?", [
   ["S3 Block Public Access at the account level", "Block Public Access prevents data leaks and can be set for the whole account."],
@@ -1591,7 +1598,7 @@ Q("s3", 0, "Versioning is enabled on a bucket that already contains objects. Wha
   ["They are given the date the bucket was created", "Version IDs are not dates."]
 ]);
 Q("s3", 0, "What is REQUIRED before you can set up S3 replication (CRR or SRR)?", [
-  ["Versioning must be enabled on both the source and destination buckets", "Replication requires versioning on both buckets, plus IAM permissions for S3."],
+  ["Versioning on both source and destination buckets", "Replication requires versioning on both buckets, plus IAM permissions for S3."],
   ["Both buckets must be in the same AWS account", "Replication can work across accounts."],
   ["Both buckets must be in the same Region", "Cross-Region Replication exists for exactly this case."],
   ["The objects must be in S3 Glacier Deep Archive", "Replication works with standard storage classes."]
@@ -1610,18 +1617,18 @@ Q("s3", 0, "A company wants to aggregate logs from several S3 buckets into one b
 ]);
 Q("s3", 0, "What durability is Amazon S3 designed for?", [
   ["99.999999999% (11 nines)", "S3 is designed for 11 nines of durability. If you store 10 million objects, you can expect to lose one about every 10,000 years."],
-  ["99.99%", "99.99% is S3 Standard's designed AVAILABILITY, not durability."],
-  ["99.9%", "99.9% is the availability of classes such as Standard-IA."],
-  ["100%", "No storage system guarantees 100% durability."]
+  ["99.99% (4 nines)", "99.99% is S3 Standard's designed AVAILABILITY, not durability."],
+  ["99.9% (3 nines)", "99.9% is the availability of classes such as Standard-IA."],
+  ["99.9999% (6 nines)", "Six nines is far below S3's designed durability of eleven nines."]
 ]);
 Q("s3", 0, "Which characteristic is the SAME across all Amazon S3 storage classes?", [
   ["Durability (11 nines)", "Durability is 11 nines for all classes. Availability, cost, minimum storage duration and retrieval fees differ."],
-  ["Availability", "Availability ranges from 99.5% (One Zone-IA) to 99.99% (Standard)."],
+  ["Availability percentage", "Availability ranges from 99.5% (One Zone-IA) to 99.99% (Standard)."],
   ["Price per GB", "Prices differ greatly, from about $0.023 per GB for Standard to about $0.00099 per GB for Deep Archive."],
-  ["Retrieval fees", "Standard and Intelligent-Tiering have none. The IA and Glacier classes charge per GB."]
+  ["Retrieval fees per GB", "Standard and Intelligent-Tiering have none. The IA and Glacier classes charge per GB."]
 ]);
 Q("s3", 0, "A company stores backups that are accessed about once a month, but when they are needed they must be available within milliseconds and survive the loss of an Availability Zone. Which S3 storage class is the MOST cost-effective?", [
-  ["S3 Standard-Infrequent Access (Standard-IA)", "Standard-IA is for less frequent but rapid access, across at least 3 AZs, at a lower storage price than Standard. It fits DR and backups."],
+  ["S3 Standard-IA", "Standard-IA is for less frequent but rapid access, across at least 3 AZs, at a lower storage price than Standard. It fits DR and backups."],
   ["S3 One Zone-IA", "One Zone-IA stores data in a single AZ, so it would be lost if that AZ were destroyed."],
   ["S3 Glacier Deep Archive", "Deep Archive retrieval takes 12 to 48 hours."],
   ["S3 Standard", "Standard costs more for data that is rarely accessed."]
@@ -1675,7 +1682,7 @@ Q("s3", 0, "A machine learning team needs S3 storage with single-digit milliseco
   ["S3 Standard-IA", "This class is for infrequent access, not ultra-low latency."]
 ]);
 Q("s3", 1, "A company must store financial records in S3 in a WORM (write once, read many) model so that no one, including administrators, can delete or overwrite them for 7 years. Which feature meets this requirement?", [
-  ["S3 Object Lock (in compliance mode)", "Object Lock enforces WORM retention. In compliance mode, no user (including root) can delete or overwrite objects until retention expires. S3 Glacier Vault Lock is the similar feature for Glacier vaults."],
+  ["S3 Object Lock", "Object Lock enforces WORM retention. Use compliance mode: then no user (including root) can delete or overwrite objects until retention expires."],
   ["S3 Versioning alone", "Versioning keeps old versions, but privileged users can still delete them."],
   ["S3 Lifecycle rules", "Lifecycle moves or expires objects. It doesn't enforce retention."],
   ["S3 Block Public Access", "This prevents public access, not deletion."]
@@ -1693,7 +1700,7 @@ Q("s3", 1, "A company wants to let a customer download one private S3 object for
   ["Disable Block Public Access", "This would open the bucket to being made public."]
 ]);
 Q("s3", 0, "Which of the following is NOT a typical use case for Amazon S3?", [
-  ["Serving as the boot volume that runs an EC2 instance's operating system", "An OS boots from block storage (EBS or instance store), not from object storage."],
+  ["Booting an EC2 instance's operating system", "An OS boots from block storage (EBS or instance store), not from object storage."],
   ["Hosting a static website", "S3 static website hosting is a classic use case."],
   ["Building a data lake for big data analytics", "S3 is the usual foundation for data lakes."],
   ["Storing backups for disaster recovery", "Backup and disaster recovery are core S3 use cases."]
@@ -1711,7 +1718,7 @@ Q("s3", 0, "Which identity can enable MFA Delete on an S3 bucket?", [
   ["AWS Support", "AWS Support doesn't change your bucket settings."]
 ]);
 Q("s3", 0, "Where does Amazon S3 encrypt data when using SERVER-SIDE encryption?", [
-  ["In S3, after S3 receives the data and before it is written to disk", "With server-side encryption (the default), S3 encrypts objects after receiving them. With client-side encryption, you encrypt before uploading."],
+  ["In S3, after S3 receives the data", "With server-side encryption (the default), S3 encrypts objects after receiving them. With client-side encryption, you encrypt before uploading."],
   ["On the client, before the upload", "That is client-side encryption."],
   ["Only while the data travels over HTTPS", "That is encryption in transit, not server-side encryption at rest."],
   ["On an AWS Snowball device", "Snowball is unrelated to regular S3 encryption."]
@@ -1719,15 +1726,15 @@ Q("s3", 0, "Where does Amazon S3 encrypt data when using SERVER-SIDE encryption?
 
 // Data transfer & hybrid storage
 Q("transfer", 0, "A company needs to move 80 TB of data from its data center to Amazon S3. Its internet connection is 100 Mbps, so a network transfer would take many weeks. What is the BEST option?", [
-  ["AWS Snowball Edge", "Rule of thumb: if a network transfer would take more than a week, use Snowball. You load the device, ship it, and AWS imports the data into S3."],
+  ["AWS Snowball Edge", "Rule of thumb: if a network transfer would take more than a week, use Snowball. You load the device, ship it, and AWS imports the data into S3. (Since November 2025 Snowball Edge is only offered to existing customers, and AWS points new customers to DataSync or AWS Data Transfer Terminal. Exam questions may still use Snowball.)"],
   ["S3 Transfer Acceleration", "Acceleration improves the network path but can't overcome a 100 Mbps bottleneck for 80 TB."],
   ["AWS Storage Gateway", "Storage Gateway also uses the network, so it has the same bandwidth limit."],
   ["S3 Cross-Region Replication", "CRR copies between buckets. It doesn't move on-premises data."]
 ]);
 Q("transfer", 0, "A research ship at sea has very limited internet connectivity. It needs to collect data and run EC2 instances or Lambda functions locally to preprocess the data before sending it to AWS. Which service should it use?", [
-  ["AWS Snowball Edge (edge computing)", "Snowball Edge can run EC2 instances and Lambda functions at the edge (ships, trucks, mines) for preprocessing, ML and transcoding, then ship the data to AWS."],
-  ["Amazon EFS", "EFS is a cloud file system that needs network connectivity."],
-  ["AWS DataSync", "DataSync needs a network connection to transfer data."],
+  ["AWS Snowball Edge (edge computing)", "Snowball Edge can run EC2 instances and Lambda functions at the edge (ships, trucks, mines) for preprocessing, ML and transcoding, then ship the data to AWS. (Since November 2025 Snowball Edge is only offered to existing customers, and AWS points new customers to other options such as DataSync. Exam questions may still use Snowball.)"],
+  ["Amazon EFS mounted over the internet", "EFS is a cloud file system that needs network connectivity."],
+  ["AWS DataSync over satellite link", "DataSync needs a network connection to transfer data."],
   ["S3 Transfer Acceleration", "This still depends on internet connectivity."]
 ]);
 Q("transfer", 0, "How much does AWS charge for data transferred INTO Amazon S3 from an AWS Snowball device?", [
@@ -1749,10 +1756,10 @@ Q("transfer", 0, "A company wants to move large amounts of data from its on-prem
   ["EC2 Image Builder", "Image Builder builds AMIs."]
 ]);
 Q("transfer", 0, "A company needs to transfer 10 TB of data to AWS and has a dedicated 10 Gbps network connection. Based on typical transfer times, what is the MOST sensible approach?", [
-  ["Transfer it over the network (for example with DataSync), which takes about 3 hours", "10 TB over 10 Gbps takes about 3 hours. Snowball only makes sense when a network transfer would take more than a week."],
-  ["Order several Snowball devices, because any transfer over 1 TB requires Snowball", "There's no such rule. Choose based on transfer time."],
-  ["Use EC2 instance store to carry the data", "Instance store is ephemeral compute storage, not a transfer method."],
-  ["It is impossible to move 10 TB to AWS", "It is easily possible over this network."]
+  ["Transfer it over the network with DataSync", "10 TB over 10 Gbps takes about 3 hours. Snowball only makes sense when a network transfer would take more than a week."],
+  ["Order an AWS Snowball Edge device", "Shipping a device takes days, which is far slower than about 3 hours over this link."],
+  ["Use a Storage Gateway Tape Gateway", "Tape Gateway replaces tape backups. It isn't a bulk transfer tool."],
+  ["Copy it to EC2 instance store volumes", "Instance store is ephemeral compute storage, not a transfer method."]
 ]);
 Q("transfer", 1, "A company wants to replace its physical tape backup infrastructure with cloud storage without changing its existing backup software. Which service should it use?", [
   ["AWS Storage Gateway (Tape Gateway)", "Tape Gateway presents a virtual tape library to existing backup software and stores the tapes in S3 and Glacier."],
@@ -1766,11 +1773,11 @@ Q("transfer", 0, "Which of the following is a common reason for a company to use
   ["S3 cannot store more than 1 PB", "S3 storage is unlimited."],
   ["AWS requires all customers to keep half their data on premises", "There is no such requirement."]
 ]);
-Q("transfer", 0, "Amazon S3 uses a proprietary protocol, unlike EFS, which uses NFS. What does an on-premises application need so it can store files in S3 through a standard file protocol?", [
-  ["AWS Storage Gateway", "Because S3 is proprietary, on-premises systems use Storage Gateway to reach S3 as file, volume or tape storage."],
-  ["S3 Transfer Acceleration", "This speeds up S3 API uploads. It doesn't provide a file protocol."],
-  ["AWS Snowball", "Snowball is offline bulk transfer, not an ongoing file interface."],
-  ["An S3 Lifecycle rule", "Lifecycle rules manage storage classes."]
+Q("transfer", 0, "Which list correctly matches AWS storage services to their storage type?", [
+  ["Block: EBS and instance store; File: EFS; Object: S3 and S3 Glacier", "Block = EBS and instance store, file = EFS (and FSx), object = S3 and Glacier."],
+  ["Block: S3; File: EBS; Object: EFS", "S3 is object storage, EBS is block storage, and EFS is file storage."],
+  ["Block: EFS; File: S3 Glacier; Object: instance store", "EFS is file storage, Glacier is object storage, and instance store is block storage."],
+  ["Block: S3 Glacier; File: instance store; Object: EBS", "Glacier is object storage, instance store is block, and EBS is block."]
 ]);
 
 </script>
@@ -1818,7 +1825,7 @@ Q("transfer", 0, "Amazon S3 uses a proprietary protocol, unlike EFS, which uses 
     stats: saved.stats || {},
     topics: Array.isArray(saved.topics) ? saved.topics.filter(t => TOPICS[t]) : Object.keys(TOPICS),
     mode: ["practice", "exam", "missed"].includes(saved.mode) ? saved.mode : "practice",
-    len: saved.len || "20"
+    len: ["10", "20", "40", "all"].includes(saved.len) ? saved.len : "20"
   };
   if (!store.topics.length) store.topics = Object.keys(TOPICS);
   function persist() { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} }
@@ -1849,7 +1856,7 @@ Q("transfer", 0, "Amazon S3 uses a proprietary protocol, unlike EFS, which uses 
     $("mode-missed").disabled = missed === 0;
     $("missed-sub").textContent = missed ? `${missed} question${missed === 1 ? "" : "s"} you got wrong the last time you answered.` : "Nothing here yet. Questions you miss will show up here.";
 
-    $("lengths").hidden = store.mode === "exam";
+    $("lengths").hidden = store.mode !== "practice";
     document.querySelectorAll("#lengths .pill").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.len === store.len)));
 
     let html = "";
@@ -1867,9 +1874,7 @@ Q("transfer", 0, "Amazon S3 uses a proprietary protocol, unlike EFS, which uses 
       html += `</div></div>`;
     }
     $("topics").innerHTML = html;
-    $("topics").hidden = store.mode === "missed";
-    $("sel-all").parentElement.hidden = store.mode === "missed";
-    $("topic-note").hidden = store.mode === "missed";
+    $("topics-panel").hidden = store.mode === "missed";
 
     const pool = poolFor(store.mode);
     const n = sessionLength(pool.length);
@@ -1927,7 +1932,19 @@ Q("transfer", 0, "Amazon S3 uses a proprietary protocol, unlike EFS, which uses 
   function startSession(mode, pool, label) {
     const n = mode === "exam" ? Math.min(EXAM_LEN, pool.length) : (mode === "missed" || store.len === "all" || label) ? pool.length : Math.min(parseInt(store.len, 10), pool.length);
     if (!n) return;
-    const deck = shuffle(pool).slice(0, n).map(q => ({ q, order: shuffle([0, 1, 2, 3]) }));
+    let picked;
+    if (mode === "exam") {
+      // Weight the draw like the real exam (Domain 4, billing, is out of scope here, so its share is spread across the other three).
+      const W = { 1: 0.28, 2: 0.33, 3: 0.39 };
+      const byD = { 1: [], 2: [], 3: [] };
+      shuffle(pool).forEach(q => byD[TOPICS[q.t].d].push(q));
+      picked = [];
+      for (const d of [1, 2, 3]) picked.push(...byD[d].splice(0, Math.round(n * W[d])));
+      const rest = shuffle([].concat(byD[1], byD[2], byD[3]));
+      while (picked.length < n && rest.length) picked.push(rest.pop());
+      picked = shuffle(picked.slice(0, n));
+    } else picked = shuffle(pool).slice(0, n);
+    const deck = picked.map(q => ({ q, order: shuffle([0, 1, 2, 3]) }));
     S = { mode: mode === "exam" ? "exam" : "practice", label: label || (mode === "exam" ? "Exam simulation" : mode === "missed" ? "Missed questions" : "Practice"),
           deck, i: 0, picks: new Array(n).fill(null), flags: new Array(n).fill(false), done: false,
           started: Date.now(), deadline: mode === "exam" ? Date.now() + EXAM_MIN * 60000 : null };
@@ -2088,6 +2105,10 @@ Q("transfer", 0, "Amazon S3 uses a proprietary protocol, unlike EFS, which uses 
 
   document.addEventListener("keydown", e => {
     if ($("quiz").hidden || !S || S.done || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (!$("quit-confirm").hidden || !$("finish-confirm").hidden) {
+      if (e.key === "Escape") { $("quit-confirm").hidden = true; $("finish-confirm").hidden = true; }
+      return;
+    }
     const tag = (e.target.tagName || "").toLowerCase();
     const k = e.key.toLowerCase();
     const map = { a: 0, b: 1, c: 2, d: 3, "1": 0, "2": 1, "3": 2, "4": 3 };
@@ -2165,6 +2186,8 @@ Q("transfer", 0, "Amazon S3 uses a proprietary protocol, unlike EFS, which uses 
     startSession("practice", wrong, "Retry of missed questions");
   };
   $("to-home").onclick = () => { S = null; renderHome(); show("home"); };
+
+  window.addEventListener("beforeunload", e => { if (S && !S.done && S.mode === "exam") { e.preventDefault(); e.returnValue = ""; } });
 
   renderHome();
   show("home");
