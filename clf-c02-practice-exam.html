@@ -1,0 +1,2175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CLF-C02 Practice Exam</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=IBM+Plex+Mono:wght@400;500;600&family=Public+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+/* Layout: one calm reading column, like an exam delivery console. A sticky status strip on top, the question below, and actions at the bottom. */
+:root {
+  --bg: #eceff3;
+  --surface: #ffffff;
+  --surface-2: #f5f7fa;
+  --ink: #16202b;
+  --muted: #5a6675;
+  --line: #d3dae3;
+  --accent: #0b6874;
+  --accent-ink: #ffffff;
+  --accent-soft: #dcefF1;
+  --good: #1d7548;
+  --good-soft: #e1f3e8;
+  --bad: #b3372b;
+  --bad-soft: #fbe6e3;
+  --flag: #a8660c;
+  --flag-soft: #fcefd9;
+  --shadow: 0 1px 2px rgb(22 32 43 / 6%), 0 4px 16px rgb(22 32 43 / 5%);
+  --font-display: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Public Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --radius: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1419; --surface: #161f27; --surface-2: #1c2731; --ink: #e5ecf2; --muted: #93a1af; --line: #2a3743;
+    --accent: #5bbac4; --accent-ink: #0b1a1e; --accent-soft: #173239;
+    --good: #58c78f; --good-soft: #15301f; --bad: #ff8a7a; --bad-soft: #3a1c19; --flag: #f0b45a; --flag-soft: #36280f;
+    --shadow: 0 1px 2px rgb(0 0 0 / 30%), 0 4px 16px rgb(0 0 0 / 25%);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1419; --surface: #161f27; --surface-2: #1c2731; --ink: #e5ecf2; --muted: #93a1af; --line: #2a3743;
+  --accent: #5bbac4; --accent-ink: #0b1a1e; --accent-soft: #173239;
+  --good: #58c78f; --good-soft: #15301f; --bad: #ff8a7a; --bad-soft: #3a1c19; --flag: #f0b45a; --flag-soft: #36280f;
+  --shadow: 0 1px 2px rgb(0 0 0 / 30%), 0 4px 16px rgb(0 0 0 / 25%);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 760px; margin: 0 auto; padding-inline: 16px; padding-block: 20px 64px; }
+h1, h2, h3 { font-family: var(--font-display); font-stretch: 85%; line-height: 1.15; text-wrap: balance; margin: 0; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 10px 18px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); cursor: pointer; font-weight: 600; font-size: 15px; }
+.btn:hover { border-color: var(--muted); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn.ghost { background: transparent; border-color: transparent; color: var(--muted); }
+.btn.ghost:hover { color: var(--ink); }
+.btn[disabled] { opacity: .45; cursor: not-allowed; }
+.btn.flagged { background: var(--flag-soft); border-color: var(--flag); color: var(--flag); }
+
+/* ---------- Home ---------- */
+.masthead { display: grid; gap: 6px; padding-block: 8px 20px; }
+.masthead h1 { font-size: clamp(30px, 6vw, 42px); font-weight: 800; letter-spacing: -.01em; }
+.masthead p { margin: 0; color: var(--muted); max-width: 60ch; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 6px; }
+.facts span { font-family: var(--font-mono); font-size: 13px; color: var(--muted); }
+.facts b { color: var(--ink); font-weight: 600; }
+
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px; display: grid; gap: 14px; }
+.stack { display: grid; gap: 16px; }
+.section-title { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.section-title h2 { font-size: 20px; font-weight: 700; }
+
+.modes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 620px) { .modes { grid-template-columns: 1fr; } }
+.mode { text-align: left; border: 1.5px solid var(--line); border-radius: 8px; background: var(--surface-2); padding: 12px 14px; cursor: pointer; display: grid; gap: 2px; min-width: 0; }
+.mode strong { font-family: var(--font-display); font-stretch: 90%; font-size: 17px; }
+.mode span { font-size: 13.5px; color: var(--muted); }
+.mode[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.mode[disabled] { opacity: .5; cursor: not-allowed; }
+
+.lengths { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.lengths .label { font-size: 14px; color: var(--muted); margin-right: 4px; }
+.pill { border: 1px solid var(--line); background: var(--surface-2); border-radius: 999px; padding: 6px 14px; min-height: 36px; cursor: pointer; font-family: var(--font-mono); font-size: 13px; }
+.pill[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+.domain { display: grid; gap: 8px; }
+.domain h3 { font-size: 16px; font-weight: 700; display: grid; gap: 2px; }
+.domain h3 .eyebrow { font-size: 11px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); background: var(--surface-2); border-radius: 8px; padding: 7px 11px; min-height: 40px; cursor: pointer; font-size: 14px; text-align: left; }
+.chip .count { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.chip .acc { font-family: var(--font-mono); font-size: 11px; padding: 1px 6px; border-radius: 4px; background: var(--bg); color: var(--muted); }
+.chip .acc.good { color: var(--good); background: var(--good-soft); }
+.chip .acc.bad { color: var(--bad); background: var(--bad-soft); }
+.chip[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.chip[aria-pressed="false"] { opacity: .62; }
+.chip .tick { width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid var(--muted); display: inline-grid; place-items: center; flex: none; }
+.chip[aria-pressed="true"] .tick { background: var(--accent); border-color: var(--accent); }
+.chip[aria-pressed="true"] .tick::after { content: ""; width: 8px; height: 4px; border: solid var(--accent-ink); border-width: 0 0 2px 2px; transform: rotate(-45deg) translate(1px, -1px); }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.row.end { justify-content: flex-end; }
+.row.between { justify-content: space-between; }
+.small { font-size: 13.5px; color: var(--muted); }
+.linkish { background: none; border: 0; padding: 4px 2px; color: var(--accent); font-weight: 600; cursor: pointer; font-size: 14px; }
+
+.statline { display: flex; flex-wrap: wrap; gap: 8px 22px; }
+.statline div { display: grid; }
+.statline b { font-family: var(--font-mono); font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.statline span { font-size: 12.5px; color: var(--muted); }
+
+.confirm { border: 1px solid var(--bad); background: var(--bad-soft); border-radius: 8px; padding: 12px 14px; display: grid; gap: 10px; }
+.confirm.neutral { border-color: var(--flag); background: var(--flag-soft); }
+.confirm p { margin: 0; }
+
+/* ---------- Quiz ---------- */
+.strip { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: 10px; margin-bottom: 8px; display: grid; gap: 8px; }
+.strip-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.qcount { font-family: var(--font-mono); font-size: 14px; font-weight: 600; }
+.qcount span { color: var(--muted); font-weight: 400; }
+.tally { display: flex; gap: 12px; font-family: var(--font-mono); font-size: 14px; }
+.tally .g { color: var(--good); } .tally .b { color: var(--bad); }
+.timer { font-family: var(--font-mono); font-size: 15px; font-weight: 600; padding: 4px 10px; border-radius: 6px; background: var(--surface); border: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+.timer.low { color: var(--bad); border-color: var(--bad); }
+.bar { height: 6px; border-radius: 99px; background: var(--line); overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--accent); border-radius: 99px; transition: width .25s ease; }
+
+.qcard { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; display: grid; gap: 16px; }
+.qmeta { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+.tag { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .04em; padding: 2px 8px; border-radius: 4px; background: var(--surface-2); color: var(--muted); border: 1px solid var(--line); }
+.tag.extra { background: var(--flag-soft); color: var(--flag); border-color: transparent; }
+.stem { font-size: 18px; line-height: 1.55; margin: 0; font-weight: 500; }
+.hint { font-size: 13px; color: var(--muted); margin-top: -6px; }
+
+.opts { display: grid; gap: 10px; list-style: none; margin: 0; padding: 0; }
+.opt { width: 100%; display: grid; grid-template-columns: 32px minmax(0, 1fr) auto; gap: 12px; align-items: start; text-align: left; padding: 13px 14px; border-radius: 8px; border: 1.5px solid var(--line); background: var(--surface-2); cursor: pointer; font-size: 16px; line-height: 1.45; transition: border-color .12s, background-color .12s; }
+.opt:hover:not([disabled]) { border-color: var(--accent); }
+.opt .letter { width: 30px; height: 30px; border-radius: 6px; display: grid; place-items: center; font-family: var(--font-mono); font-weight: 600; font-size: 14px; background: var(--surface); border: 1px solid var(--line); }
+.opt .txt { padding-top: 3px; min-width: 0; }
+.opt .mark { font-family: var(--font-mono); font-size: 12px; font-weight: 600; padding-top: 6px; white-space: nowrap; }
+.opt[data-state="selected"] { border-color: var(--accent); background: var(--accent-soft); }
+.opt[data-state="selected"] .letter { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.opt[data-state="correct"] { border-color: var(--good); background: var(--good-soft); }
+.opt[data-state="correct"] .letter { background: var(--good); color: var(--surface); border-color: var(--good); }
+.opt[data-state="correct"] .mark { color: var(--good); }
+.opt[data-state="wrong"] { border-color: var(--bad); background: var(--bad-soft); }
+.opt[data-state="wrong"] .letter { background: var(--bad); color: var(--surface); border-color: var(--bad); }
+.opt[data-state="wrong"] .mark { color: var(--bad); }
+.opt[data-state="dim"] { opacity: .6; }
+.opt[disabled] { cursor: default; }
+
+.feedback { border-radius: 8px; border: 1px solid var(--line); overflow: hidden; }
+.fb-head { padding: 12px 14px; display: grid; gap: 2px; }
+.fb-head.good { background: var(--good-soft); }
+.fb-head.bad { background: var(--bad-soft); }
+.fb-head strong { font-family: var(--font-display); font-stretch: 90%; font-size: 19px; }
+.fb-head.good strong { color: var(--good); }
+.fb-head.bad strong { color: var(--bad); }
+.fb-body { padding: 14px; display: grid; gap: 12px; background: var(--surface); }
+.fb-body p { margin: 0; }
+.why { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.why li { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 10px; font-size: 14.5px; color: var(--muted); }
+.why li b { font-family: var(--font-mono); font-size: 12px; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 5px; border: 1px solid var(--line); color: var(--ink); }
+.why li .ot { color: var(--ink); font-weight: 600; }
+.why li.is-correct b { background: var(--good); color: var(--surface); border-color: var(--good); }
+.why li.is-picked b { background: var(--bad); color: var(--surface); border-color: var(--bad); }
+.why-title { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+
+.actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; margin-top: 16px; }
+.actions .right { display: flex; gap: 10px; flex-wrap: wrap; margin-left: auto; }
+.kbd { font-family: var(--font-mono); font-size: 11.5px; color: var(--muted); }
+@media (max-width: 520px) { .kbd { display: none; } }
+
+.navgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 6px; }
+.navgrid button { height: 38px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface-2); font-family: var(--font-mono); font-size: 13px; cursor: pointer; position: relative; }
+.navgrid button.answered { background: var(--accent-soft); border-color: var(--accent); }
+.navgrid button.current { outline: 2px solid var(--ink); outline-offset: 1px; }
+.navgrid button.flagged::after { content: ""; position: absolute; top: 3px; right: 3px; width: 7px; height: 7px; border-radius: 50%; background: var(--flag); }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12.5px; color: var(--muted); }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 5px; border: 1px solid var(--line); background: var(--surface-2); }
+.legend i.a { background: var(--accent-soft); border-color: var(--accent); }
+.legend i.f { background: var(--flag); border-color: var(--flag); border-radius: 50%; }
+
+/* ---------- Results ---------- */
+.score { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 18px; align-items: center; }
+@media (max-width: 480px) { .score { grid-template-columns: 1fr; } }
+.dial { width: 132px; height: 132px; }
+.dial text { font-family: var(--font-mono); fill: var(--ink); }
+.verdict { font-family: var(--font-display); font-stretch: 85%; font-size: 26px; font-weight: 800; }
+.verdict.good { color: var(--good); } .verdict.bad { color: var(--bad); }
+.tbars { display: grid; gap: 10px; }
+.tbar { display: grid; grid-template-columns: minmax(0, 1fr) 64px; gap: 4px 12px; align-items: center; font-size: 14px; }
+.tbar .track { grid-column: 1 / -1; height: 8px; border-radius: 99px; background: var(--line); overflow: hidden; position: relative; }
+.tbar .track i { display: block; height: 100%; border-radius: 99px; }
+.tbar .track::after { content: ""; position: absolute; left: 70%; top: -2px; bottom: -2px; width: 2px; background: var(--ink); opacity: .35; }
+.tbar .num { font-family: var(--font-mono); font-size: 13px; text-align: right; color: var(--muted); }
+
+.review { display: grid; gap: 10px; }
+.ritem { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+.ritem summary { list-style: none; cursor: pointer; padding: 12px 14px; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; align-items: start; }
+.ritem summary::-webkit-details-marker { display: none; }
+.ritem summary .res { width: 26px; height: 26px; border-radius: 6px; display: grid; place-items: center; font-family: var(--font-mono); font-weight: 700; font-size: 13px; }
+.ritem.ok summary .res { background: var(--good-soft); color: var(--good); }
+.ritem.no summary .res { background: var(--bad-soft); color: var(--bad); }
+.ritem.skip summary .res { background: var(--surface-2); color: var(--muted); border: 1px solid var(--line); }
+.ritem summary .s { font-size: 15px; }
+.ritem summary .s small { display: block; color: var(--muted); font-family: var(--font-mono); font-size: 11.5px; margin-top: 2px; }
+.ritem .rbody { padding: 0 14px 14px; display: grid; gap: 10px; }
+.empty { color: var(--muted); font-size: 14px; padding: 8px 2px; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <!-- HOME -->
+  <main id="home" class="stack" aria-labelledby="home-title">
+    <header class="masthead">
+      <span class="eyebrow">AWS Certified Cloud Practitioner · CLF-C02</span>
+      <h1 id="home-title">CLF-C02 Practice Exam</h1>
+      <p>Questions are written in the exam's style: a short scenario, four options and one best answer. Tap an answer to see whether it's right and why each option is right or wrong. This set covers your study notes up to and including Amazon S3.</p>
+      <div class="facts" id="facts"></div>
+    </header>
+
+    <section class="panel" aria-labelledby="mode-title">
+      <div class="section-title"><h2 id="mode-title">How do you want to practice?</h2></div>
+      <div class="modes" id="modes">
+        <button class="mode" id="mode-practice" data-mode="practice" aria-pressed="true"><strong>Practice</strong><span>See the answer and explanation right after each question.</span></button>
+        <button class="mode" id="mode-exam" data-mode="exam" aria-pressed="false"><strong>Exam simulation</strong><span>65 questions, 90 minutes, no feedback until you finish.</span></button>
+        <button class="mode" id="mode-missed" data-mode="missed" aria-pressed="false"><strong>Missed questions</strong><span id="missed-sub">Questions you got wrong the last time you answered them.</span></button>
+      </div>
+      <div class="lengths" id="lengths">
+        <span class="label">Questions per session</span>
+        <button class="pill" id="len-10" data-len="10" aria-pressed="false">10</button>
+        <button class="pill" id="len-20" data-len="20" aria-pressed="true">20</button>
+        <button class="pill" id="len-40" data-len="40" aria-pressed="false">40</button>
+        <button class="pill" id="len-all" data-len="all" aria-pressed="false">All</button>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="topics-title">
+      <div class="section-title">
+        <h2 id="topics-title">Topics</h2>
+        <div class="row"><button class="linkish" id="sel-all">Select all</button><button class="linkish" id="sel-none">Clear</button></div>
+      </div>
+      <div id="topics" class="stack"></div>
+      <p class="small" id="topic-note">Amber-tagged questions cover exam topics that aren't in your notes yet, such as Object Lock, Transfer Acceleration, Compute Savings Plans and AWS Backup.</p>
+    </section>
+
+    <div class="row between">
+      <p class="small" id="start-note" style="margin:0"></p>
+      <button class="btn primary" id="start">Start</button>
+    </div>
+
+    <section class="panel" aria-labelledby="progress-title">
+      <div class="section-title"><h2 id="progress-title">Your progress</h2><button class="linkish" id="reset">Reset progress</button></div>
+      <div class="statline" id="statline"></div>
+      <div id="reset-confirm" class="confirm" hidden>
+        <p>This clears your answer history and your list of missed questions on this device. It can't be undone.</p>
+        <div class="row"><button class="btn" id="reset-yes">Clear history</button><button class="btn ghost" id="reset-no">Keep it</button></div>
+      </div>
+      <p class="small" style="margin:0">Your progress is saved in this browser only.</p>
+    </section>
+  </main>
+
+  <!-- QUIZ -->
+  <main id="quiz" hidden aria-live="polite">
+    <div class="strip">
+      <div class="strip-top">
+        <div class="qcount" id="qcount"></div>
+        <div class="tally" id="tally"></div>
+        <div class="timer" id="timer" hidden></div>
+      </div>
+      <div class="bar" aria-hidden="true"><i id="bar"></i></div>
+    </div>
+
+    <article class="qcard" id="qcard">
+      <div class="qmeta" id="qmeta"></div>
+      <p class="stem" id="stem"></p>
+      <ul class="opts" id="opts"></ul>
+      <div id="feedback" hidden></div>
+    </article>
+
+    <div class="actions">
+      <button class="btn ghost" id="quit">End session</button>
+      <div class="right">
+        <button class="btn" id="prev" hidden>← Previous</button>
+        <button class="btn" id="flag" hidden>Flag for review</button>
+        <button class="btn primary" id="next">Next →</button>
+      </div>
+    </div>
+    <p class="kbd" id="kbd">Keys: A–D or 1–4 to answer · Enter for next</p>
+
+    <section class="panel" id="navpanel" hidden style="margin-top:14px">
+      <div class="section-title"><h2 style="font-size:17px">Question navigator</h2>
+        <div class="legend"><span><i class="a"></i>Answered</span><span><i class="f"></i>Flagged</span></div>
+      </div>
+      <div class="navgrid" id="navgrid"></div>
+      <div id="finish-confirm" class="confirm neutral" hidden>
+        <p id="finish-msg"></p>
+        <div class="row"><button class="btn primary" id="finish-yes">Finish and score</button><button class="btn ghost" id="finish-no">Keep working</button></div>
+      </div>
+      <div class="row end"><button class="btn" id="finish">Finish exam</button></div>
+    </section>
+
+    <div id="quit-confirm" class="confirm" hidden style="margin-top:14px">
+      <p id="quit-msg"></p>
+      <div class="row"><button class="btn" id="quit-yes">End and see results</button><button class="btn ghost" id="quit-no">Keep going</button></div>
+    </div>
+  </main>
+
+  <!-- RESULTS -->
+  <main id="results" hidden class="stack">
+    <section class="panel">
+      <span class="eyebrow" id="res-mode"></span>
+      <div class="score">
+        <svg class="dial" viewBox="0 0 132 132" role="img" id="dial"></svg>
+        <div style="display:grid;gap:6px;min-width:0">
+          <div class="verdict" id="verdict"></div>
+          <p class="small" id="res-detail" style="margin:0"></p>
+        </div>
+      </div>
+      <div class="row">
+        <button class="btn primary" id="retry-missed">Practice the ones I missed</button>
+        <button class="btn" id="to-home">Back to menu</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-title"><h2>By topic</h2><span class="small">Line marks the 70% target</span></div>
+      <div class="tbars" id="tbars"></div>
+    </section>
+
+    <section class="stack">
+      <div class="section-title">
+        <h2>Review answers</h2>
+        <div class="lengths" id="rfilter">
+          <button class="pill" id="rf-wrong" data-f="wrong" aria-pressed="true">Wrong</button>
+          <button class="pill" id="rf-flag" data-f="flag" aria-pressed="false">Flagged</button>
+          <button class="pill" id="rf-all" data-f="all" aria-pressed="false">All</button>
+        </div>
+      </div>
+      <div class="review" id="review"></div>
+    </section>
+  </main>
+</div>
+
+<script>
+const QB = [];
+function Q(t, x, q, o) { QB.push({ t, x: !!x, q, o }); }
+// Domain 1 — Cloud Concepts. Q(topic, beyondNotes, stem, options) — options[0] is always the correct one; the app shuffles.
+Q("concepts", 0, "A company wants its developers to be able to provision servers and storage themselves, at any time, without opening a ticket or talking to anyone at the cloud provider. Which characteristic of cloud computing does this describe?", [
+  ["On-demand self-service", "On-demand self-service means users provision resources themselves, whenever they need them, with no human interaction from the provider."],
+  ["Measured service", "Measured service is about metering usage so you pay for exactly what you consume, not about who provisions resources."],
+  ["Broad network access", "Broad network access means resources are reachable over the network from many kinds of clients (laptops, phones). It says nothing about self-provisioning."],
+  ["Multi-tenancy and resource pooling", "Resource pooling means many customers share the same physical infrastructure securely. It does not describe self-provisioning."]
+]);
+Q("concepts", 0, "Multiple AWS customers run workloads on the same physical hardware, but each customer's data and resources remain isolated and private. Which cloud characteristic is this?", [
+  ["Multi-tenancy and resource pooling", "Many customers securely and privately share the same physical infrastructure. That pooling is one reason cloud is cheaper."],
+  ["Rapid elasticity", "Elasticity is about quickly acquiring and releasing resources as demand changes, not about sharing hardware."],
+  ["On-demand self-service", "Self-service is about provisioning without provider interaction, not about sharing hardware."],
+  ["High availability", "High availability is about surviving failures (for example across AZs). It is not one of the five characteristics that describes shared hardware."]
+]);
+Q("concepts", 0, "A company is billed only for the exact number of compute seconds and gigabytes of storage it used each month. Which characteristic of cloud computing makes this possible?", [
+  ["Measured service", "Usage is metered, so you pay for exactly what you used. That is measured service."],
+  ["Broad network access", "Broad network access is about reaching services over the network from many devices."],
+  ["Resource pooling", "Resource pooling is about sharing infrastructure between tenants, not metering."],
+  ["Agility", "Agility is about speed of provisioning and experimentation. It is not a billing characteristic."]
+]);
+Q("concepts", 0, "A startup does not want to spend a large amount of money up front on servers. Instead, it wants to pay only for the IT resources it consumes, as it consumes them. Which advantage of cloud computing does this describe?", [
+  ["Trade fixed expense (CAPEX) for variable expense (OPEX)", "Paying on demand instead of buying hardware up front turns capital expenditure into operational expenditure."],
+  ["Benefit from massive economies of scale", "Economies of scale is about AWS's size lowering prices for everyone. The scenario is about avoiding upfront investment."],
+  ["Go global in minutes", "Going global is about deploying in many Regions quickly. It has nothing to do with upfront spending."],
+  ["Increase speed and agility", "Agility is about how quickly you can get resources, not how you pay for them."]
+]);
+Q("concepts", 0, "Because AWS aggregates usage from hundreds of thousands of customers, it can operate more efficiently and regularly lower its prices. Which advantage of cloud computing does this describe?", [
+  ["Benefit from massive economies of scale", "AWS's huge aggregate usage makes it more efficient, and those savings are passed on as lower pay-as-you-go prices."],
+  ["Trade capital expense for variable expense", "This is about switching from upfront purchases to paying on demand, not about AWS's scale lowering prices."],
+  ["Stop guessing capacity", "This is about scaling with actual demand instead of forecasting hardware needs."],
+  ["Stop spending money running and maintaining data centers", "This is about focusing on your business instead of racking and powering servers. It does not describe price reductions from scale."]
+]);
+Q("concepts", 0, "A retailer used to buy enough servers for its busiest holiday week, which left most of those servers idle for the rest of the year. After moving to AWS, it adds and removes capacity based on actual demand. Which advantage of cloud computing is the retailer taking advantage of?", [
+  ["Stop guessing capacity", "Instead of forecasting and buying for the peak, you scale based on measured usage."],
+  ["Go global in minutes", "Nothing in the scenario involves deploying to new geographic Regions."],
+  ["Benefit from massive economies of scale", "Economies of scale lowers unit prices. The scenario is about matching capacity to demand."],
+  ["Trade variable expense for capital expense", "The wording is backwards. The cloud lets you trade capital expense for variable expense, not the other way around."]
+]);
+Q("concepts", 0, "A media company wants to serve customers in Europe and Asia with low latency. With AWS it can deploy its application to Regions on both continents in a few clicks. Which advantage of cloud computing is this?", [
+  ["Go global in minutes", "AWS's global infrastructure lets you deploy in many Regions worldwide in minutes, giving users lower latency at minimal cost."],
+  ["Stop guessing capacity", "This is about scaling to demand, not about geographic reach."],
+  ["Trade CAPEX for OPEX", "This is about the payment model, not about geography."],
+  ["Multi-tenancy", "Multi-tenancy is a characteristic (shared infrastructure), not an advantage about global reach."]
+]);
+Q("concepts", 0, "Which statement BEST describes the cloud deployment model of a company that keeps its sensitive customer database in its own data center but runs its public website on AWS, with the two environments connected?", [
+  ["Hybrid cloud", "Hybrid means some resources stay on premises and some capabilities are extended to the cloud, connected together."],
+  ["Private cloud", "A private cloud is used only by one organization and is not exposed publicly. Here the website runs on a public cloud."],
+  ["Public cloud", "In a pure public cloud everything runs on the provider's infrastructure. Here part of the workload stays on premises."],
+  ["Multi-Region cloud", "Multi-Region is an architecture choice inside a cloud provider. It is not one of the three deployment models."]
+]);
+Q("concepts", 0, "Which deployment model delivers all six advantages of cloud computing, such as massive economies of scale and going global in minutes?", [
+  ["Public cloud", "Public cloud, owned and operated by a third-party provider such as AWS and delivered over the internet, is the model that delivers the six advantages."],
+  ["Private cloud", "A private cloud gives full control to one organization, but it cannot deliver massive economies of scale or global reach in minutes."],
+  ["On-premises data center", "Running your own data center is the traditional model that the cloud replaces."],
+  ["Hybrid cloud", "Hybrid gets some cloud benefits for the part in the cloud, but the on-premises part still carries traditional costs and limits."]
+]);
+Q("concepts", 0, "Which AWS service is an example of Infrastructure as a Service (IaaS)?", [
+  ["Amazon EC2", "EC2 gives you virtual machines: raw compute, networking and storage building blocks. You manage the OS and everything above it. That is IaaS."],
+  ["AWS Elastic Beanstalk", "Elastic Beanstalk is Platform as a Service (PaaS). You upload code and AWS manages the platform."],
+  ["Amazon Rekognition", "Rekognition is a finished AI service you just call. The course classifies it as SaaS."],
+  ["Gmail", "Gmail is a Software as a Service product, and it is not an AWS service."]
+]);
+Q("concepts", 0, "A development team wants to upload its application code and let the platform handle capacity provisioning, load balancing, scaling and OS patching. The team only wants to manage the application and its data. Which cloud computing model fits BEST?", [
+  ["Platform as a Service (PaaS)", "With PaaS (for example Elastic Beanstalk) the provider manages everything except your applications and data."],
+  ["Infrastructure as a Service (IaaS)", "With IaaS you still manage the OS, middleware and runtime, which is more than the team wants."],
+  ["Software as a Service (SaaS)", "With SaaS you use a finished product and manage nothing, not even your own application code."],
+  ["On-premises", "On premises you manage every layer, from networking hardware up."]
+]);
+Q("concepts", 0, "In the Infrastructure as a Service (IaaS) model, which layer is the CUSTOMER responsible for managing?", [
+  ["The operating system", "In IaaS the provider manages networking, storage, servers and virtualization. You manage the O/S and everything above it."],
+  ["The virtualization layer (hypervisor)", "The provider manages virtualization in IaaS."],
+  ["The physical servers", "Physical servers are managed by the provider in every cloud model."],
+  ["The physical networking equipment", "Networking hardware is managed by the provider in every cloud model."]
+]);
+Q("concepts", 0, "A company uses a web-based email product. The provider runs and maintains everything, including the application itself; the company's employees simply sign in and use it. Which cloud computing model is this?", [
+  ["Software as a Service (SaaS)", "SaaS is a finished product run by the provider. You just use it. Examples: Gmail, Dropbox, Zoom."],
+  ["Platform as a Service (PaaS)", "With PaaS you still deploy and manage your own application code."],
+  ["Infrastructure as a Service (IaaS)", "With IaaS you manage the OS, runtime and applications yourself."],
+  ["Hybrid cloud", "Hybrid is a deployment model (where things run), not a service model (who manages what)."]
+]);
+Q("concepts", 0, "Under the AWS pay-as-you-go pricing model, which of the following is typically FREE?", [
+  ["Data transferred into AWS from the internet", "Inbound data transfer is free. You pay for compute time, data stored, and data transferred OUT."],
+  ["Data transferred out of AWS to the internet", "Outbound data transfer is one of the three things that cost money."],
+  ["Compute time used by EC2 instances", "Compute time is billed, per second or per hour depending on the OS and pricing model."],
+  ["Data stored in Amazon S3", "Storage is billed per GB-month."]
+]);
+Q("concepts", 0, "An online store's fleet automatically adds servers during a flash sale and removes them when traffic drops, so the store pays only for the capacity it actually needs. Which concept does this describe?", [
+  ["Elasticity", "Elasticity is automatic scaling out and in to match demand, so you pay only for what you use."],
+  ["Agility", "Agility is about how fast you can get new resources (minutes instead of weeks), not automatic matching to load."],
+  ["Vertical scaling", "Vertical scaling means changing to a bigger or smaller instance. The scenario adds and removes servers."],
+  ["Fault tolerance", "Fault tolerance is about continuing to work when components fail, not about following demand."]
+]);
+Q("concepts", 0, "Developers at a company can now create a complete test environment in minutes instead of waiting weeks for hardware to be purchased and installed. Which benefit of the AWS Cloud does this describe?", [
+  ["Agility", "Agility means new IT resources are only a click away, cutting provisioning time from weeks to minutes and making experiments cheap."],
+  ["Elasticity", "Elasticity is automatic scaling to demand. The scenario is about how quickly environments can be created."],
+  ["High availability", "High availability is about staying up during failures."],
+  ["Durability", "Durability is about not losing stored data."]
+]);
+Q("concepts", 0, "A database administrator changes a database server from a t2.micro instance to an r5.large instance to handle more load. What type of scaling is this?", [
+  ["Vertical scaling (scale up)", "Increasing the size of a single instance is vertical scaling. It is common for non-distributed systems such as databases and is limited by hardware."],
+  ["Horizontal scaling (scale out)", "Horizontal scaling adds more instances rather than making one instance bigger."],
+  ["Elasticity through Auto Scaling", "Auto Scaling groups add and remove instances automatically (horizontal). A manual instance-type change is vertical scaling."],
+  ["Loose coupling", "Loose coupling is a design principle about splitting components, not a scaling technique."]
+]);
+Q("concepts", 0, "Which approach is the MOST common way to scale a modern, stateless web application on AWS?", [
+  ["Add more EC2 instances behind a load balancer (horizontal scaling)", "Modern web apps are distributed, so they scale out by adding instances, typically with an Auto Scaling group and a load balancer."],
+  ["Move the application to the largest available instance type", "Vertical scaling is capped by hardware and gives no redundancy."],
+  ["Move the application to a Dedicated Host", "Dedicated Hosts address licensing and compliance needs, not scalability."],
+  ["Attach additional EBS volumes to the existing instance", "More disk does not add compute capacity for more users."]
+]);
+Q("concepts", 0, "What is the MINIMUM that AWS recommends to make an application highly available so it can survive the loss of a data center?", [
+  ["Run it in at least two Availability Zones", "High availability means running in at least 2 AZs, usually with a multi-AZ Auto Scaling group and load balancer."],
+  ["Run two EC2 instances in the same Availability Zone", "If that AZ fails, both instances fail together."],
+  ["Run it in at least two AWS Regions", "Multi-Region helps with Region-level disasters, but it is more than the minimum needed to survive a data center loss."],
+  ["Run it on a single larger instance with more vCPUs", "A single instance is a single point of failure, however large it is."]
+]);
+Q("concepts", 0, "Which of the following costs does a company STOP paying directly after it moves all of its workloads from its own data center to AWS?", [
+  ["Power, cooling and rent for the data center", "The cloud externalizes rent, power, cooling and hardware maintenance. AWS operates the facilities."],
+  ["Data transferred out to the internet", "Outbound data transfer is still billed on AWS."],
+  ["Staff time spent building and maintaining the company's own applications", "You still own your applications in the cloud. What goes away is running the data center."],
+  ["Compute usage", "You still pay for compute on AWS, per second or per hour."]
+]);
+Q("concepts", 1, "Which statement correctly describes how on-premises and AWS costs typically differ?", [
+  ["On premises, hardware is a large fixed upfront cost; on AWS, costs are mostly variable and tied to actual usage", "On-premises infrastructure is bought up front and depreciated whether or not it is used. AWS turns most of this into variable, pay-as-you-go spending. The exam guide calls this fixed versus variable costs."],
+  ["On AWS, customers pay a fixed monthly fee regardless of usage", "Most AWS services are pay-as-you-go. There is no flat fee for unlimited use."],
+  ["On premises, costs rise automatically when usage drops", "On-premises costs are largely fixed. They do not follow usage."],
+  ["On AWS, all costs must be paid three years in advance", "Upfront commitments such as Reserved Instances are optional discounts, not a requirement."]
+]);
+Q("concepts", 0, "A company is in the middle of a long, multi-year migration and must keep some systems on premises for compliance reasons. Which cloud problem does a hybrid model mainly help solve here?", [
+  ["It keeps control over sensitive on-premises assets while still using the flexibility of the public cloud", "Hybrid combines control over sensitive assets with the flexibility and cost-effectiveness of the public cloud."],
+  ["It removes all compliance obligations from the company", "Compliance obligations remain with the customer whatever the deployment model."],
+  ["It makes on-premises servers automatically scale with demand", "On-premises capacity stays fixed. Only the cloud side is elastic."],
+  ["It makes all AWS services free during the migration", "Hybrid is an architecture choice. It has no effect on pricing."]
+]);
+
+// Global infrastructure
+Q("infra", 0, "A European bank must make sure its customer data never leaves the country where it operates. Which factor should drive its choice of AWS Region FIRST?", [
+  ["Compliance and data governance requirements", "Legal and governance requirements come first. AWS data never leaves a Region without your explicit permission, so you pick a Region inside the required country."],
+  ["Proximity to customers for lower latency", "Latency matters, but a legal data residency requirement overrides it."],
+  ["Pricing in the Region", "Prices vary by Region, but you cannot trade legal compliance for a lower price."],
+  ["Number of edge locations nearby", "Edge locations cache content, but they don't decide where your primary data is stored."]
+]);
+Q("infra", 0, "Which of the following is NOT one of the main factors to consider when choosing an AWS Region?", [
+  ["The number of IAM users in the account", "IAM is a global service, so the number of users has nothing to do with Region choice. The four factors are compliance, proximity (latency), service availability, and pricing."],
+  ["Proximity to customers", "Being close to users lowers latency. This is one of the four factors."],
+  ["Availability of the required services and features", "Not every service or feature exists in every Region. This is one of the four factors."],
+  ["Pricing", "Prices differ between Regions. This is one of the four factors."]
+]);
+Q("infra", 0, "What is an AWS Availability Zone (AZ)?", [
+  ["One or more discrete data centers with redundant power, networking and connectivity, located within a Region", "Each AZ is one or more physically separate data centers. AZs in a Region are linked by high-bandwidth, low-latency networking."],
+  ["A geographic area that contains several AWS Regions", "It's the other way around: a Region contains multiple AZs."],
+  ["A location used only to cache content for Amazon CloudFront", "That describes an edge location (point of presence)."],
+  ["A single rack of servers inside a data center", "An AZ is far larger than a rack. It is at least one full data center."]
+]);
+Q("infra", 0, "How many Availability Zones does an AWS Region usually have?", [
+  ["Usually three (minimum 3, maximum 6)", "Regions typically have 3 AZs, with a minimum of 3 and a maximum of 6."],
+  ["Exactly one", "A single AZ would give no isolation from data center failures."],
+  ["Exactly two", "AWS Regions are designed with at least three AZs."],
+  ["At least 20", "No Region has that many AZs. Numbers like 400+ refer to edge locations."]
+]);
+Q("infra", 0, "Why are Availability Zones within a Region physically separated from each other?", [
+  ["To isolate them from disasters such as fire, flooding or power loss, so a failure in one AZ does not affect the others", "AZs are separated for disaster isolation but close enough for low-latency networking. That is why multi-AZ designs are highly available."],
+  ["To reduce the price of data transfer between them to zero", "Physical separation is about failure isolation, not pricing."],
+  ["To meet IAM requirements for global services", "IAM has nothing to do with AZ placement."],
+  ["So that each AZ can serve a different country", "All AZs of a Region are in the same geographic area."]
+]);
+Q("infra", 0, "Which AWS infrastructure component caches content close to end users to deliver it with lower latency?", [
+  ["Edge locations (points of presence)", "AWS has 400+ points of presence in 90+ cities. CloudFront uses them to serve content close to users."],
+  ["Availability Zones", "AZs host your resources inside a Region. They are not a global caching layer."],
+  ["Regions", "A Region is a cluster of AZs where you deploy workloads. There are far fewer Regions than edge locations."],
+  ["Amazon VPC", "A VPC is a private network for your resources, not a content cache."]
+]);
+Q("infra", 0, "Which of the following AWS services is GLOBAL rather than Region-scoped?", [
+  ["AWS Identity and Access Management (IAM)", "IAM is global, along with Route 53, CloudFront and WAF. Users and policies are not tied to a Region."],
+  ["Amazon EC2", "EC2 is Region-scoped. Instances live in a specific Region and AZ."],
+  ["AWS Elastic Beanstalk", "Elastic Beanstalk is Region-scoped."],
+  ["AWS Lambda", "Lambda functions are created in a specific Region."]
+]);
+Q("infra", 1, "A company wants its application to keep running even if an ENTIRE AWS Region becomes unavailable. What should it do?", [
+  ["Deploy the application in more than one AWS Region", "Multi-AZ protects against a data center failure. Only a multi-Region design protects against losing a whole Region. Using several Regions also helps with disaster recovery and serving global users with low latency."],
+  ["Deploy the application across three Availability Zones in one Region", "Multi-AZ gives high availability within a Region, but every AZ is in the affected Region."],
+  ["Use larger EC2 instances", "Instance size does not protect against a Region outage."],
+  ["Use Dedicated Hosts", "Dedicated Hosts address licensing and compliance, not Region failure."]
+]);
+Q("infra", 0, "A company notices that a feature it needs is available in us-east-1 but not in the Region closest to its users. What does this illustrate?", [
+  ["Service and feature availability varies by Region, so it is a factor in Region selection", "Not every service or feature launches in every Region at once. Check the Regional services list before choosing."],
+  ["All AWS services are available in all Regions at all times", "This is false. Availability differs between Regions."],
+  ["Features are tied to Availability Zones, not Regions", "Service availability is published per Region."],
+  ["The feature must be enabled in IAM first", "IAM controls permissions. It cannot make a service available in a Region."]
+]);
+
+// Well-Architected
+Q("wa", 0, "Which pillar of the AWS Well-Architected Framework focuses on a workload's ability to recover from disruptions, acquire resources to meet demand, and avoid misconfigurations?", [
+  ["Reliability", "Reliability covers testing recovery, recovering automatically, scaling horizontally, stopping capacity guessing, and managing change through automation."],
+  ["Performance Efficiency", "Performance Efficiency is about using resources efficiently as demand and technology change."],
+  ["Operational Excellence", "Operational Excellence is about running and monitoring systems and continuously improving processes."],
+  ["Security", "Security is about protecting information, systems and assets."]
+]);
+Q("wa", 0, "A team wants to perform operations as code, make frequent, small, reversible changes, and learn from every operational failure. Which Well-Architected pillar do these design principles belong to?", [
+  ["Operational Excellence", "These are Operational Excellence principles: operations as code, small reversible changes, refining procedures, anticipating failure and learning from it."],
+  ["Reliability", "Reliability is about recovering from failure and meeting demand. The listed principles are about how you run operations."],
+  ["Cost Optimization", "Cost Optimization is about delivering value at the lowest price."],
+  ["Sustainability", "Sustainability is about minimizing environmental impact."]
+]);
+Q("wa", 0, "Which Well-Architected pillar includes the design principles 'democratize advanced technologies', 'go global in minutes', 'use serverless architectures' and 'experiment more often'?", [
+  ["Performance Efficiency", "These are the Performance Efficiency design principles, along with mechanical sympathy."],
+  ["Reliability", "Reliability principles include automatic recovery and testing recovery procedures."],
+  ["Operational Excellence", "Operational Excellence principles include operations as code and small, reversible changes."],
+  ["Security", "Security principles include a strong identity foundation and traceability."]
+]);
+Q("wa", 0, "A company uses cost allocation tags to track which team is responsible for each part of its AWS bill and measures the return on its investments. Which Well-Architected pillar is it applying?", [
+  ["Cost Optimization", "'Analyze and attribute expenditure' (with tags) and measuring efficiency are Cost Optimization design principles."],
+  ["Operational Excellence", "Operational Excellence focuses on running and improving operations, not on attributing spending."],
+  ["Performance Efficiency", "Performance Efficiency focuses on choosing and using resources efficiently for performance."],
+  ["Security", "Tags can support security, but attributing costs to teams is a Cost Optimization practice."]
+]);
+Q("wa", 0, "A company right-sizes its instances, reduces idle resources, and uses S3 Lifecycle rules to move cold data to archive storage, specifically to reduce the environmental impact of its workloads. Which Well-Architected pillar does this BEST represent?", [
+  ["Sustainability", "Sustainability focuses on minimizing environmental impact: maximize utilization, use efficient hardware and managed services, and move cold data automatically."],
+  ["Reliability", "Reliability is about recovering from failures and meeting demand."],
+  ["Performance Efficiency", "Performance Efficiency is about meeting performance needs efficiently. The stated goal here is environmental impact."],
+  ["Operational Excellence", "Operational Excellence is about running and improving operations."]
+]);
+Q("wa", 0, "Implementing a strong identity foundation, enabling traceability, and applying security at every layer are design principles of which Well-Architected pillar?", [
+  ["Security", "These are core Security pillar principles, along with protecting data in transit and at rest and preparing for security events."],
+  ["Reliability", "Reliability deals with recovery and scaling, not identity and traceability."],
+  ["Operational Excellence", "Operational Excellence includes observability, but identity and traceability are Security principles."],
+  ["Cost Optimization", "Cost Optimization is about spending, not identity."]
+]);
+Q("wa", 0, "Which of the following is NOT one of the six pillars of the AWS Well-Architected Framework?", [
+  ["Scalability", "The six pillars are Operational Excellence, Security, Reliability, Performance Efficiency, Cost Optimization and Sustainability. Scalability is a design principle, not a pillar."],
+  ["Sustainability", "Sustainability is the sixth pillar."],
+  ["Reliability", "Reliability is a pillar."],
+  ["Cost Optimization", "Cost Optimization is a pillar."]
+]);
+Q("wa", 0, "Which FREE AWS tool lets a company answer questions about a workload and review it against the six Well-Architected pillars, then receive improvement advice?", [
+  ["AWS Well-Architected Tool", "The Well-Architected Tool is free. You define a workload, answer questions, and get a report and dashboard measured against the six pillars."],
+  ["AWS Config", "Config records resource configurations and compliance. It does not run Well-Architected reviews."],
+  ["AWS Artifact", "Artifact gives access to AWS compliance reports and agreements."],
+  ["Amazon Inspector", "Inspector scans for software vulnerabilities."]
+]);
+Q("wa", 0, "A company breaks its monolithic application into smaller components so that a failure or change in one component does not cascade to the others. Which cloud design principle is this?", [
+  ["Loose coupling", "Loose coupling separates components so that failures and changes stay contained."],
+  ["Vertical scaling", "Vertical scaling makes one server bigger. It does not split components."],
+  ["Mechanical sympathy", "Mechanical sympathy means understanding how services work to use them well."],
+  ["Stop guessing capacity", "This principle is about scaling to demand, not about architecture boundaries."]
+]);
+Q("wa", 0, "Which design principle encourages customers to use managed AWS services instead of building and running everything themselves on EC2?", [
+  ["Services, not servers", "'Services, not servers' means preferring managed services over only using raw EC2."],
+  ["Disposable resources", "Disposable resources means treating servers as replaceable, not as long-lived pets."],
+  ["Test at production scale", "This is about testing, not about service choice."],
+  ["Drive architectures with data", "This is about using data to make design decisions."]
+]);
+Q("wa", 0, "Which AWS tool helps a company track, measure, review and forecast the carbon emissions produced by its AWS usage?", [
+  ["AWS Customer Carbon Footprint Tool", "It shows emissions by geography, by service and over time, and forecasts the path to 100% renewable energy."],
+  ["AWS Cost Explorer", "Cost Explorer shows spending, not carbon emissions."],
+  ["AWS Well-Architected Tool", "It reviews workloads against pillars but does not measure emissions."],
+  ["AWS Config", "Config tracks resource configuration changes."]
+]);
+Q("wa", 0, "Before a big product launch, a company runs a planned event that simulates flash-sale traffic in order to test how its systems and teams respond. Which Well-Architected general design principle is this?", [
+  ["Improve through game days", "Game days simulate real events (such as a flash-sale day) to test systems and procedures."],
+  ["Allow for evolutionary architectures", "This is about designing for changing requirements."],
+  ["Automate to make architectural experimentation easier", "This is about automation. The scenario describes a simulated event."],
+  ["Loose coupling", "This is about decoupling components."]
+]);
+
+// CAF, migration, right sizing
+Q("caf", 0, "Which AWS Cloud Adoption Framework (AWS CAF) perspective focuses on culture, organizational structure, leadership and workforce transformation?", [
+  ["People", "The People perspective bridges technology and business and deals with culture, org structure, leadership and workforce."],
+  ["Business", "The Business perspective makes sure cloud investments drive business outcomes."],
+  ["Governance", "The Governance perspective orchestrates initiatives and minimizes transformation risk."],
+  ["Operations", "The Operations perspective makes sure cloud services are delivered at the level the business needs."]
+]);
+Q("caf", 0, "Which AWS CAF perspective makes sure that cloud services are delivered at a level that meets the needs of the business?", [
+  ["Operations", "Operations is a technical perspective focused on delivering and running services at the agreed level."],
+  ["Platform", "Platform is about building an enterprise-grade, scalable hybrid cloud platform."],
+  ["Security", "Security is about confidentiality, integrity and availability of data and workloads."],
+  ["Governance", "Governance orchestrates initiatives and manages risk. It does not run services."]
+]);
+Q("caf", 0, "Which AWS CAF perspective helps orchestrate cloud initiatives while maximizing organizational benefits and minimizing transformation-related risks?", [
+  ["Governance", "Governance orchestrates initiatives, maximizes benefits and minimizes risk."],
+  ["People", "People covers culture, leadership and workforce."],
+  ["Business", "Business makes sure cloud investments drive business outcomes."],
+  ["Platform", "Platform is a technical perspective about the cloud platform itself."]
+]);
+Q("caf", 0, "A company wants to build an enterprise-grade, scalable, hybrid cloud platform and modernize existing workloads into cloud-native ones. Which AWS CAF perspective does this align with?", [
+  ["Platform", "The Platform perspective builds the scalable hybrid platform and modernizes workloads."],
+  ["Operations", "Operations is about running services at the required level."],
+  ["Business", "Business focuses on business outcomes, not the platform build."],
+  ["People", "People focuses on culture and workforce."]
+]);
+Q("caf", 0, "Which set lists the three AWS CAF perspectives that represent TECHNICAL capabilities?", [
+  ["Platform, Security, Operations", "The technical perspectives are Platform, Security and Operations. Business, People and Governance are the business perspectives."],
+  ["Business, People, Governance", "These are the three business-capability perspectives."],
+  ["Envision, Align, Launch", "These are transformation phases, not perspectives."],
+  ["Technology, Process, Product", "These are transformation domains, not perspectives."]
+]);
+Q("caf", 0, "What is the correct order of the AWS CAF cloud transformation phases?", [
+  ["Envision, Align, Launch, Scale", "Envision the value, Align to find capability gaps, Launch pilots in production, then Scale them."],
+  ["Align, Envision, Scale, Launch", "You must envision the opportunity before aligning, and launch pilots before scaling."],
+  ["Launch, Envision, Align, Scale", "Pilots are launched only after envisioning and aligning."],
+  ["Plan, Build, Run, Optimize", "These are generic IT phases, not the AWS CAF phases."]
+]);
+Q("caf", 0, "During which AWS CAF transformation phase does an organization identify capability gaps across the six perspectives and create an action plan?", [
+  ["Align", "Align identifies capability gaps across the six perspectives, which results in an action plan."],
+  ["Envision", "Envision shows how the cloud will accelerate business outcomes and identifies opportunities."],
+  ["Launch", "Launch delivers pilot initiatives in production."],
+  ["Scale", "Scale expands pilots to the desired scale and benefits."]
+]);
+Q("caf", 1, "According to AWS, which of the following is a business outcome that customers can achieve through cloud transformation with the AWS CAF?", [
+  ["Improved environmental, social and governance (ESG) performance", "AWS lists reduced business risk, improved ESG performance, increased revenue and increased operational efficiency as CAF benefits."],
+  ["Guaranteed 100% uptime for every application", "No cloud provider guarantees 100% uptime for your applications."],
+  ["Removal of all of the customer's security responsibilities", "Under the shared responsibility model the customer always keeps security IN the cloud."],
+  ["Fixed, predictable hardware refresh costs", "Moving to the cloud removes hardware refresh cycles. It does not make them predictable."]
+]);
+Q("caf", 0, "A company wants to move an application to Amazon EC2 exactly as it is, without making any changes, to exit its data center quickly. Which migration strategy is this?", [
+  ["Rehost (lift and shift)", "Rehost moves applications as they are, without cloud optimization. It can still save around 30%. AWS Application Migration Service helps with this."],
+  ["Replatform", "Replatform makes a few cloud optimizations (such as moving to RDS). The scenario makes no changes."],
+  ["Refactor", "Refactor re-architects the application to use cloud-native features."],
+  ["Repurchase", "Repurchase replaces the application with a different product, often SaaS."]
+]);
+Q("caf", 0, "A company migrates its self-managed MySQL database to Amazon RDS but does not change the core architecture of its application. Which migration strategy is this?", [
+  ["Replatform (lift and reshape)", "Replatform keeps the core architecture but adopts some cloud optimizations, such as a managed database."],
+  ["Rehost", "Rehost would move the database server unchanged, for example to EC2."],
+  ["Refactor", "Refactor would redesign the application, for example into microservices or serverless."],
+  ["Retain", "Retain means leaving the workload where it is for now."]
+]);
+Q("caf", 0, "A company replaces its on-premises CRM system with Salesforce, a SaaS product. Which migration strategy is this?", [
+  ["Repurchase (drop and shop)", "Repurchase switches to a different product, often SaaS. It can cost more in the short term but is fast to deploy."],
+  ["Rehost", "Rehost moves the same application to the cloud unchanged."],
+  ["Relocate", "Relocate moves workloads to a cloud version of the same platform (for example VMware Cloud on AWS)."],
+  ["Refactor", "Refactor rewrites the existing application to be cloud-native."]
+]);
+Q("caf", 0, "A company redesigns a monolithic application into microservices and serverless components to gain scalability and agility it could not get before. Which migration strategy is this?", [
+  ["Refactor / Re-architect", "Refactoring is driven by needs for features, scale, performance or agility that the current architecture can't provide."],
+  ["Replatform", "Replatform only makes a few optimizations and keeps the core architecture."],
+  ["Rehost", "Rehost changes nothing about the application."],
+  ["Retire", "Retire turns the application off."]
+]);
+Q("caf", 0, "During migration planning, a company discovers several applications that nobody uses anymore. It decides to turn them off. Which migration strategy is this?", [
+  ["Retire", "Retire removes what you don't need. That reduces the attack surface and often saves 10 to 20%."],
+  ["Retain", "Retain keeps an application running as it is for now. It does not shut anything down."],
+  ["Relocate", "Relocate moves workloads to the cloud version of the same platform."],
+  ["Repurchase", "Repurchase replaces an application with a different product."]
+]);
+Q("caf", 0, "A company decides to keep its mainframe application on premises for now because of unresolved dependencies and compliance concerns. Which migration strategy is this?", [
+  ["Retain", "Retain is doing nothing for now, which is still a decision. It is common for mainframes, unresolved dependencies, or apps with no business value in migrating."],
+  ["Retire", "Retire means decommissioning the application."],
+  ["Rehost", "Rehost moves the application to the cloud."],
+  ["Refactor", "Refactor rebuilds the application for the cloud."]
+]);
+Q("caf", 0, "A company moves its VMware vSphere-based workloads to VMware Cloud on AWS without buying new hardware or rewriting applications. Which migration strategy is this?", [
+  ["Relocate", "Relocate moves applications to the cloud version of their platform, for example VMware SDDC to VMware Cloud on AWS."],
+  ["Replatform", "Replatform changes part of the platform, such as moving to a managed database."],
+  ["Repurchase", "Repurchase switches to a different product."],
+  ["Retain", "Retain leaves the workload where it is."]
+]);
+Q("caf", 0, "Which AWS service is designed to simplify rehost (lift-and-shift) migrations of servers from physical, virtual or other cloud environments to AWS?", [
+  ["AWS Application Migration Service", "Application Migration Service is the recommended rehost tool. It replicates servers into AWS with minimal changes."],
+  ["AWS Elastic Beanstalk", "Elastic Beanstalk is a PaaS for deploying application code. It does not replicate existing servers."],
+  ["AWS Storage Gateway", "Storage Gateway connects on-premises storage to AWS. It does not migrate servers."],
+  ["Amazon Rekognition", "Rekognition is an image and video analysis service."]
+]);
+Q("caf", 0, "When should a company perform right sizing of its EC2 instances?", [
+  ["Before migrating to the cloud, and continuously afterwards as requirements change", "Right sizing is done before a migration and continuously after it, because workloads change over time."],
+  ["Only once, just before the migration", "Requirements change after migration, so a one-time exercise leaves money on the table."],
+  ["Only after the first full year of running in the cloud", "Waiting a year wastes money. Right-size from the start."],
+  ["Never, because the cloud is elastic and right sizing is unnecessary", "Elasticity makes right sizing easy, not unnecessary. Oversized instances still cost money."]
+]);
+Q("caf", 0, "CloudWatch metrics show that a company's EC2 instances average only 5% CPU utilization. What is the MOST cost-effective action?", [
+  ["Right-size the instances to a smaller instance type", "Matching the instance type and size to the actual workload at the lowest cost is right sizing. Start small and scale up if needed."],
+  ["Purchase Reserved Instances for the current instance size", "Committing to an oversized instance locks in waste. Right-size first, then commit."],
+  ["Add more instances to spread the load", "Adding instances increases cost when utilization is already very low."],
+  ["Move the instances to Dedicated Hosts", "Dedicated Hosts are the most expensive option and don't fix low utilization."]
+]);
+
+// Domain 2 — Security & Compliance
+Q("srm", 0, "According to the AWS shared responsibility model, which task is the CUSTOMER's responsibility when using Amazon EC2?", [
+  ["Patching and updating the guest operating system", "For EC2 (IaaS), the customer manages the guest OS, installed software, security group rules, IAM and data."],
+  ["Physical security of the data centers", "Physical security is part of 'security OF the cloud', which is AWS's job."],
+  ["Replacing faulty hardware on the host", "AWS replaces faulty hardware."],
+  ["Patching the hypervisor that isolates instances", "The virtualization layer and host isolation are AWS's responsibility."]
+]);
+Q("srm", 0, "According to the AWS shared responsibility model, which of the following is AWS's responsibility?", [
+  ["Protecting the global infrastructure (hardware, software, facilities and networking) that runs AWS services", "AWS is responsible for security OF the cloud: the infrastructure that runs every AWS service."],
+  ["Configuring security group rules for EC2 instances", "Security group rules are customer configuration (security IN the cloud)."],
+  ["Encrypting the customer's application data", "Encrypting your data is the customer's responsibility. AWS provides the tools."],
+  ["Creating IAM users and assigning least-privilege permissions", "Managing IAM users, groups, roles and policies is the customer's responsibility."]
+]);
+Q("srm", 0, "Which of the following is a SHARED control under the AWS shared responsibility model?", [
+  ["Patch management", "Shared controls include patch management, configuration management, and awareness and training. AWS patches the infrastructure; you patch your guest OS and applications."],
+  ["Physical and environmental controls", "These are inherited controls, fully handled by AWS."],
+  ["Customer data classification", "Your data is entirely your responsibility."],
+  ["Replacing failed disks in AWS data centers", "Hardware replacement is AWS's job."]
+]);
+Q("srm", 0, "A company uses Amazon RDS. Under the shared responsibility model, which task is the CUSTOMER's responsibility?", [
+  ["Configuring the DB security group inbound rules and the database users and permissions", "With RDS, customers manage security group rules, in-database users, public vs. private access, enforcing SSL, and whether the database is encrypted."],
+  ["Patching the operating system of the database host", "AWS applies automated OS and database patching for RDS."],
+  ["Managing the underlying EC2 instance, including SSH access", "AWS manages the underlying instance, and SSH is disabled."],
+  ["Auditing the physical disks of the database host", "AWS audits the underlying instance and disks."]
+]);
+Q("srm", 0, "Under the shared responsibility model, which Amazon S3 task is the CUSTOMER responsible for?", [
+  ["Configuring bucket policies and Block Public Access settings", "Customers own bucket policies, public settings, versioning, replication, logging, storage class choice, encryption and IAM access."],
+  ["Making sure objects achieve 99.999999999% durability", "AWS designs S3 for 11 nines durability. That is part of the infrastructure."],
+  ["Surviving the concurrent loss of two facilities", "AWS's infrastructure provides this resilience."],
+  ["Preventing AWS employees from accessing customer data", "AWS is responsible for keeping its employees out of customer data."]
+]);
+Q("srm", 0, "Who is responsible for backing up data stored on an EC2 instance store volume?", [
+  ["The customer", "Instance store is ephemeral. Understanding that risk and handling backups or replication is the customer's job."],
+  ["AWS", "AWS does not back up instance store data. It is lost if the instance stops or the hardware fails."],
+  ["Both, equally", "This is not a shared control. Data on the drives belongs to the customer."],
+  ["No one, because instance store data is automatically replicated to another AZ", "Instance store is NOT replicated. It is a physical disk on a single host."]
+]);
+Q("srm", 1, "As a customer moves from running software on Amazon EC2 to using a managed service such as Amazon RDS, how do the customer's security responsibilities typically change?", [
+  ["They decrease, because AWS takes over more layers such as OS and database patching", "The more managed the service, the more AWS handles. You still keep responsibilities such as data, access control and configuration."],
+  ["They increase, because managed services expose more settings", "Managed services shift work to AWS."],
+  ["They stay exactly the same for every service", "The split varies by service. That is why the model is 'shared'."],
+  ["They move completely to AWS", "Customers always keep security IN the cloud: data, identities and configuration."]
+]);
+Q("srm", 1, "A company runs a payment application on AWS and must comply with PCI DSS. AWS infrastructure is certified PCI DSS compliant. Which statement is correct?", [
+  ["The customer must still make sure its own application and configuration meet PCI DSS requirements", "AWS's compliance covers the infrastructure. You inherit those controls but remain responsible for what you build and configure on it."],
+  ["The application is automatically PCI DSS compliant because it runs on AWS", "Running on compliant infrastructure does not make your workload compliant."],
+  ["AWS takes full legal responsibility for the application's compliance", "AWS is responsible only for its side of the shared responsibility model."],
+  ["PCI DSS does not apply to cloud workloads", "PCI DSS applies wherever cardholder data is processed."]
+]);
+Q("srm", 0, "Who is responsible for replicating data for Amazon EBS and Amazon EFS to protect against hardware failure?", [
+  ["AWS", "For EC2 storage, AWS handles infrastructure, data replication for EBS and EFS, and faulty hardware. The customer handles backups, snapshots and encryption."],
+  ["The customer, by writing replication scripts", "Built-in replication for EBS and EFS is handled by AWS."],
+  ["The customer's internet service provider", "ISPs have nothing to do with AWS storage replication."],
+  ["Nobody, because EBS and EFS do not replicate data", "Both services replicate data. EBS replicates within its AZ, and EFS stores data across multiple AZs."]
+]);
+Q("srm", 0, "Which document describes prohibited uses of AWS, such as illegal or offensive content, security violations, and network or email abuse?", [
+  ["AWS Acceptable Use Policy", "The Acceptable Use Policy (aws.amazon.com/aup) lists what you must not do with AWS services."],
+  ["AWS shared responsibility model", "This model describes who secures what. It does not list prohibited uses."],
+  ["AWS Well-Architected Framework", "This framework gives architecture best practices."],
+  ["An AWS SOC 2 report in AWS Artifact", "SOC reports are third-party audits of AWS's controls."]
+]);
+
+// IAM, root, identity
+Q("iam", 0, "What can an IAM group contain?", [
+  ["IAM users only", "Groups contain users only. They cannot contain other groups. A user can belong to zero, one or many groups."],
+  ["Other IAM groups", "IAM does not support nested groups."],
+  ["IAM roles", "Roles are assumed by services or principals. They are not group members."],
+  ["Users and other groups", "Groups can never contain other groups."]
+]);
+Q("iam", 0, "An administrator gives each employee only the permissions needed to perform their job and nothing more. Which security principle is this?", [
+  ["Principle of least privilege", "Least privilege means granting only the permissions required. It is an IAM best practice and a Security pillar principle."],
+  ["Defense in depth", "Defense in depth is about security at every layer, not the scope of permissions."],
+  ["Separation of concerns", "This is a software design idea, not an IAM principle."],
+  ["Shared responsibility", "This model is about AWS versus customer duties."]
+]);
+Q("iam", 0, "In what format are IAM policies written?", [
+  ["JSON", "IAM policies are JSON documents with Version, optional Id, and a Statement list."],
+  ["YAML", "CloudFormation templates can be YAML, but IAM policy documents are JSON."],
+  ["XML", "IAM policies are not XML."],
+  ["CSV", "The Credentials Report is a CSV file, but policies are JSON."]
+]);
+Q("iam", 0, "Which element of an IAM policy statement specifies whether the statement allows or denies access?", [
+  ["Effect", "Effect is either Allow or Deny."],
+  ["Action", "Action lists the API actions (for example s3:GetObject) that are allowed or denied."],
+  ["Principal", "Principal is the account, user or role the policy applies to."],
+  ["Resource", "Resource lists the resources the actions apply to."]
+]);
+Q("iam", 0, "In an IAM policy statement, which element lists the specific AWS resources that the actions apply to?", [
+  ["Resource", "Resource specifies the ARNs (or '*') of what the actions apply to."],
+  ["Condition", "Condition is optional and specifies when the statement is in effect."],
+  ["Sid", "Sid is an optional identifier for the statement."],
+  ["Version", "Version is the policy language version, always '2012-10-17'."]
+]);
+Q("iam", 1, "An IAM user belongs to a group whose policy allows all Amazon S3 actions. The user also has an inline policy that explicitly DENIES s3:DeleteObject. What happens when the user tries to delete an object?", [
+  ["The request is denied, because an explicit Deny always overrides an Allow", "In AWS policy evaluation, an explicit Deny anywhere wins over any Allow."],
+  ["The request is allowed, because group policies take priority over inline policies", "No policy type outranks an explicit Deny."],
+  ["The request is allowed, because the Allow in the group policy was attached first", "The order of attachment doesn't matter."],
+  ["The result is random", "Policy evaluation is deterministic, and explicit Deny always wins."]
+]);
+Q("iam", 0, "What should a company do with its AWS account root user right after creating the account?", [
+  ["Enable MFA on it, lock away its credentials, and create IAM identities for everyday administrative work", "Use the root user only for account setup and root-only tasks. Protect it with MFA and never share it."],
+  ["Share the root credentials with all administrators so they have full access", "One person should have one identity. Root credentials must never be shared."],
+  ["Create root access keys for day-to-day CLI use", "Root access keys should be locked away or not created at all. Use IAM identities for programmatic access."],
+  ["Delete the root user so it cannot be compromised", "The root user cannot be deleted. It is the account owner."]
+]);
+Q("iam", 0, "Which task can ONLY be performed by the AWS account root user?", [
+  ["Changing or canceling the AWS Support plan", "Changing or canceling the Support plan is on the root-only list, along with closing the account and changing account settings."],
+  ["Creating an IAM user", "An IAM user with the right permissions can create other IAM users."],
+  ["Launching an EC2 instance", "Any IAM identity with EC2 permissions can launch instances."],
+  ["Creating an S3 bucket", "Any IAM identity with S3 permissions can create buckets."]
+]);
+Q("iam", 0, "Which of the following actions requires the AWS account root user?", [
+  ["Closing the AWS account", "Closing the account is a root-only task. Others include changing the account name, email or root password, and restoring IAM user permissions."],
+  ["Attaching a policy to an IAM group", "An IAM administrator can do this."],
+  ["Creating an IAM role for EC2", "An IAM administrator can do this."],
+  ["Viewing the AWS Management Console dashboard", "Any IAM user can sign in and view the console."]
+]);
+Q("iam", 0, "Which task requires the root user?", [
+  ["Registering as a seller in the Reserved Instance Marketplace", "Registering as an RI Marketplace seller is a root-only action."],
+  ["Buying a Reserved Instance", "IAM users with the right permissions can buy Reserved Instances."],
+  ["Creating an IAM password policy", "IAM administrators can set the password policy."],
+  ["Enabling MFA for an IAM user", "IAM administrators or the users themselves can do this."]
+]);
+Q("iam", 0, "What does multi-factor authentication (MFA) combine?", [
+  ["Something you know (a password) and something you have (a device)", "MFA = a password you know + a device you own. A stolen password alone isn't enough."],
+  ["Two different passwords", "Two passwords are still only one factor: something you know."],
+  ["An access key ID and a secret access key", "These are the two parts of one programmatic credential, not MFA."],
+  ["A username and an email address", "Neither is a second authentication factor."]
+]);
+Q("iam", 0, "Which of the following is a U2F (Universal 2nd Factor) physical security key that can be used for MFA with AWS?", [
+  ["YubiKey", "YubiKey (by Yubico, a third party) is a U2F security key. One key can serve several root and IAM users."],
+  ["Google Authenticator", "Google Authenticator is a virtual MFA app on a phone."],
+  ["Gemalto key fob", "Gemalto is a hardware key fob MFA device (TOTP), not a U2F key."],
+  ["Authy", "Authy is a virtual MFA app."]
+]);
+Q("iam", 0, "A developer needs to manage AWS resources from the AWS CLI on their laptop. What credentials does the CLI use?", [
+  ["An access key ID and a secret access key", "The CLI and SDKs are protected by access keys. The console uses a password plus MFA."],
+  ["The IAM user's console password", "Console passwords are for the Management Console, not the CLI."],
+  ["An EC2 key pair (.pem file)", "EC2 key pairs are for SSH into instances, not for calling AWS APIs."],
+  ["The root user's email address", "An email address is not an API credential."]
+]);
+Q("iam", 0, "An access key is made up of an access key ID and a secret access key. The secret access key is MOST comparable to which of the following?", [
+  ["A password", "Access key ID ≈ username and secret access key ≈ password. Treat them like passwords and never share them."],
+  ["A username", "The access key ID is the username-like part."],
+  ["An MFA device", "An MFA device is a separate second factor."],
+  ["A security group", "A security group is a firewall, not a credential."]
+]);
+Q("iam", 0, "A developer wants to call AWS services directly from a Python application's code. What should they use?", [
+  ["An AWS SDK (for example, Boto3 for Python)", "SDKs are language-specific libraries you embed in your application to call AWS APIs."],
+  ["The AWS Management Console", "The console is a web UI for people, not for application code."],
+  ["AWS Artifact", "Artifact provides compliance reports."],
+  ["An IAM Credentials Report", "This is an audit report of user credentials."]
+]);
+Q("iam", 0, "An application running on an EC2 instance needs to read objects from an S3 bucket. What is the MOST secure way to give it access?", [
+  ["Attach an IAM role to the EC2 instance with a policy that allows the required S3 actions", "IAM roles give AWS services temporary credentials, so no long-term keys are stored on the instance."],
+  ["Store an IAM user's access keys in a configuration file on the instance", "Long-term keys on disk can leak. Roles are the best practice."],
+  ["Use the root user's access keys", "Never use root keys for applications."],
+  ["Put the access keys in the instance User Data script", "User Data is readable from the instance and is not a place for secrets."]
+]);
+Q("iam", 0, "A security auditor wants a list of ALL IAM users in the account and the status of their credentials, such as passwords, access keys and MFA. Which IAM feature provides this?", [
+  ["IAM Credentials Report", "The Credentials Report is an account-level report listing all users and the status of their credentials."],
+  ["IAM Access Advisor", "Access Advisor is user-level. It shows which services a user can access and when each was last used."],
+  ["IAM Access Analyzer", "Access Analyzer finds resources shared outside your zone of trust."],
+  ["AWS Artifact", "Artifact provides AWS's own compliance reports, not your users' credential status."]
+]);
+Q("iam", 0, "An administrator wants to see which services an IAM user has permission to access and when the user last accessed each of them, in order to remove unused permissions. Which feature should they use?", [
+  ["IAM Access Advisor", "Access Advisor shows the service permissions granted to a user and when each was last used. That is ideal for tightening to least privilege."],
+  ["IAM Credentials Report", "The Credentials Report shows credential status for all users, not per-service last access."],
+  ["Amazon GuardDuty", "GuardDuty detects threats. It does not review permissions."],
+  ["Amazon Macie", "Macie finds sensitive data in S3."]
+]);
+Q("iam", 0, "A company wants to require that all IAM user passwords are at least 14 characters long and include uppercase letters, numbers and symbols. What should it configure?", [
+  ["An IAM password policy", "The password policy sets minimum length, required character types, expiration, reuse prevention, and whether users can change their own password."],
+  ["An S3 bucket policy", "Bucket policies control access to S3, not passwords."],
+  ["A security group", "Security groups filter network traffic."],
+  ["AWS Shield", "Shield protects against DDoS attacks."]
+]);
+Q("iam", 0, "Five developers share a single IAM user to access AWS. Which IAM best practice does this violate?", [
+  ["One physical person should have one AWS user", "Each person needs their own identity so that access is traceable and can be revoked per person."],
+  ["Use roles for AWS services", "This is about services such as EC2 and Lambda, not people sharing a user."],
+  ["Use access keys for programmatic access", "This does not address sharing a user."],
+  ["Enable Shield Standard", "Shield is DDoS protection and is always on anyway."]
+]);
+Q("iam", 0, "Which AWS service issues temporary, limited-privilege credentials with a configurable expiration, for example when a user assumes an IAM role?", [
+  ["AWS Security Token Service (STS)", "STS returns temporary credentials when you assume a role. It is used for identity federation, cross-account access and EC2 roles."],
+  ["Amazon Cognito", "Cognito manages identities for web and mobile app users."],
+  ["AWS Key Management Service (KMS)", "KMS manages encryption keys, not login credentials."],
+  ["AWS Certificate Manager (ACM)", "ACM manages SSL/TLS certificates."]
+]);
+Q("iam", 0, "A company is building a mobile app that will have millions of users. Users should be able to sign in with Google or Facebook accounts. Which service should the company use for user identities?", [
+  ["Amazon Cognito", "Cognito provides identity for web and mobile app users at scale, including social login. You create app users in Cognito, not IAM."],
+  ["IAM users", "IAM is for trusted people in your organization, not millions of app customers."],
+  ["AWS Directory Service Simple AD", "Simple AD is a basic AD-compatible directory for workforce users."],
+  ["AWS IAM Identity Center", "Identity Center provides workforce single sign-on to AWS accounts and business apps."]
+]);
+Q("iam", 0, "A company uses AWS Organizations with 40 accounts. Employees should sign in once to reach all of their AWS accounts and business apps such as Salesforce and Microsoft 365. Which service meets this need?", [
+  ["AWS IAM Identity Center (successor to AWS SSO)", "IAM Identity Center gives one login for all accounts in an organization, business cloud apps, SAML 2.0 apps and EC2 Windows instances."],
+  ["Amazon Cognito", "Cognito is for customer-facing app users."],
+  ["AWS STS", "STS issues temporary credentials but isn't a single sign-on portal."],
+  ["IAM Access Advisor", "Access Advisor shows last-accessed services."]
+]);
+Q("iam", 0, "A company wants its AWS workloads to authenticate against its existing on-premises Microsoft Active Directory. Users must continue to be managed only on premises. Which AWS Directory Service option fits?", [
+  ["AD Connector", "AD Connector is a directory gateway (proxy) that redirects requests to on-premises AD. Users stay managed on premises."],
+  ["AWS Managed Microsoft AD", "Managed Microsoft AD runs a real AD in AWS where users are managed. It can trust on-premises AD, but it is not a pure proxy."],
+  ["Simple AD", "Simple AD cannot be joined with an on-premises AD."],
+  ["Amazon Cognito", "Cognito is for app users, not an AD proxy."]
+]);
+Q("iam", 0, "Which AWS Directory Service option is an AD-compatible managed directory in AWS that CANNOT be joined with an on-premises Active Directory?", [
+  ["Simple AD", "Simple AD is a standalone AD-compatible directory. It cannot join or trust on-premises AD."],
+  ["AD Connector", "AD Connector exists only to connect to on-premises AD."],
+  ["AWS Managed Microsoft AD", "Managed Microsoft AD can set up a trust with on-premises AD."],
+  ["IAM Identity Center", "Identity Center can use AD as an identity source."]
+]);
+Q("iam", 0, "How is access to the AWS Management Console protected for an IAM user, following best practices?", [
+  ["Password plus MFA", "Console = password + MFA. CLI and SDK = access keys."],
+  ["Access key ID and secret access key", "Access keys are for programmatic access (CLI and SDK)."],
+  ["An EC2 key pair", "Key pairs are for SSH into instances."],
+  ["A security group", "Security groups are network firewalls for resources."]
+]);
+
+// Network & application protection
+Q("netsec", 0, "Which AWS service provides FREE, automatic protection for all customers against common layer 3 and layer 4 DDoS attacks such as SYN floods and UDP reflection?", [
+  ["AWS Shield Standard", "Shield Standard is free and automatically enabled for every AWS customer."],
+  ["AWS Shield Advanced", "Shield Advanced is a paid service ($3,000 per month per organization) with extra protections."],
+  ["AWS WAF", "WAF is a layer 7 web application firewall. You pay for it and configure its rules."],
+  ["AWS Firewall Manager", "Firewall Manager centrally manages rules across accounts. It is not free DDoS protection."]
+]);
+Q("netsec", 0, "A company wants 24/7 access to the AWS DDoS Response Team and protection against unexpected cost spikes caused by DDoS attacks on its CloudFront and Route 53 resources. Which service should it use?", [
+  ["AWS Shield Advanced", "Shield Advanced adds protection against sophisticated attacks, 24/7 access to the DDoS Response Team, and protection against DDoS-related fee spikes."],
+  ["AWS Shield Standard", "Shield Standard gives basic automatic protection but no response team and no cost protection."],
+  ["Amazon GuardDuty", "GuardDuty is threat detection, not DDoS mitigation."],
+  ["Amazon Inspector", "Inspector scans for vulnerabilities."]
+]);
+Q("netsec", 0, "A company wants to protect its web application from SQL injection and cross-site scripting (XSS) attacks. Which AWS service should it use?", [
+  ["AWS WAF", "WAF is a layer 7 (HTTP) firewall with rules that block common exploits such as SQL injection and XSS."],
+  ["AWS Shield Standard", "Shield Standard protects against layer 3 and 4 DDoS attacks, not application exploits."],
+  ["Security groups", "Security groups filter by port, protocol and IP. They cannot inspect HTTP content."],
+  ["Amazon Macie", "Macie finds sensitive data in S3."]
+]);
+Q("netsec", 0, "A company wants to block all HTTP requests that come from certain countries and limit how many requests a single IP address can send to its Application Load Balancer. What should it use?", [
+  ["AWS WAF with geo-match conditions and rate-based rules", "WAF web ACLs support geo-match (block countries) and rate-based rules (limit requests per IP, which also helps against DDoS)."],
+  ["Security group deny rules", "Security groups only have allow rules. They cannot deny or rate-limit."],
+  ["AWS Shield Standard", "Shield Standard has no configurable country or rate rules."],
+  ["Amazon Inspector", "Inspector does not filter traffic."]
+]);
+Q("netsec", 0, "AWS WAF can be deployed on all of the following resources EXCEPT which one?", [
+  ["Network Load Balancer", "WAF works at layer 7 and deploys on Application Load Balancers, API Gateway and CloudFront. An NLB works at layer 4."],
+  ["Application Load Balancer", "The ALB is a supported WAF target."],
+  ["Amazon CloudFront distribution", "CloudFront is a supported WAF target."],
+  ["Amazon API Gateway", "API Gateway is a supported WAF target."]
+]);
+Q("netsec", 0, "A company wants to filter traffic for its ENTIRE VPC, at layers 3 through 7, in every direction, including traffic to and from Direct Connect and Site-to-Site VPN. Which service fits?", [
+  ["AWS Network Firewall", "Network Firewall protects the whole VPC at layers 3 to 7: VPC to VPC, outbound, inbound, and to or from Direct Connect and VPN."],
+  ["Security groups", "Security groups protect individual resources such as EC2 instances, not the whole VPC."],
+  ["AWS WAF", "WAF protects HTTP applications on ALB, API Gateway and CloudFront."],
+  ["AWS Shield Standard", "Shield handles DDoS, not general traffic filtering."]
+]);
+Q("netsec", 0, "A company uses AWS Organizations and wants to centrally manage WAF rules, security groups and Shield Advanced protections across ALL of its accounts, and apply them automatically to new resources. Which service should it use?", [
+  ["AWS Firewall Manager", "Firewall Manager manages security rules across all accounts in an organization and applies them to new resources and new accounts."],
+  ["AWS Network Firewall", "Network Firewall filters VPC traffic but is not a cross-account rule manager."],
+  ["AWS Config", "Config records and evaluates configurations. It does not deploy firewall rules."],
+  ["Amazon Detective", "Detective investigates security findings."]
+]);
+Q("netsec", 0, "Which of the following penetration-testing activities is PROHIBITED on AWS?", [
+  ["Running a simulated DDoS attack against your own EC2 instances", "DoS, DDoS and simulated DoS/DDoS are prohibited, as are port, protocol and request flooding and DNS zone walking."],
+  ["Running a vulnerability scan against your own EC2 instances", "EC2 instances are on the list of services you can test without prior approval."],
+  ["Testing your own Amazon RDS instance", "RDS can be tested without prior approval."],
+  ["Testing your own AWS Lambda functions", "Lambda and Lambda@Edge can be tested without prior approval."]
+]);
+Q("netsec", 0, "Which of the following can a customer penetration-test WITHOUT prior approval from AWS?", [
+  ["Their own Amazon CloudFront distributions", "CloudFront is on the approved list, along with EC2, NAT gateways, ELB, RDS, Aurora, API Gateway, Lambda, Lightsail and Elastic Beanstalk."],
+  ["DNS zone walking through Amazon Route 53 hosted zones", "DNS zone walking through Route 53 hosted zones is explicitly prohibited."],
+  ["Protocol flooding against their application", "Protocol flooding is prohibited."],
+  ["Request flooding against a login API", "Request flooding (login or API) is prohibited."]
+]);
+Q("netsec", 0, "A company notices that EC2 instances with AWS-owned IP addresses are port-scanning and sending spam to its servers. What should the company do?", [
+  ["Report it to the AWS Trust & Safety team using the AWS abuse form (or abuse@amazonaws.com)", "AWS Abuse handles reports of AWS resources used for spam, port scanning, DoS, intrusion attempts, malware and similar abuse."],
+  ["Enable Shield Advanced on the attacker's account", "You cannot manage another customer's account."],
+  ["Open a case with AWS Artifact", "Artifact is a portal for compliance reports, not incident reporting."],
+  ["Do nothing, because AWS allows port scanning from its IP addresses", "Port scanning others is abuse and against the Acceptable Use Policy."]
+]);
+Q("netsec", 0, "Which combination of AWS services helps absorb and mitigate DDoS attacks at the edge, before traffic reaches the application?", [
+  ["Amazon CloudFront and Amazon Route 53, protected by AWS Shield", "CloudFront and Route 53 use the global edge network. Together with Shield, attacks are mitigated at the edge."],
+  ["A single EC2 instance with an Elastic IP address", "A single instance is easy to overwhelm and has no edge protection."],
+  ["Amazon EBS snapshots", "Snapshots are backups. They do not mitigate traffic."],
+  ["S3 One Zone-IA", "This is a storage class, not a network protection."]
+]);
+Q("netsec", 0, "At which OSI layer does AWS WAF operate?", [
+  ["Layer 7 (application, HTTP)", "WAF inspects HTTP requests: headers, body, URI strings and IPs."],
+  ["Layer 3 (network)", "Layer 3/4 DDoS protection is Shield's area. The Gateway Load Balancer also works at layer 3."],
+  ["Layer 4 (transport)", "Layer 4 is TCP/UDP. The Network Load Balancer works there, not WAF."],
+  ["Layer 1 (physical)", "No AWS security service a customer configures works at the physical layer."]
+]);
+
+// Encryption & secrets
+Q("crypto", 0, "Which of the following is an example of data AT REST?", [
+  ["Data stored on an Amazon EBS volume", "At rest means stored or archived on a device, such as EBS, RDS, S3 or S3 Glacier Deep Archive."],
+  ["Data sent from a browser to a web server over HTTPS", "That is data in transit."],
+  ["Data copied from on premises to AWS over a VPN", "That is data in transit."],
+  ["Data moving from an EC2 instance to DynamoDB", "That is data in transit."]
+]);
+Q("crypto", 0, "A company needs a managed service to create and control the encryption keys used to encrypt data in services such as EBS, S3 and RDS. Which service should it use?", [
+  ["AWS Key Management Service (KMS)", "On the exam, 'encryption' usually points to KMS. AWS manages the key infrastructure and it integrates with most services."],
+  ["AWS Certificate Manager (ACM)", "ACM manages SSL/TLS certificates for encryption in transit, not data-encryption keys."],
+  ["AWS Secrets Manager", "Secrets Manager stores and rotates secrets such as database passwords."],
+  ["Amazon Macie", "Macie discovers sensitive data. It does not manage keys."]
+]);
+Q("crypto", 0, "A company's regulations require encryption keys to be stored on dedicated, single-tenant hardware validated to FIPS 140-2 Level 3, with the company, not AWS, managing the keys. Which service meets this requirement?", [
+  ["AWS CloudHSM", "CloudHSM gives you dedicated, tamper-resistant hardware security modules (FIPS 140-2 Level 3). AWS manages the hardware and you fully manage the keys."],
+  ["AWS KMS with AWS managed keys", "With AWS managed keys, AWS creates and manages the keys."],
+  ["AWS Certificate Manager", "ACM manages TLS certificates, not dedicated key hardware."],
+  ["AWS Secrets Manager", "Secrets Manager stores secrets, encrypted with KMS."]
+]);
+Q("crypto", 0, "A company needs free public SSL/TLS certificates for HTTPS on its Application Load Balancer and CloudFront distribution, and it wants them renewed automatically. Which service should it use?", [
+  ["AWS Certificate Manager (ACM)", "ACM provisions and deploys SSL/TLS certificates, is free for public certificates, renews them automatically, and integrates with ELB, CloudFront and API Gateway."],
+  ["AWS KMS", "KMS manages encryption keys, not TLS certificates."],
+  ["AWS CloudHSM", "CloudHSM is dedicated key hardware."],
+  ["AWS Secrets Manager", "Secrets Manager stores secrets such as database credentials."]
+]);
+Q("crypto", 0, "A company wants to store its Amazon RDS database credentials securely and have them rotated automatically every 30 days. Which service is BEST suited?", [
+  ["AWS Secrets Manager", "Secrets Manager can force rotation every X days, generates new secrets using Lambda, integrates natively with RDS, and encrypts secrets with KMS."],
+  ["AWS KMS", "KMS manages encryption keys but does not store or rotate database passwords."],
+  ["AWS Certificate Manager", "ACM manages certificates, not database credentials."],
+  ["IAM Credentials Report", "This reports on IAM user credentials. It does not store or rotate secrets."]
+]);
+Q("crypto", 0, "For which of the following is encryption ALWAYS enabled and not something the customer needs to turn on?", [
+  ["Amazon S3 Glacier", "In the course material, encryption is always on for CloudTrail logs, S3 Glacier and Storage Gateway."],
+  ["Amazon EBS volumes", "EBS encryption is opt-in."],
+  ["Amazon RDS databases", "RDS encryption is opt-in and chosen when the database is created."],
+  ["Amazon EFS file systems", "EFS encryption is opt-in."]
+]);
+Q("crypto", 0, "Which type of KMS key is created and managed by AWS on your behalf and used by a specific service in your account, with an alias such as aws/s3 or aws/ebs?", [
+  ["AWS managed key", "AWS managed keys are created and managed for you and used by a service (aws/s3, aws/ebs, aws/redshift)."],
+  ["Customer managed key", "You create, manage, enable or disable, and optionally rotate customer managed keys yourself."],
+  ["AWS owned key", "AWS owned keys are used by a service across many accounts and are not visible to you."],
+  ["CloudHSM key", "CloudHSM keys are generated on your own CloudHSM cluster."]
+]);
+Q("crypto", 0, "A company needs full control over its KMS keys, including the ability to enable, disable and schedule rotation of each key. Which type of KMS key should it use?", [
+  ["Customer managed key", "Customer managed keys are created, managed and used by you, with enable/disable and optional yearly rotation. You can even bring your own key material."],
+  ["AWS managed key", "AWS manages these for you, and you cannot disable them."],
+  ["AWS owned key", "You cannot see or manage AWS owned keys."],
+  ["An ACM certificate", "Certificates are for TLS, not KMS key management."]
+]);
+Q("crypto", 0, "What does encryption IN TRANSIT protect?", [
+  ["Data moving across a network, for example between a client and a server using TLS", "In transit means data moving across the network, such as on-premises to AWS or EC2 to DynamoDB."],
+  ["Data stored on a hard disk", "That is data at rest."],
+  ["Data in an archived S3 Glacier object", "That is data at rest."],
+  ["The physical servers in an AWS data center", "Physical security is a different control."]
+]);
+Q("crypto", 0, "What happens by default when a new object is uploaded to Amazon S3 without specifying any encryption?", [
+  ["S3 encrypts it on the server side using SSE-S3", "Server-side encryption with S3-managed keys (SSE-S3) is on by default. SSE-KMS is opt-in."],
+  ["It is stored unencrypted", "Since 2023, S3 encrypts all new objects by default."],
+  ["It is rejected until the client encrypts it", "S3 does not reject unencrypted uploads by default."],
+  ["It is encrypted with a key stored in the customer's CloudHSM", "CloudHSM keys are never used by default."]
+]);
+Q("crypto", 0, "A company's policy requires that data be encrypted BEFORE it leaves the company's own servers and is uploaded to Amazon S3. Which approach meets this requirement?", [
+  ["Client-side encryption", "With client-side encryption, you encrypt the data yourself before uploading it."],
+  ["Server-side encryption with SSE-S3", "Server-side encryption happens after S3 receives the data."],
+  ["S3 Versioning", "Versioning keeps object versions but does not encrypt anything."],
+  ["S3 Block Public Access", "This prevents public exposure but does not encrypt data."]
+]);
+
+// Compliance, detection & investigation
+Q("detect", 0, "An external auditor asks for AWS's SOC 2 and PCI DSS compliance reports. Where can the company download them on demand?", [
+  ["AWS Artifact", "Artifact is a self-service portal for AWS compliance reports (ISO, PCI, SOC) and agreements."],
+  ["AWS Config", "Config reports on YOUR resources' compliance with rules, not AWS's third-party audit reports."],
+  ["AWS Security Hub", "Security Hub aggregates security findings for your accounts."],
+  ["Amazon Inspector", "Inspector reports software vulnerabilities in your workloads."]
+]);
+Q("detect", 0, "A healthcare company must review and accept the Business Associate Addendum (BAA) for HIPAA with AWS. Where can it do this?", [
+  ["AWS Artifact (Agreements)", "Artifact Agreements let you review, accept and track agreements such as the BAA for an account or an organization."],
+  ["AWS IAM Identity Center", "Identity Center provides single sign-on, not legal agreements."],
+  ["AWS Acceptable Use Policy page", "The AUP lists prohibited uses. You don't accept a BAA there."],
+  ["Amazon Macie", "Macie finds PII in S3. It doesn't manage agreements."]
+]);
+Q("detect", 0, "Which service uses machine learning, anomaly detection and third-party threat intelligence to analyze CloudTrail events, VPC Flow Logs and DNS logs for threats, and can be enabled with one click with no agents to install?", [
+  ["Amazon GuardDuty", "GuardDuty is intelligent threat discovery. It is enabled with one click (30-day trial) and analyzes CloudTrail, VPC Flow Logs, DNS logs and more."],
+  ["Amazon Inspector", "Inspector scans workloads for vulnerabilities. It does not analyze logs for threats."],
+  ["AWS Config", "Config records configuration changes."],
+  ["Amazon Macie", "Macie finds sensitive data in S3."]
+]);
+Q("detect", 0, "A company suspects that some of its EC2 instances have been compromised and are being used for cryptocurrency mining. Which service can detect this?", [
+  ["Amazon GuardDuty", "GuardDuty has dedicated findings for cryptocurrency attacks and unusual network behavior."],
+  ["Amazon Inspector", "Inspector finds vulnerabilities before they are exploited, not active mining behavior."],
+  ["AWS Artifact", "Artifact provides compliance documents."],
+  ["AWS Shield Standard", "Shield handles DDoS attacks, not compromised instances."]
+]);
+Q("detect", 0, "Which service automatically scans EC2 instances, container images in Amazon ECR, and Lambda functions for software vulnerabilities (CVEs) and unintended network exposure?", [
+  ["Amazon Inspector", "Inspector runs automated security assessments for EC2 (through the SSM agent), ECR images and Lambda functions, and gives each finding a risk score."],
+  ["Amazon GuardDuty", "GuardDuty detects threats from log analysis. It does not scan software packages for CVEs."],
+  ["Amazon Detective", "Detective investigates the root cause of findings."],
+  ["AWS WAF", "WAF filters HTTP traffic."]
+]);
+Q("detect", 0, "A company wants to record how its AWS resource configurations change over time and be alerted when a resource becomes non-compliant, for example a security group that allows SSH from anywhere. Which service should it use?", [
+  ["AWS Config", "Config audits and records configurations and compliance over time, sends SNS alerts on changes, and answers questions such as 'is SSH open to the world?'"],
+  ["Amazon GuardDuty", "GuardDuty detects threats but does not track configuration history or compliance rules."],
+  ["Amazon Inspector", "Inspector finds software vulnerabilities."],
+  ["AWS Artifact", "Artifact provides AWS's compliance reports, not your resource configurations."]
+]);
+Q("detect", 0, "A company needs to automatically discover and protect personally identifiable information (PII), such as credit card and passport numbers, stored in its Amazon S3 buckets. Which service should it use?", [
+  ["Amazon Macie", "Macie uses machine learning and pattern matching to find sensitive data (PII) in S3 and alerts you through EventBridge."],
+  ["Amazon Inspector", "Inspector scans compute workloads for vulnerabilities, not S3 data."],
+  ["AWS Shield", "Shield protects against DDoS attacks."],
+  ["AWS Config", "Config tracks configurations, not the contents of objects."]
+]);
+Q("detect", 0, "A security team wants a single dashboard that aggregates findings from GuardDuty, Inspector, Macie and IAM Access Analyzer across multiple AWS accounts and runs automated security checks. Which service should it use?", [
+  ["AWS Security Hub", "Security Hub centralizes security across multiple accounts, aggregates findings from many services, and runs automated checks."],
+  ["Amazon Detective", "Detective investigates the root cause. It does not aggregate findings from all these services."],
+  ["AWS Firewall Manager", "Firewall Manager manages firewall rules across accounts."],
+  ["AWS Artifact", "Artifact provides compliance documents."]
+]);
+Q("detect", 0, "Which service must be enabled before you can use AWS Security Hub?", [
+  ["AWS Config", "Security Hub requires AWS Config to be enabled, because its automated checks rely on Config."],
+  ["Amazon Macie", "Macie is an optional source of findings."],
+  ["AWS Shield Advanced", "Shield Advanced is not a prerequisite."],
+  ["AWS CloudHSM", "CloudHSM is unrelated to Security Hub."]
+]);
+Q("detect", 0, "After GuardDuty raises a finding, the security team wants to investigate the ROOT CAUSE using machine learning and graph visualizations built from VPC Flow Logs, CloudTrail and GuardDuty data. Which service should it use?", [
+  ["Amazon Detective", "Detective analyzes, investigates and quickly finds the root cause of security issues, using ML and graphs over automatically collected data."],
+  ["Amazon Inspector", "Inspector scans for vulnerabilities. It does not investigate incidents."],
+  ["AWS Config", "Config shows configuration history, not a security investigation graph."],
+  ["Amazon Macie", "Macie finds sensitive data in S3."]
+]);
+Q("detect", 0, "A company wants to find which of its resources, such as S3 buckets, IAM roles and KMS keys, are shared with principals OUTSIDE its AWS account or organization (its zone of trust). Which feature should it use?", [
+  ["IAM Access Analyzer", "Access Analyzer defines a zone of trust (account or organization) and produces findings for resources shared outside it."],
+  ["IAM Access Advisor", "Access Advisor shows which services a user used last. It does not show external sharing."],
+  ["IAM Credentials Report", "This lists user credential status."],
+  ["Amazon GuardDuty", "GuardDuty detects threats, not resource-sharing configurations."]
+]);
+Q("detect", 0, "What is required to start using Amazon GuardDuty?", [
+  ["Enable it with one click; there is no software or agent to install", "GuardDuty is one click to enable with a 30-day trial. It reads data sources such as CloudTrail, VPC Flow Logs and DNS logs on its own."],
+  ["Install the GuardDuty agent on every EC2 instance", "No agent is required for core GuardDuty."],
+  ["Buy a license from AWS Marketplace", "GuardDuty is a native AWS service."],
+  ["Deploy a Gateway Load Balancer in front of the VPC", "No network appliances are needed."]
+]);
+Q("detect", 0, "Which service gives an organization on-demand access to AWS security and compliance documentation to support its INTERNAL audits?", [
+  ["AWS Artifact", "Artifact supports internal audit and compliance with on-demand AWS reports and agreements."],
+  ["Amazon GuardDuty", "GuardDuty is threat detection."],
+  ["IAM Access Analyzer", "Access Analyzer finds externally shared resources."],
+  ["AWS WAF", "WAF is a web application firewall."]
+]);
+
+// Domain 3 — Cloud Technology & Services (EC2 through S3 + data transfer)
+Q("ec2", 0, "A company wants every new EC2 instance to automatically install software updates and download its application files the first time it boots. What should it use?", [
+  ["EC2 User Data", "User Data is a bootstrap script that runs once, at first launch, as the root user. It is used for installing updates and software and downloading files."],
+  ["An IAM role", "An IAM role grants permissions. It doesn't run scripts."],
+  ["A security group", "A security group is a firewall."],
+  ["EC2 Instance Connect", "Instance Connect is a way to open an SSH session from the browser."]
+]);
+Q("ec2", 0, "Which statement about EC2 User Data scripts is correct?", [
+  ["They run once at the instance's first launch, with root privileges", "By default, User Data runs only at first boot, as root."],
+  ["They run every time the instance is rebooted, as a standard user", "By default they run only at first launch, and as root."],
+  ["They run only when the instance is terminated", "User Data is a boot-time script, not a shutdown hook."],
+  ["They are used to store the instance's IAM credentials", "Never store credentials in User Data. Use IAM roles."]
+]);
+Q("ec2", 0, "In the EC2 instance type name m5.2xlarge, what does the '5' represent?", [
+  ["The generation of the instance class", "'m' is the instance class, '5' the generation, and '2xlarge' the size within the class."],
+  ["The instance class (family)", "The class is 'm'."],
+  ["The size of the instance", "The size is '2xlarge'."],
+  ["The number of vCPUs", "The name doesn't encode the vCPU count directly. An m5.2xlarge actually has 8 vCPUs."]
+]);
+Q("ec2", 0, "A company runs batch processing, media transcoding and dedicated gaming servers that need high-performance processors. Which EC2 instance family is MOST appropriate?", [
+  ["Compute optimized", "Compute optimized instances (such as C family) are designed for compute-bound work: batch processing, transcoding, HPC, scientific modeling, ML and gaming servers."],
+  ["Memory optimized", "Memory optimized is for large in-memory datasets."],
+  ["Storage optimized", "Storage optimized is for high sequential read/write to local storage."],
+  ["General purpose", "General purpose is balanced. It fits web servers and code repositories, not compute-intensive work."]
+]);
+Q("ec2", 0, "Which EC2 instance family is BEST for a high-performance in-memory database and real-time processing of large unstructured data sets?", [
+  ["Memory optimized", "Memory optimized instances (such as R family) are for workloads that process large datasets in memory, such as in-memory databases and BI."],
+  ["Compute optimized", "Compute optimized favors CPU-bound work."],
+  ["Storage optimized", "Storage optimized favors high I/O to local disks."],
+  ["General purpose", "General purpose has balanced resources, not large memory."]
+]);
+Q("ec2", 0, "A workload needs very high, sequential read and write access to large datasets on LOCAL storage, for example a data warehouse or high-frequency OLTP. Which EC2 instance family should be used?", [
+  ["Storage optimized", "Storage optimized instances are built for high sequential read/write on local storage: OLTP, data warehousing and distributed file systems."],
+  ["Memory optimized", "Memory optimized focuses on RAM."],
+  ["Compute optimized", "Compute optimized focuses on CPU."],
+  ["General purpose", "General purpose balances compute, memory and networking."]
+]);
+Q("ec2", 0, "What are the DEFAULT rules of a newly created EC2 security group?", [
+  ["All inbound traffic is blocked and all outbound traffic is allowed", "By default, a security group denies all inbound traffic and allows all outbound traffic. You add allow rules for inbound access."],
+  ["All inbound traffic is allowed and all outbound traffic is blocked", "It is the other way around."],
+  ["All inbound and outbound traffic is allowed", "Inbound traffic is blocked by default."],
+  ["All inbound and outbound traffic is blocked", "Outbound traffic is allowed by default."]
+]);
+Q("ec2", 0, "Which type of rules can an EC2 security group contain?", [
+  ["Allow rules only", "Security groups contain only allow rules. Anything not explicitly allowed is blocked. Rules can reference IP ranges or other security groups."],
+  ["Deny rules only", "Security groups have no deny rules."],
+  ["Both allow and deny rules", "Only allow rules exist in security groups."],
+  ["Only rules that reference other AWS accounts", "Rules reference IP ranges (IPv4/IPv6) or security groups."]
+]);
+Q("ec2", 0, "A user tries to SSH into a newly launched EC2 instance, and the connection TIMES OUT. What is the MOST likely cause?", [
+  ["The security group does not allow inbound traffic on port 22", "A timeout almost always means a security group issue. A 'connection refused' error means the app isn't running or has an error."],
+  ["The application on the instance has crashed", "An application problem gives 'connection refused', not a timeout."],
+  ["The instance type is too small", "Instance size doesn't cause SSH timeouts."],
+  ["The IAM user has no S3 permissions", "IAM permissions don't affect network connectivity to the instance."]
+]);
+Q("ec2", 0, "An administrator needs to connect remotely to the desktop of a Windows EC2 instance. Which port must be open in the security group?", [
+  ["3389 (RDP)", "RDP (Remote Desktop Protocol) on port 3389 is used to log in to Windows instances."],
+  ["22 (SSH)", "SSH on port 22 is used for Linux instances (and SFTP)."],
+  ["80 (HTTP)", "Port 80 is unencrypted web traffic."],
+  ["21 (FTP)", "Port 21 is FTP file transfer."]
+]);
+Q("ec2", 0, "A web server on EC2 must accept secure web traffic from the internet. Which inbound port should be allowed in its security group?", [
+  ["443", "HTTPS uses port 443."],
+  ["80", "Port 80 is plain HTTP, not secure."],
+  ["22", "Port 22 is SSH."],
+  ["3389", "Port 3389 is RDP."]
+]);
+Q("ec2", 0, "A user wants to open an SSH session to an Amazon Linux 2 instance directly from the browser, without managing a key file. Which option should they use, and what is still required?", [
+  ["EC2 Instance Connect; port 22 must still be allowed in the security group", "Instance Connect pushes a temporary key for you, but it still uses SSH, so port 22 must be open."],
+  ["EC2 Instance Connect; no ports need to be open", "Instance Connect uses SSH underneath, so port 22 must be open."],
+  ["PuTTY; port 3389 must be open", "PuTTY is a desktop SSH client that needs a key, and 3389 is RDP."],
+  ["AWS CLI; port 443 must be open", "The CLI calls AWS APIs. It doesn't open a shell on the instance."]
+]);
+Q("ec2", 1, "An EC2 security group allows inbound HTTPS (port 443) from anywhere. Is the response traffic back to the client allowed automatically?", [
+  ["Yes, because security groups are stateful, so return traffic for allowed requests is automatically allowed", "Security groups are stateful: if a request is allowed in, the response is allowed out, whatever the outbound rules say."],
+  ["No, an outbound rule for each client IP must be added", "Stateful security groups don't need this."],
+  ["No, security groups block all return traffic by default", "Return traffic for allowed connections is always permitted."],
+  ["Only if AWS WAF is attached to the instance", "WAF cannot be attached to EC2 instances, and it is unrelated to return traffic."]
+]);
+Q("ec2", 0, "A company has a short-term workload with unpredictable usage that must NOT be interrupted. It cannot make any long-term commitment. Which EC2 purchasing option is MOST appropriate?", [
+  ["On-Demand Instances", "On-Demand has no commitment and no upfront payment, and it is never interrupted by AWS. It fits short-term, unpredictable workloads."],
+  ["Spot Instances", "Spot can be reclaimed at any time, so it is not suitable for uninterruptible work."],
+  ["Standard Reserved Instances (3-year)", "RIs require a 1- or 3-year commitment."],
+  ["Dedicated Hosts", "Dedicated Hosts are the most expensive option and are meant for licensing and compliance needs."]
+]);
+Q("ec2", 0, "A company runs a steady-state database on EC2 24/7 and expects to keep running it for the next 3 years. Which purchasing option gives the LARGEST discount for this workload?", [
+  ["3-year Standard Reserved Instance, All Upfront", "Steady-state workloads such as databases are ideal for RIs. A 3-year term with All Upfront gives the biggest RI discount (up to about 72%)."],
+  ["On-Demand Instances", "On-Demand is the most expensive option for continuous use."],
+  ["Spot Instances", "Spot can interrupt a database, so it is not appropriate even though it is cheap."],
+  ["1-year Convertible Reserved Instance, No Upfront", "Convertible and No Upfront both give smaller discounts than Standard with All Upfront over 3 years."]
+]);
+Q("ec2", 0, "A company runs fault-tolerant image-processing batch jobs that can be stopped and restarted at any time and have flexible start and end times. Which purchasing option is the MOST cost-effective?", [
+  ["Spot Instances", "Spot gives up to 90% off and is ideal for failure-resilient work such as batch, data analysis and image processing."],
+  ["On-Demand Instances", "On-Demand works but costs much more."],
+  ["Dedicated Instances", "Dedicated Instances add hardware isolation at extra cost."],
+  ["On-Demand Capacity Reservations", "Capacity Reservations give no discount."]
+]);
+Q("ec2", 0, "Which workload is NOT a good fit for EC2 Spot Instances?", [
+  ["A critical production database that must never be interrupted", "Spot capacity can be reclaimed with little warning. Never use it for critical jobs or databases."],
+  ["Distributed batch data analysis", "This is a classic Spot use case."],
+  ["Image rendering jobs that can be retried", "Retryable jobs are ideal for Spot."],
+  ["CI build agents that can be restarted", "Interruptible workers suit Spot."]
+]);
+Q("ec2", 0, "A company has server-bound software licenses (per-socket and per-core) that it wants to bring to AWS (BYOL). It also has strict regulatory requirements. Which EC2 option should it choose?", [
+  ["Dedicated Hosts", "A Dedicated Host is a whole physical server for you, with visibility into sockets and cores. It supports server-bound BYOL and compliance needs."],
+  ["Dedicated Instances", "Dedicated Instances run on dedicated hardware but don't give socket or core visibility or placement control for licensing."],
+  ["Spot Instances", "Spot is for interruptible workloads, not licensing."],
+  ["Savings Plans", "Savings Plans are a pricing commitment. They don't address licensing."]
+]);
+Q("ec2", 0, "A company needs its EC2 instances to run on hardware that is not shared with other AWS customers, but it does NOT need control over instance placement on specific physical servers. Which option is MOST cost-effective for this?", [
+  ["Dedicated Instances", "Dedicated Instances run on hardware dedicated to you (possibly shared with your own other instances), without placement control. They are cheaper than Dedicated Hosts."],
+  ["Dedicated Hosts", "Hosts give full server control but cost the most. They are more than required here."],
+  ["Spot Instances", "Spot instances run on shared hardware."],
+  ["On-Demand Capacity Reservations", "Capacity Reservations reserve capacity on shared hardware."]
+]);
+Q("ec2", 0, "A company must guarantee EC2 capacity in a specific Availability Zone for an important two-week event. It does not want a 1- or 3-year commitment. Which option meets this need?", [
+  ["On-Demand Capacity Reservations", "Capacity Reservations reserve On-Demand capacity in a specific AZ for any duration with no commitment. You pay the On-Demand rate whether you use it or not."],
+  ["Standard Reserved Instances", "RIs require a 1- or 3-year term."],
+  ["Spot Instances", "Spot capacity is never guaranteed."],
+  ["Savings Plans", "Savings Plans require a 1- or 3-year commitment and do not reserve capacity."]
+]);
+Q("ec2", 0, "A company commits to spending $10 per hour on EC2 for 1 year in exchange for a discount, while keeping the flexibility to change instance size and operating system. Any usage above $10 per hour is billed at On-Demand rates. Which pricing model is this?", [
+  ["Savings Plans", "With Savings Plans you commit to a $/hour amount for 1 or 3 years. Usage above that is billed On-Demand, and you keep flexibility over size, OS and tenancy."],
+  ["Spot Instances", "Spot has no commitment and can be interrupted."],
+  ["Dedicated Hosts", "Dedicated Hosts are about physical servers, not an hourly spending commitment."],
+  ["On-Demand Capacity Reservations", "These reserve capacity without a discount."]
+]);
+Q("ec2", 1, "A company wants a 3-year commitment discount that applies automatically across ANY EC2 instance family and Region, and also to AWS Fargate and AWS Lambda usage. Which option should it choose?", [
+  ["Compute Savings Plans", "Compute Savings Plans are the most flexible. They apply across instance family, size, OS, tenancy and Region, and also cover Fargate and Lambda."],
+  ["EC2 Instance Savings Plans", "EC2 Instance Savings Plans give a larger discount but are locked to one instance family in one Region (for example M5 in us-east-1)."],
+  ["Standard Reserved Instances", "Standard RIs are tied to specific instance attributes and don't cover Lambda or Fargate."],
+  ["Spot Instances", "Spot is not a commitment-based discount."]
+]);
+Q("ec2", 0, "A company wants a Reserved Instance discount but expects to change the instance family and operating system during the term. Which option fits BEST?", [
+  ["Convertible Reserved Instances", "Convertible RIs let you change instance type, family, OS, scope and tenancy, with a somewhat smaller discount (up to about 66%)."],
+  ["Standard Reserved Instances", "Standard RIs lock in the instance family and OS in exchange for a bigger discount."],
+  ["Dedicated Hosts", "Dedicated Hosts are about physical isolation and licensing."],
+  ["On-Demand Instances", "On-Demand has no discount."]
+]);
+Q("ec2", 0, "Which EC2 purchasing option is generally the MOST expensive?", [
+  ["Dedicated Hosts", "A whole physical server reserved for you is the most expensive option."],
+  ["Spot Instances", "Spot is the cheapest option (up to 90% off)."],
+  ["Reserved Instances", "RIs are discounted in exchange for a commitment."],
+  ["Savings Plans", "Savings Plans are discounted in exchange for a commitment."]
+]);
+Q("ec2", 0, "How are On-Demand Linux and Windows EC2 instances billed?", [
+  ["Per second, after the first minute", "Linux and Windows On-Demand instances are billed per second after a 1-minute minimum. Other operating systems are billed per hour."],
+  ["Per hour, rounded up", "Per-hour billing applies to other operating systems."],
+  ["Per day", "EC2 is not billed per day."],
+  ["A fixed monthly fee", "On-Demand is pay-as-you-go with no fixed fee."]
+]);
+Q("ec2", 0, "A company no longer needs some of its Standard Reserved Instances before the term ends. Where can it try to sell them?", [
+  ["The Reserved Instance Marketplace", "Unused Standard RIs can be sold on the RI Marketplace. Registering as a seller is a root-user task."],
+  ["AWS Artifact", "Artifact provides compliance documents."],
+  ["The Spot Instance market", "Spot is spare AWS capacity, not a resale market."],
+  ["AWS Marketplace for AMIs", "AWS Marketplace sells third-party software, not Reserved Instances."]
+]);
+Q("ec2", 0, "A company wants to launch many EC2 instances that already have its software, configuration and monitoring agents installed, so they boot and become ready faster. What should it create?", [
+  ["An Amazon Machine Image (AMI)", "An AMI is a customized image (OS, software, config). Instances launched from it boot faster because everything is pre-installed."],
+  ["An EBS snapshot only", "Snapshots back up volumes. An AMI is what you launch instances from, and creating one also creates snapshots."],
+  ["A security group", "Security groups are firewalls."],
+  ["A User Data script that is shared across Regions", "User Data runs at boot and slows startup. It is not a pre-built image."]
+]);
+Q("ec2", 0, "A company created a custom AMI in us-east-1 and needs to launch instances from it in eu-west-1. What should it do?", [
+  ["Copy the AMI to the eu-west-1 Region", "AMIs are built for a specific Region but can be copied to other Regions."],
+  ["Nothing, because AMIs are global", "AMIs are Regional."],
+  ["Recreate the AMI from scratch in eu-west-1", "Copying is simpler and gives the same image."],
+  ["Attach the AMI to an IAM role", "IAM roles don't move AMIs."]
+]);
+Q("ec2", 0, "A company wants to buy a pre-configured AMI from a third-party vendor that includes a commercial firewall appliance. Where can it find this?", [
+  ["AWS Marketplace", "AWS Marketplace offers third-party AMIs (some paid), along with SaaS and other listings. Charges appear on your AWS bill."],
+  ["AWS Artifact", "Artifact provides compliance reports."],
+  ["EC2 Image Builder", "Image Builder automates building your own images. It doesn't sell third-party ones."],
+  ["AWS Snowball", "Snowball is a data transfer device."]
+]);
+Q("ec2", 0, "A company wants to automatically build, test and distribute updated AMIs every week, including security patches, across several Regions. Which service should it use?", [
+  ["EC2 Image Builder", "Image Builder automates creating, maintaining, validating and testing AMIs and container images on a schedule, and can distribute them to multiple Regions. It is free; you pay for the underlying resources."],
+  ["AWS Config", "Config tracks configurations. It doesn't build images."],
+  ["Amazon Inspector", "Inspector scans for vulnerabilities, but it doesn't build AMIs."],
+  ["EC2 User Data", "User Data runs at instance launch. It is not an image pipeline."]
+]);
+
+// EC2 storage
+Q("storage", 0, "An application needs a block storage volume for its EC2 instance that keeps its data even after the instance is terminated. Which storage should it use?", [
+  ["Amazon EBS volume (with Delete on Termination disabled)", "EBS is a network drive that can persist independently of the instance. Non-root EBS volumes are kept by default when the instance terminates."],
+  ["EC2 instance store", "Instance store is ephemeral. Its data is lost when the instance stops or terminates."],
+  ["Amazon S3", "S3 is object storage, not a block volume attached to an instance."],
+  ["The instance's RAM", "Memory is lost when the instance stops."]
+]);
+Q("storage", 0, "An EBS volume was created in us-east-1a. The company needs to use its data with an instance in us-east-1b. What should it do?", [
+  ["Create a snapshot of the volume and restore a new volume from it in us-east-1b", "EBS volumes are locked to one AZ. To move one, snapshot it and create a new volume from the snapshot in the target AZ."],
+  ["Attach the volume directly to the instance in us-east-1b", "An EBS volume can only attach to instances in its own AZ."],
+  ["Change the volume's AZ setting in the console", "There is no such setting. You must use a snapshot."],
+  ["Move it with S3 Cross-Region Replication", "CRR copies S3 objects, not EBS volumes."]
+]);
+Q("storage", 0, "By default, what happens to an EC2 instance's EBS volumes when the instance is terminated?", [
+  ["The root volume is deleted, and any additional attached volumes are kept", "Delete on Termination is enabled by default for the root volume and disabled for other volumes. You can change this."],
+  ["All attached EBS volumes are deleted", "Only the root volume is deleted by default."],
+  ["All attached EBS volumes are kept", "The root volume is deleted by default."],
+  ["All volumes are automatically converted into snapshots", "Termination doesn't create snapshots automatically."]
+]);
+Q("storage", 0, "A company wants to keep EBS snapshots for years for compliance at the LOWEST cost and can accept a restore time of 24 to 72 hours. What should it use?", [
+  ["EBS Snapshot Archive", "Snapshot Archive is a tier that is 75% cheaper, with 24 to 72 hours to restore."],
+  ["Recycle Bin", "Recycle Bin protects against accidental deletion. It is not a cheaper storage tier."],
+  ["EC2 instance store", "Instance store is ephemeral and cannot hold snapshots."],
+  ["Amazon EFS Standard", "EFS is a shared file system and is expensive for this."]
+]);
+Q("storage", 0, "An administrator accidentally deletes an important EBS snapshot. Which feature could have allowed the company to recover it?", [
+  ["Recycle Bin with a retention rule", "Recycle Bin rules keep deleted snapshots and AMIs for a retention period (1 day to 1 year) so they can be recovered."],
+  ["EBS Snapshot Archive", "Archive is a cheaper tier. It doesn't protect against deletion."],
+  ["S3 Versioning", "S3 Versioning protects S3 objects, not EBS snapshots that you manage."],
+  ["EC2 User Data", "User Data is a boot script."]
+]);
+Q("storage", 0, "An application needs the HIGHEST possible disk I/O performance for temporary cache and scratch data, and losing that data is acceptable. Which storage option is BEST?", [
+  ["EC2 instance store", "Instance store is a physical disk on the host with very high IOPS. It is ideal for buffers, caches and scratch data."],
+  ["Amazon EBS", "EBS is network-attached, so it has a bit more latency than instance store."],
+  ["Amazon EFS", "EFS is a network file system, not the fastest local disk."],
+  ["Amazon S3 Glacier Deep Archive", "Deep Archive is archival storage with retrieval times of hours."]
+]);
+Q("storage", 0, "What happens to data on an EC2 instance store volume when the instance is STOPPED?", [
+  ["The data is lost", "Instance store is ephemeral. Data is lost when the instance stops or terminates, and it is at risk if the hardware fails."],
+  ["The data is kept until the instance is terminated", "Stopping the instance is enough to lose instance store data."],
+  ["The data is automatically copied to EBS", "There is no automatic copy. Backups are your job."],
+  ["The data is automatically moved to S3", "There is no automatic move to S3."]
+]);
+Q("storage", 0, "Hundreds of Linux EC2 instances across multiple Availability Zones need to read and write the SAME files at the same time. Which service should be used?", [
+  ["Amazon EFS", "EFS is a managed NFS file system that can be mounted on hundreds of Linux instances across multiple AZs."],
+  ["Amazon EBS", "An EBS volume attaches to one instance at a time (at this level) in one AZ."],
+  ["EC2 instance store", "Instance store is local to one host."],
+  ["S3 Glacier Flexible Retrieval", "Glacier is archival object storage, not a mounted file system."]
+]);
+Q("storage", 0, "A company stores files on Amazon EFS, but many files are not accessed for months. How can it reduce storage costs automatically without changing the application?", [
+  ["Enable an EFS lifecycle policy to move files to EFS Infrequent Access (EFS-IA)", "EFS-IA is up to 92% cheaper than EFS Standard. A lifecycle policy moves files that haven't been accessed for N days, and applications don't notice."],
+  ["Move the files to EC2 instance store", "Instance store is ephemeral and not shared."],
+  ["Convert the EFS file system to an EBS volume", "EBS isn't a shared file system, and there is no conversion."],
+  ["Enable S3 Transfer Acceleration", "Transfer Acceleration speeds up S3 uploads. It has nothing to do with EFS."]
+]);
+Q("storage", 0, "A company needs a fully managed, Windows-native shared file system that supports the SMB protocol and NTFS and integrates with Microsoft Active Directory. Which service should it use?", [
+  ["Amazon FSx for Windows File Server", "FSx for Windows provides SMB, NTFS and AD integration. It can be multi-AZ and reached from AWS or on premises."],
+  ["Amazon EFS", "EFS is NFS for Linux. It is not Windows SMB."],
+  ["Amazon FSx for Lustre", "Lustre is a Linux high-performance computing file system."],
+  ["Amazon EBS", "EBS is block storage for one instance."]
+]);
+Q("storage", 0, "A research team needs a high-performance file system for HPC and machine learning, with hundreds of GB/s of throughput and sub-millisecond latency, that can link to data in Amazon S3. Which service fits?", [
+  ["Amazon FSx for Lustre", "Lustre (Linux + cluster) is built for HPC, ML, analytics and video processing, and it integrates with S3."],
+  ["Amazon FSx for Windows File Server", "This is a Windows SMB file share, not an HPC file system."],
+  ["Amazon EFS Infrequent Access", "EFS-IA is a low-cost class for rarely used files."],
+  ["AWS Storage Gateway", "Storage Gateway is a hybrid bridge to S3, not an HPC file system."]
+]);
+Q("storage", 0, "Which AWS storage service is OBJECT storage?", [
+  ["Amazon S3", "S3 (and S3 Glacier) are object storage. EBS and instance store are block storage. EFS is file storage."],
+  ["Amazon EBS", "EBS is block storage."],
+  ["Amazon EFS", "EFS is file storage (NFS)."],
+  ["EC2 instance store", "Instance store is block storage."]
+]);
+Q("storage", 1, "A company wants to centrally define backup policies and automate backups of its EBS volumes, EFS file systems and RDS databases from one place, including across accounts and Regions. Which service should it use?", [
+  ["AWS Backup", "AWS Backup is a fully managed service that centralizes and automates backups across many AWS services using backup plans."],
+  ["AWS Storage Gateway", "Storage Gateway connects on-premises storage to AWS."],
+  ["AWS DataSync", "DataSync moves data between on-premises storage and AWS."],
+  ["EC2 Image Builder", "Image Builder builds AMIs."]
+]);
+Q("storage", 0, "At the Cloud Practitioner level, how many EC2 instances can a standard EBS volume be attached to at one time?", [
+  ["One", "An EBS volume is attached to one instance at a time. Multi-Attach for some io1/io2 volumes exists, but it is beyond this exam's scope."],
+  ["Up to hundreds, like Amazon EFS", "Mounting on hundreds of instances is EFS, not EBS."],
+  ["Any number within the same Region", "An EBS volume is locked to one AZ and attaches to one instance."],
+  ["Zero, because EBS volumes cannot be attached", "EBS volumes are designed to be attached to instances."]
+]);
+
+// ELB & Auto Scaling
+Q("elb", 0, "A company needs a load balancer for its HTTP/HTTPS web application that can route requests to different backend services based on the URL path. Which load balancer should it use?", [
+  ["Application Load Balancer (ALB)", "The ALB works at layer 7 (HTTP, HTTPS, gRPC) and supports HTTP routing features such as path-based routing."],
+  ["Network Load Balancer (NLB)", "The NLB works at layer 4 (TCP/UDP) and doesn't look at URL paths."],
+  ["Gateway Load Balancer (GWLB)", "The GWLB sends traffic through security appliances at layer 3."],
+  ["Classic Load Balancer", "The Classic Load Balancer was retired in 2023."]
+]);
+Q("elb", 0, "A gaming company needs a load balancer that handles millions of TCP and UDP requests per second with ultra-low latency and a static IP address. Which should it choose?", [
+  ["Network Load Balancer (NLB)", "The NLB works at layer 4 (TCP/UDP), offers ultra-high performance, and supports a static IP through an Elastic IP."],
+  ["Application Load Balancer (ALB)", "The ALB is for HTTP/HTTPS at layer 7 and provides a static DNS name, not a static IP."],
+  ["Gateway Load Balancer (GWLB)", "The GWLB is for routing traffic through firewalls and appliances."],
+  ["AWS WAF", "WAF is a firewall, not a load balancer."]
+]);
+Q("elb", 0, "A company must route all incoming network traffic through a fleet of third-party firewall and intrusion detection appliances running on EC2. Which load balancer is designed for this?", [
+  ["Gateway Load Balancer (GWLB)", "The GWLB works at layer 3 (GENEVE protocol on IP packets) and sends traffic through third-party security appliances."],
+  ["Application Load Balancer (ALB)", "The ALB routes HTTP requests to application targets."],
+  ["Network Load Balancer (NLB)", "The NLB balances TCP/UDP to application targets."],
+  ["Amazon CloudFront", "CloudFront is a CDN."]
+]);
+Q("elb", 0, "Which of the following is a benefit of using Elastic Load Balancing?", [
+  ["It runs health checks and stops sending traffic to unhealthy instances", "ELB spreads load, exposes one DNS access point, runs health checks, handles instance failures seamlessly, terminates SSL, and provides high availability across AZs."],
+  ["It encrypts EBS volumes attached to the instances", "EBS encryption is handled by KMS, not ELB."],
+  ["It stores static website files", "Static files belong in S3."],
+  ["It registers internet domain names", "Domain registration is a DNS function (Route 53)."]
+]);
+Q("elb", 0, "Why would a company choose the managed Elastic Load Balancing service instead of running its own load balancer software on EC2?", [
+  ["AWS guarantees it works and takes care of upgrades, maintenance and high availability", "A managed load balancer reduces operational effort. A self-managed one can be cheaper but takes much more work."],
+  ["ELB is always free", "ELB is billed per hour and per usage."],
+  ["A self-managed load balancer cannot do health checks", "A self-managed one can, but you must build and operate it yourself."],
+  ["ELB removes the need for security groups", "Security groups are still used with load balancers."]
+]);
+Q("elb", 0, "Which AWS feature automatically adds EC2 instances when load increases, removes them when load decreases, and replaces instances that fail health checks?", [
+  ["Amazon EC2 Auto Scaling group (ASG)", "An ASG scales out and in, keeps the instance count between minimum and maximum, registers instances with the load balancer, and replaces unhealthy ones."],
+  ["Elastic Load Balancing", "ELB distributes traffic but does not launch or terminate instances."],
+  ["EC2 Image Builder", "Image Builder creates AMIs."],
+  ["AWS Config", "Config records configurations."]
+]);
+Q("elb", 0, "A company wants its Auto Scaling group to keep the fleet's AVERAGE CPU utilization at about 40%, adding or removing instances as needed. Which scaling policy is this?", [
+  ["Target tracking scaling", "Target tracking keeps a metric (such as average CPU at 40%) near a target value."],
+  ["Scheduled scaling", "Scheduled scaling changes capacity at set times."],
+  ["Predictive scaling", "Predictive scaling uses ML forecasts to provision ahead of time."],
+  ["Manual scaling", "Manual scaling means changing the ASG size yourself."]
+]);
+Q("elb", 0, "An e-commerce site knows that traffic spikes every Friday at 5 PM. It wants to increase the minimum capacity of its Auto Scaling group to 10 just before then. Which scaling approach should it use?", [
+  ["Scheduled scaling", "Scheduled scaling anticipates known patterns, for example setting minimum capacity to 10 at 5 PM on Fridays."],
+  ["Target tracking scaling", "Target tracking reacts to a metric. It doesn't act at a set time."],
+  ["Simple/step scaling", "Step scaling reacts to CloudWatch alarms after load appears."],
+  ["Manual scaling", "Manual scaling would need a person to act every Friday."]
+]);
+Q("elb", 0, "Which Auto Scaling approach uses machine learning to forecast traffic from historical daily and weekly patterns and provisions capacity AHEAD of time?", [
+  ["Predictive scaling", "Predictive scaling forecasts load with ML and scales in advance. It fits time-based patterns."],
+  ["Target tracking scaling", "Target tracking reacts to current metric values."],
+  ["Scheduled scaling", "Scheduled scaling uses times you set yourself, not ML forecasts."],
+  ["Manual scaling", "Manual scaling is done by a person."]
+]);
+Q("elb", 0, "An Auto Scaling policy is configured as 'when a CloudWatch alarm shows CPU above 70%, add 2 instances; when CPU drops below 30%, remove 1 instance'. What type of scaling is this?", [
+  ["Simple/step scaling (dynamic)", "Simple/step scaling triggers on CloudWatch alarms with defined adjustments."],
+  ["Predictive scaling", "Predictive scaling uses ML forecasts, not alarm thresholds."],
+  ["Scheduled scaling", "Scheduled scaling is based on time."],
+  ["Vertical scaling", "Vertical scaling changes instance size. The ASG here adds and removes instances."]
+]);
+Q("elb", 0, "An Auto Scaling group is configured with minimum = 2, desired = 4 and maximum = 10. Under normal conditions with no scaling events, how many instances are running?", [
+  ["4", "The ASG runs the desired capacity. Scaling policies adjust desired capacity between minimum and maximum."],
+  ["2", "2 is the floor the ASG never goes below."],
+  ["10", "10 is the ceiling."],
+  ["0", "The minimum of 2 means the ASG never goes to zero here."]
+]);
+Q("elb", 0, "Which architecture gives a web application both high availability and elasticity?", [
+  ["An Auto Scaling group spanning multiple AZs behind an Elastic Load Balancer", "A multi-AZ ASG with a load balancer survives an AZ failure (high availability) and scales with demand (elasticity)."],
+  ["One large EC2 instance in a single AZ", "This has no redundancy and no automatic scaling."],
+  ["Two EC2 instances in the same AZ without a load balancer", "An AZ failure takes down both, and there is no automatic scaling."],
+  ["An EC2 instance with a larger EBS volume", "More storage doesn't provide high availability or elasticity."]
+]);
+
+// Amazon S3
+Q("s3", 0, "Which statement about Amazon S3 buckets is correct?", [
+  ["Buckets are created in a specific AWS Region, even though the S3 console looks global", "S3 looks global, but every bucket lives in one Region that you choose."],
+  ["Buckets are global resources with no Region", "Buckets are always created in a Region."],
+  ["A bucket spans all Regions automatically", "Data stays in its Region unless you replicate it."],
+  ["Buckets must be created in us-east-1", "You choose the Region for each bucket."]
+]);
+Q("s3", 0, "Which of the following is a VALID Amazon S3 bucket name?", [
+  ["company-logs-2025", "Lowercase letters, numbers and hyphens, starting with a letter or number, make a valid name."],
+  ["Company_Logs", "Uppercase letters and underscores are not allowed."],
+  ["192.168.10.5", "A bucket name can't be formatted as an IP address."],
+  ["xn--company-logs", "Bucket names must not start with 'xn--'."]
+]);
+Q("s3", 0, "In Amazon S3, what is an object's key?", [
+  ["The full path of the object: the prefix plus the object name", "For example 'my_folder1/another_folder/my_file.txt'. S3 has no real directories, only keys that contain slashes."],
+  ["The encryption key used to protect the object", "In S3 terms, the 'key' is the object's name or path, not a cryptographic key."],
+  ["The IAM access key used to upload the object", "Access keys are credentials, not object identifiers."],
+  ["The version number of the object", "That is the version ID."]
+]);
+Q("s3", 0, "A company needs to upload a 20 GB video file to Amazon S3. What must it use?", [
+  ["Multipart upload", "Uploads larger than 5 GB must use multipart upload, which splits the file into parts that upload in parallel."],
+  ["S3 Glacier Deep Archive", "This is a storage class. It doesn't change how uploads work."],
+  ["A single PUT request", "A single PUT is limited to 5 GB."],
+  ["AWS Snowball", "Snowball is for terabytes to petabytes, not one 20 GB file."]
+]);
+Q("s3", 1, "What is the MAXIMUM size of a single object in Amazon S3?", [
+  ["50 TB", "In December 2025 AWS raised the S3 maximum object size from 5 TB to 50 TB, and your notes list 50 TB. Older practice material still says 5 TB, so treat that as the previous limit."],
+  ["5 GB", "5 GB is the maximum for a single PUT request. Anything larger needs multipart upload."],
+  ["160 GB", "160 GB is the limit for uploading through the S3 console, not the object size limit."],
+  ["Unlimited", "Total bucket storage is unlimited, but each object has a maximum size."]
+]);
+Q("s3", 0, "An IAM user's identity policy allows s3:GetObject on a bucket, but the bucket policy contains an explicit Deny for that user. What happens when the user tries to download an object?", [
+  ["Access is denied", "S3 allows access only if an IAM policy or a resource policy allows it AND there is no explicit Deny."],
+  ["Access is allowed, because IAM policies override bucket policies", "Neither policy type overrides an explicit Deny."],
+  ["Access is allowed only through the console", "The same evaluation applies to the console, CLI and SDK."],
+  ["Access is allowed if the object is encrypted", "Encryption doesn't change authorization results."]
+]);
+Q("s3", 0, "A company hosts a public static website on Amazon S3 and wants anonymous internet users to read its objects. What should it configure?", [
+  ["A bucket policy that allows public read (s3:GetObject), with Block Public Access turned off for that bucket", "Public website visitors are anonymous, so access is granted with a bucket policy. Block Public Access must allow it."],
+  ["An IAM user for each website visitor", "Visitors don't have IAM identities."],
+  ["An IAM role attached to the bucket", "Roles are assumed by principals. They aren't attached to buckets to grant public access."],
+  ["Cross-Region Replication", "Replication copies data. It doesn't grant access."]
+]);
+Q("s3", 0, "A company needs to give another AWS account access to one of its S3 buckets. What is the typical way to do this?", [
+  ["A bucket policy that grants access to the other account", "Bucket policies are resource-based and support cross-account access."],
+  ["Share the root user credentials with the other account", "Never share root credentials."],
+  ["Enable S3 Versioning", "Versioning doesn't grant access."],
+  ["Use S3 Transfer Acceleration", "Transfer Acceleration speeds up uploads. It doesn't grant access."]
+]);
+Q("s3", 0, "A company enables static website hosting on an S3 bucket, but visitors receive a 403 Forbidden error. What is the MOST likely fix?", [
+  ["Add a bucket policy that allows public reads (and make sure Block Public Access allows it)", "A 403 on an S3 website usually means the bucket policy doesn't allow public reads."],
+  ["Enable S3 Versioning", "Versioning doesn't affect access."],
+  ["Move the objects to S3 Glacier", "Glacier objects can't be served directly as a website."],
+  ["Enable Cross-Region Replication", "Replication doesn't fix permissions."]
+]);
+Q("s3", 0, "A company wants to make sure that NONE of the S3 buckets in its AWS account can ever be made public, even by mistake. What should it enable?", [
+  ["S3 Block Public Access at the account level", "Block Public Access prevents data leaks and can be set for the whole account."],
+  ["S3 Versioning on every bucket", "Versioning protects against overwrites and deletes, not public exposure."],
+  ["S3 Intelligent-Tiering", "This is a storage class."],
+  ["Server-side encryption with SSE-S3", "Encryption doesn't prevent a bucket from being made public."]
+]);
+Q("s3", 0, "A company wants to protect S3 objects against accidental deletion or overwrites and be able to roll back to earlier versions. What should it enable?", [
+  ["S3 Versioning", "With versioning, overwriting a key creates a new version and a delete is recoverable. It is a best practice."],
+  ["S3 Lifecycle rules", "Lifecycle moves or expires objects. It doesn't keep old versions by itself."],
+  ["S3 Transfer Acceleration", "This speeds up uploads."],
+  ["S3 Block Public Access", "This prevents public access, not deletions."]
+]);
+Q("s3", 0, "Versioning is enabled on a bucket that already contains objects. What version ID do those pre-existing objects have?", [
+  ["null", "Objects uploaded before versioning was enabled have a version ID of null."],
+  ["1", "New versions get system-generated IDs. Pre-existing objects are marked null."],
+  ["They are deleted when versioning is enabled", "Existing objects are never deleted by enabling versioning."],
+  ["They are given the date the bucket was created", "Version IDs are not dates."]
+]);
+Q("s3", 0, "What is REQUIRED before you can set up S3 replication (CRR or SRR)?", [
+  ["Versioning must be enabled on both the source and destination buckets", "Replication requires versioning on both buckets, plus IAM permissions for S3."],
+  ["Both buckets must be in the same AWS account", "Replication can work across accounts."],
+  ["Both buckets must be in the same Region", "Cross-Region Replication exists for exactly this case."],
+  ["The objects must be in S3 Glacier Deep Archive", "Replication works with standard storage classes."]
+]);
+Q("s3", 0, "A company must keep a copy of its S3 data in another AWS Region to meet compliance requirements and to give users on another continent lower-latency access. Which feature should it use?", [
+  ["S3 Cross-Region Replication (CRR)", "CRR asynchronously copies objects to a bucket in another Region. Use cases include compliance, lower latency and cross-account replication."],
+  ["S3 Same-Region Replication (SRR)", "SRR copies within the same Region."],
+  ["S3 Lifecycle rules", "Lifecycle changes storage class or expires objects. It doesn't copy them to other Regions."],
+  ["S3 Transfer Acceleration", "This speeds up uploads to one bucket. It doesn't make copies."]
+]);
+Q("s3", 0, "A company wants to aggregate logs from several S3 buckets into one bucket in the SAME Region, and keep a live copy of production data in a test account in that Region. Which feature should it use?", [
+  ["S3 Same-Region Replication (SRR)", "SRR use cases include log aggregation and live replication between production and test accounts."],
+  ["S3 Cross-Region Replication (CRR)", "CRR copies to a different Region."],
+  ["AWS Snowball", "Snowball is for offline bulk transfer."],
+  ["S3 Glacier Flexible Retrieval", "This is an archive storage class."]
+]);
+Q("s3", 0, "What durability is Amazon S3 designed for?", [
+  ["99.999999999% (11 nines)", "S3 is designed for 11 nines of durability. If you store 10 million objects, you can expect to lose one about every 10,000 years."],
+  ["99.99%", "99.99% is S3 Standard's designed AVAILABILITY, not durability."],
+  ["99.9%", "99.9% is the availability of classes such as Standard-IA."],
+  ["100%", "No storage system guarantees 100% durability."]
+]);
+Q("s3", 0, "Which characteristic is the SAME across all Amazon S3 storage classes?", [
+  ["Durability (11 nines)", "Durability is 11 nines for all classes. Availability, cost, minimum storage duration and retrieval fees differ."],
+  ["Availability", "Availability ranges from 99.5% (One Zone-IA) to 99.99% (Standard)."],
+  ["Price per GB", "Prices differ greatly, from about $0.023 per GB for Standard to about $0.00099 per GB for Deep Archive."],
+  ["Retrieval fees", "Standard and Intelligent-Tiering have none. The IA and Glacier classes charge per GB."]
+]);
+Q("s3", 0, "A company stores backups that are accessed about once a month, but when they are needed they must be available within milliseconds and survive the loss of an Availability Zone. Which S3 storage class is the MOST cost-effective?", [
+  ["S3 Standard-Infrequent Access (Standard-IA)", "Standard-IA is for less frequent but rapid access, across at least 3 AZs, at a lower storage price than Standard. It fits DR and backups."],
+  ["S3 One Zone-IA", "One Zone-IA stores data in a single AZ, so it would be lost if that AZ were destroyed."],
+  ["S3 Glacier Deep Archive", "Deep Archive retrieval takes 12 to 48 hours."],
+  ["S3 Standard", "Standard costs more for data that is rarely accessed."]
+]);
+Q("s3", 0, "A company needs low-cost storage for secondary backup copies of data that it can easily re-create if lost. It needs millisecond access. Which S3 storage class is MOST cost-effective?", [
+  ["S3 One Zone-IA", "One Zone-IA is cheaper because data lives in one AZ (99.5% availability). It fits secondary copies or data you can re-create."],
+  ["S3 Standard", "Standard costs more and is meant for frequently accessed data."],
+  ["S3 Standard-IA", "Standard-IA gives multi-AZ resilience, which isn't needed for re-creatable data."],
+  ["S3 Glacier Deep Archive", "Deep Archive doesn't give millisecond access."]
+]);
+Q("s3", 0, "A company archives medical images that are accessed about once a quarter, but when requested they must be retrieved in MILLISECONDS. Which storage class is MOST cost-effective?", [
+  ["S3 Glacier Instant Retrieval", "Glacier Instant Retrieval gives millisecond retrieval for data accessed about once a quarter, with a 90-day minimum storage duration."],
+  ["S3 Glacier Flexible Retrieval", "Flexible Retrieval takes minutes to hours."],
+  ["S3 Glacier Deep Archive", "Deep Archive takes 12 to 48 hours."],
+  ["S3 Standard", "Standard costs much more for rarely accessed data."]
+]);
+Q("s3", 0, "A company needs to archive data that is rarely accessed. Retrieval within 3 to 5 hours is acceptable, and free bulk retrievals within 5 to 12 hours would be useful. Which storage class fits BEST?", [
+  ["S3 Glacier Flexible Retrieval", "Flexible Retrieval offers Expedited (1 to 5 min), Standard (3 to 5 h) and free Bulk (5 to 12 h) retrievals, with a 90-day minimum."],
+  ["S3 Glacier Instant Retrieval", "Instant Retrieval costs more per GB. Millisecond access isn't needed here."],
+  ["S3 Standard-IA", "Standard-IA costs more for archive data."],
+  ["S3 Intelligent-Tiering", "Intelligent-Tiering is for unknown access patterns."]
+]);
+Q("s3", 0, "A financial company must keep records for 10 years for regulatory reasons. The data will almost never be read, and retrieval within 48 hours is acceptable. Which storage class is the LOWEST cost?", [
+  ["S3 Glacier Deep Archive", "Deep Archive is the cheapest class (about $0.00099 per GB-month) for long-term retention, with 12 to 48 hour retrieval and a 180-day minimum."],
+  ["S3 Glacier Flexible Retrieval", "It is cheap, but it costs more than Deep Archive."],
+  ["S3 Standard-IA", "It costs much more for data that is never read."],
+  ["S3 One Zone-IA", "It costs more and is stored in only one AZ."]
+]);
+Q("s3", 0, "A company stores data with UNKNOWN or changing access patterns and wants S3 to move objects between access tiers automatically, with NO retrieval charges. Which storage class should it use?", [
+  ["S3 Intelligent-Tiering", "Intelligent-Tiering charges a small monitoring fee, has no retrieval fees, and moves objects automatically between tiers based on access."],
+  ["S3 Standard-IA", "Standard-IA charges per-GB retrieval fees and doesn't move data automatically."],
+  ["S3 One Zone-IA", "One Zone-IA doesn't move data automatically and charges retrieval fees."],
+  ["S3 Glacier Deep Archive", "Deep Archive is for long-term archives and charges retrieval fees."]
+]);
+Q("s3", 0, "A company wants objects to move to S3 Standard-IA 30 days after creation and to S3 Glacier Flexible Retrieval after 90 days, without manual work. What should it configure?", [
+  ["S3 Lifecycle rules", "Lifecycle configurations transition objects between storage classes (and can expire them) automatically."],
+  ["S3 Cross-Region Replication", "CRR copies objects to another Region. It doesn't change their storage class over time."],
+  ["S3 Versioning", "Versioning keeps object versions."],
+  ["S3 Block Public Access", "This controls public access."]
+]);
+Q("s3", 0, "What is the MINIMUM storage duration charge for S3 Glacier Deep Archive?", [
+  ["180 days", "Deep Archive has a 180-day minimum. Glacier Instant and Flexible have 90 days, and Standard-IA and One Zone-IA have 30 days."],
+  ["30 days", "30 days applies to Standard-IA and One Zone-IA."],
+  ["90 days", "90 days applies to Glacier Instant Retrieval and Flexible Retrieval."],
+  ["There is no minimum", "Only S3 Standard and Intelligent-Tiering have no minimum."]
+]);
+Q("s3", 0, "A machine learning team needs S3 storage with single-digit millisecond latency and hundreds of thousands of requests per second, located in the same Availability Zone as its compute. Which option should it choose?", [
+  ["S3 Express One Zone", "Express One Zone stores objects in a directory bucket in one AZ. It is up to 10 times faster than Standard and suits AI/ML training, HPC and similar workloads."],
+  ["S3 One Zone-IA", "One Zone-IA is a low-cost class for infrequent access, not a high-performance class."],
+  ["S3 Glacier Instant Retrieval", "This is an archive class for rarely accessed data."],
+  ["S3 Standard-IA", "This class is for infrequent access, not ultra-low latency."]
+]);
+Q("s3", 1, "A company must store financial records in S3 in a WORM (write once, read many) model so that no one, including administrators, can delete or overwrite them for 7 years. Which feature meets this requirement?", [
+  ["S3 Object Lock (in compliance mode)", "Object Lock enforces WORM retention. In compliance mode, no user (including root) can delete or overwrite objects until retention expires. S3 Glacier Vault Lock is the similar feature for Glacier vaults."],
+  ["S3 Versioning alone", "Versioning keeps old versions, but privileged users can still delete them."],
+  ["S3 Lifecycle rules", "Lifecycle moves or expires objects. It doesn't enforce retention."],
+  ["S3 Block Public Access", "This prevents public access, not deletion."]
+]);
+Q("s3", 1, "Users around the world upload large files to a single S3 bucket in us-east-1, and uploads from distant countries are slow. Which feature speeds up these uploads by routing them through AWS edge locations?", [
+  ["S3 Transfer Acceleration", "Transfer Acceleration sends uploads to the nearest edge location and then over the AWS global network to the bucket."],
+  ["S3 Cross-Region Replication", "CRR copies data after it arrives. It doesn't speed up the upload."],
+  ["S3 Lifecycle rules", "Lifecycle changes storage classes."],
+  ["AWS Storage Gateway", "Storage Gateway connects on-premises storage to S3. It doesn't help global users upload faster."]
+]);
+Q("s3", 1, "A company wants to let a customer download one private S3 object for the next 15 minutes without making the object public or creating an IAM user for the customer. What should it use?", [
+  ["An S3 pre-signed URL", "A pre-signed URL grants temporary access to a specific object, using the signer's permissions, until it expires."],
+  ["A bucket policy that allows public read", "This would make the object public to everyone, indefinitely."],
+  ["S3 Transfer Acceleration", "This speeds up transfers. It doesn't grant access."],
+  ["Disable Block Public Access", "This would open the bucket to being made public."]
+]);
+Q("s3", 0, "Which of the following is NOT a typical use case for Amazon S3?", [
+  ["Serving as the boot volume that runs an EC2 instance's operating system", "An OS boots from block storage (EBS or instance store), not from object storage."],
+  ["Hosting a static website", "S3 static website hosting is a classic use case."],
+  ["Building a data lake for big data analytics", "S3 is the usual foundation for data lakes."],
+  ["Storing backups for disaster recovery", "Backup and disaster recovery are core S3 use cases."]
+]);
+Q("s3", 0, "A company wants to host a website made only of HTML, CSS, JavaScript and images, with no server-side code and no servers to manage. What is the SIMPLEST AWS solution?", [
+  ["Amazon S3 static website hosting", "S3 can host static websites directly from a bucket, reachable at a bucket-name.s3-website endpoint."],
+  ["An EC2 instance running a web server", "This works, but you then have to manage servers."],
+  ["Amazon EFS", "EFS is a file system for EC2 instances, not a web host."],
+  ["AWS Snowball", "Snowball is for data transfer."]
+]);
+Q("s3", 0, "Which identity can enable MFA Delete on an S3 bucket?", [
+  ["The AWS account root user (bucket owner)", "Configuring an S3 bucket for MFA Delete is a root-only action."],
+  ["Any IAM user with s3:* permissions", "Even full S3 permissions are not enough. It must be the root user."],
+  ["An EC2 instance role", "Roles cannot enable MFA Delete."],
+  ["AWS Support", "AWS Support doesn't change your bucket settings."]
+]);
+Q("s3", 0, "Where does Amazon S3 encrypt data when using SERVER-SIDE encryption?", [
+  ["In S3, after S3 receives the data and before it is written to disk", "With server-side encryption (the default), S3 encrypts objects after receiving them. With client-side encryption, you encrypt before uploading."],
+  ["On the client, before the upload", "That is client-side encryption."],
+  ["Only while the data travels over HTTPS", "That is encryption in transit, not server-side encryption at rest."],
+  ["On an AWS Snowball device", "Snowball is unrelated to regular S3 encryption."]
+]);
+
+// Data transfer & hybrid storage
+Q("transfer", 0, "A company needs to move 80 TB of data from its data center to Amazon S3. Its internet connection is 100 Mbps, so a network transfer would take many weeks. What is the BEST option?", [
+  ["AWS Snowball Edge", "Rule of thumb: if a network transfer would take more than a week, use Snowball. You load the device, ship it, and AWS imports the data into S3."],
+  ["S3 Transfer Acceleration", "Acceleration improves the network path but can't overcome a 100 Mbps bottleneck for 80 TB."],
+  ["AWS Storage Gateway", "Storage Gateway also uses the network, so it has the same bandwidth limit."],
+  ["S3 Cross-Region Replication", "CRR copies between buckets. It doesn't move on-premises data."]
+]);
+Q("transfer", 0, "A research ship at sea has very limited internet connectivity. It needs to collect data and run EC2 instances or Lambda functions locally to preprocess the data before sending it to AWS. Which service should it use?", [
+  ["AWS Snowball Edge (edge computing)", "Snowball Edge can run EC2 instances and Lambda functions at the edge (ships, trucks, mines) for preprocessing, ML and transcoding, then ship the data to AWS."],
+  ["Amazon EFS", "EFS is a cloud file system that needs network connectivity."],
+  ["AWS DataSync", "DataSync needs a network connection to transfer data."],
+  ["S3 Transfer Acceleration", "This still depends on internet connectivity."]
+]);
+Q("transfer", 0, "How much does AWS charge for data transferred INTO Amazon S3 from an AWS Snowball device?", [
+  ["$0.00 per GB", "Importing data into S3 is free. You pay for device usage (per job, plus extra days) and for data transferred out."],
+  ["$0.09 per GB", "Inbound transfer into S3 from Snowball is free."],
+  ["A flat $3,000 per job", "$3,000 per month is Shield Advanced pricing, not Snowball."],
+  ["The same as S3 Standard storage", "Storage and data transfer are billed separately, and transfer into S3 is free."]
+]);
+Q("transfer", 0, "A company's on-premises applications need to use Amazon S3 as storage through standard file or volume protocols, for backup, disaster recovery and tiered storage. Which service bridges on-premises environments and S3?", [
+  ["AWS Storage Gateway", "Storage Gateway is a hybrid bridge between on-premises data and S3. It comes as File, Volume and Tape gateways."],
+  ["Amazon EFS", "EFS is a cloud file system, not a gateway to S3."],
+  ["S3 Transfer Acceleration", "This speeds up uploads. It doesn't present S3 as local storage."],
+  ["Amazon FSx for Lustre", "Lustre is an HPC file system."]
+]);
+Q("transfer", 0, "A company wants to move large amounts of data from its on-premises NFS server to Amazon EFS over the network, on a daily schedule, copying only what changed after the first full transfer. Which service should it use?", [
+  ["AWS DataSync", "DataSync uses an on-premises agent to move data to S3, EFS or FSx over TLS. It can run on a schedule and copies incrementally after the first full load."],
+  ["AWS Snowball Edge", "Snowball is an offline, shipped device. It is not suited to daily incremental syncs."],
+  ["S3 Cross-Region Replication", "CRR replicates between S3 buckets only."],
+  ["EC2 Image Builder", "Image Builder builds AMIs."]
+]);
+Q("transfer", 0, "A company needs to transfer 10 TB of data to AWS and has a dedicated 10 Gbps network connection. Based on typical transfer times, what is the MOST sensible approach?", [
+  ["Transfer it over the network (for example with DataSync), which takes about 3 hours", "10 TB over 10 Gbps takes about 3 hours. Snowball only makes sense when a network transfer would take more than a week."],
+  ["Order several Snowball devices, because any transfer over 1 TB requires Snowball", "There's no such rule. Choose based on transfer time."],
+  ["Use EC2 instance store to carry the data", "Instance store is ephemeral compute storage, not a transfer method."],
+  ["It is impossible to move 10 TB to AWS", "It is easily possible over this network."]
+]);
+Q("transfer", 1, "A company wants to replace its physical tape backup infrastructure with cloud storage without changing its existing backup software. Which service should it use?", [
+  ["AWS Storage Gateway (Tape Gateway)", "Tape Gateway presents a virtual tape library to existing backup software and stores the tapes in S3 and Glacier."],
+  ["AWS Snowball Edge", "Snowball can move data once, but it doesn't act as an ongoing virtual tape library."],
+  ["Amazon EBS", "EBS is block storage for EC2."],
+  ["Amazon FSx for Windows File Server", "This is a Windows file share, not a tape replacement."]
+]);
+Q("transfer", 0, "Which of the following is a common reason for a company to use a HYBRID cloud storage setup instead of moving everything to AWS at once?", [
+  ["Long migrations, security or compliance requirements, or IT strategy", "Hybrid is common during long migrations or when security, compliance or strategy keep some data on premises."],
+  ["Hybrid setups make S3 free", "Hybrid has no effect on pricing."],
+  ["S3 cannot store more than 1 PB", "S3 storage is unlimited."],
+  ["AWS requires all customers to keep half their data on premises", "There is no such requirement."]
+]);
+Q("transfer", 0, "Amazon S3 uses a proprietary protocol, unlike EFS, which uses NFS. What does an on-premises application need so it can store files in S3 through a standard file protocol?", [
+  ["AWS Storage Gateway", "Because S3 is proprietary, on-premises systems use Storage Gateway to reach S3 as file, volume or tape storage."],
+  ["S3 Transfer Acceleration", "This speeds up S3 API uploads. It doesn't provide a file protocol."],
+  ["AWS Snowball", "Snowball is offline bulk transfer, not an ongoing file interface."],
+  ["An S3 Lifecycle rule", "Lifecycle rules manage storage classes."]
+]);
+
+</script>
+<script>
+(function () {
+  "use strict";
+  const DOMAINS = {
+    1: { name: "Cloud Concepts", w: "24%" },
+    2: { name: "Security and Compliance", w: "30%" },
+    3: { name: "Cloud Technology and Services", w: "34%" }
+  };
+  const TOPICS = {
+    concepts: { d: 1, name: "Cloud concepts and economics" },
+    wa:       { d: 1, name: "Well-Architected Framework" },
+    caf:      { d: 1, name: "CAF, migration and right sizing" },
+    srm:      { d: 2, name: "Shared responsibility" },
+    iam:      { d: 2, name: "IAM, root and identity" },
+    netsec:   { d: 2, name: "DDoS, WAF and firewalls" },
+    crypto:   { d: 2, name: "Encryption and secrets" },
+    detect:   { d: 2, name: "Compliance and threat detection" },
+    infra:    { d: 3, name: "Global infrastructure" },
+    ec2:      { d: 3, name: "EC2 and purchasing options" },
+    storage:  { d: 3, name: "EBS, EFS and FSx" },
+    elb:      { d: 3, name: "Load balancing and Auto Scaling" },
+    s3:       { d: 3, name: "Amazon S3" },
+    transfer: { d: 3, name: "Snowball and hybrid storage" }
+  };
+  const EXAM_LEN = 65, EXAM_MIN = 90, TARGET = 0.7, LETTERS = ["A", "B", "C", "D"];
+  const KEY = "clf-c02-practice-v1";
+
+  // Stable id per question, from its text.
+  QB.forEach(q => {
+    let h = 5381;
+    for (let i = 0; i < q.q.length; i++) h = ((h << 5) + h + q.q.charCodeAt(i)) | 0;
+    q.id = q.t + "-" + (h >>> 0).toString(36);
+  });
+
+  // ---------- storage (per-viewer convenience; always optional) ----------
+  function load() {
+    try { const s = JSON.parse(localStorage.getItem(KEY) || "null"); if (s && typeof s === "object") return s; } catch (e) {}
+    return null;
+  }
+  const saved = load() || {};
+  const store = {
+    stats: saved.stats || {},
+    topics: Array.isArray(saved.topics) ? saved.topics.filter(t => TOPICS[t]) : Object.keys(TOPICS),
+    mode: ["practice", "exam", "missed"].includes(saved.mode) ? saved.mode : "practice",
+    len: saved.len || "20"
+  };
+  if (!store.topics.length) store.topics = Object.keys(TOPICS);
+  function persist() { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} }
+  function record(q, ok) {
+    const s = store.stats[q.id] || { n: 0, c: 0, last: null };
+    s.n++; if (ok) s.c++; s.last = ok ? 1 : 0;
+    store.stats[q.id] = s;
+  }
+
+  // ---------- helpers ----------
+  const $ = id => document.getElementById(id);
+  function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+  function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+  function pct(n, d) { return d ? Math.round((n / d) * 100) : 0; }
+  function missedList() { return QB.filter(q => store.stats[q.id] && store.stats[q.id].last === 0); }
+  function show(id) { ["home", "quiz", "results"].forEach(s => { $(s).hidden = s !== id; }); window.scrollTo(0, 0); }
+
+  // ---------- home ----------
+  function renderHome() {
+    const extra = QB.filter(q => q.x).length;
+    $("facts").innerHTML =
+      `<span><b>${QB.length}</b> questions</span><span><b>${Object.keys(TOPICS).length}</b> topics</span>` +
+      `<span><b>${extra}</b> beyond your notes</span><span>Real exam: <b>65 Qs · 90 min · 700/1000 to pass</b></span>`;
+
+    const missed = missedList().length;
+    if (store.mode === "missed" && !missed) store.mode = "practice";
+    document.querySelectorAll(".mode").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.mode === store.mode)));
+    $("mode-missed").disabled = missed === 0;
+    $("missed-sub").textContent = missed ? `${missed} question${missed === 1 ? "" : "s"} you got wrong the last time you answered.` : "Nothing here yet. Questions you miss will show up here.";
+
+    $("lengths").hidden = store.mode === "exam";
+    document.querySelectorAll("#lengths .pill").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.len === store.len)));
+
+    let html = "";
+    for (const d of [1, 2, 3]) {
+      html += `<div class="domain"><h3><span class="eyebrow">Domain ${d} · ${DOMAINS[d].w} of the exam</span>${DOMAINS[d].name}</h3><div class="chips">`;
+      for (const [k, t] of Object.entries(TOPICS)) {
+        if (t.d !== d) continue;
+        const qs = QB.filter(q => q.t === k);
+        let n = 0, c = 0;
+        qs.forEach(q => { const s = store.stats[q.id]; if (s) { n++; if (s.last) c++; } });
+        const acc = n ? `<span class="acc ${pct(c, n) >= 70 ? "good" : "bad"}">${pct(c, n)}%</span>` : "";
+        const on = store.topics.includes(k);
+        html += `<button class="chip" id="topic-${k}" data-topic="${k}" aria-pressed="${on}"><span class="tick" aria-hidden="true"></span>${esc(t.name)} <span class="count">${qs.length}</span>${acc}</button>`;
+      }
+      html += `</div></div>`;
+    }
+    $("topics").innerHTML = html;
+    $("topics").hidden = store.mode === "missed";
+    $("sel-all").parentElement.hidden = store.mode === "missed";
+    $("topic-note").hidden = store.mode === "missed";
+
+    const pool = poolFor(store.mode);
+    const n = sessionLength(pool.length);
+    const startBtn = $("start");
+    startBtn.disabled = n === 0;
+    startBtn.textContent = store.mode === "exam" ? `Start exam (${n} questions)` : store.mode === "missed" ? `Retry ${n} missed` : `Start practice (${n} questions)`;
+    $("start-note").textContent = n === 0 ? "Select at least one topic." :
+      store.mode === "exam" ? (pool.length < EXAM_LEN ? `Only ${pool.length} questions in the selected topics. Select more topics for a full 65-question exam.` : `Questions are drawn at random from ${store.topics.length} selected topic${store.topics.length === 1 ? "" : "s"}. The timer runs for ${EXAM_MIN} minutes.`) :
+      `${pool.length} questions available. Answer order is shuffled every time.`;
+
+    const ids = Object.keys(store.stats).filter(id => QB.some(q => q.id === id));
+    const answered = ids.length;
+    const lastRight = ids.filter(id => store.stats[id].last === 1).length;
+    $("statline").innerHTML =
+      `<div><b>${answered}<small style="font-size:13px;color:var(--muted)">/${QB.length}</small></b><span>questions seen</span></div>` +
+      `<div><b>${answered ? pct(lastRight, answered) + "%" : "—"}</b><span>correct on last try</span></div>` +
+      `<div><b>${missed}</b><span>still to fix</span></div>`;
+  }
+
+  function poolFor(mode) {
+    if (mode === "missed") return missedList();
+    return QB.filter(q => store.topics.includes(q.t));
+  }
+  function sessionLength(poolLen) {
+    if (store.mode === "exam") return Math.min(EXAM_LEN, poolLen);
+    if (store.mode === "missed" || store.len === "all") return poolLen;
+    return Math.min(parseInt(store.len, 10), poolLen);
+  }
+
+  $("modes").addEventListener("click", e => {
+    const b = e.target.closest(".mode"); if (!b || b.disabled) return;
+    store.mode = b.dataset.mode; persist(); renderHome();
+  });
+  $("lengths").addEventListener("click", e => {
+    const b = e.target.closest(".pill"); if (!b) return;
+    store.len = b.dataset.len; persist(); renderHome();
+  });
+  $("topics").addEventListener("click", e => {
+    const b = e.target.closest(".chip"); if (!b) return;
+    const k = b.dataset.topic;
+    store.topics = store.topics.includes(k) ? store.topics.filter(t => t !== k) : store.topics.concat(k);
+    persist(); renderHome();
+    const again = $("topic-" + k); if (again) again.focus();
+  });
+  $("sel-all").onclick = () => { store.topics = Object.keys(TOPICS); persist(); renderHome(); };
+  $("sel-none").onclick = () => { store.topics = []; persist(); renderHome(); };
+  $("reset").onclick = () => { $("reset-confirm").hidden = false; };
+  $("reset-no").onclick = () => { $("reset-confirm").hidden = true; };
+  $("reset-yes").onclick = () => { store.stats = {}; persist(); $("reset-confirm").hidden = true; if (store.mode === "missed") store.mode = "practice"; renderHome(); };
+  $("start").onclick = () => startSession(store.mode, poolFor(store.mode));
+
+  // ---------- session ----------
+  let S = null, tick = null;
+
+  function startSession(mode, pool, label) {
+    const n = mode === "exam" ? Math.min(EXAM_LEN, pool.length) : (mode === "missed" || store.len === "all" || label) ? pool.length : Math.min(parseInt(store.len, 10), pool.length);
+    if (!n) return;
+    const deck = shuffle(pool).slice(0, n).map(q => ({ q, order: shuffle([0, 1, 2, 3]) }));
+    S = { mode: mode === "exam" ? "exam" : "practice", label: label || (mode === "exam" ? "Exam simulation" : mode === "missed" ? "Missed questions" : "Practice"),
+          deck, i: 0, picks: new Array(n).fill(null), flags: new Array(n).fill(false), done: false,
+          started: Date.now(), deadline: mode === "exam" ? Date.now() + EXAM_MIN * 60000 : null };
+    clearInterval(tick);
+    if (S.mode === "exam") { tick = setInterval(updateTimer, 1000); }
+    show("quiz");
+    renderQuestion();
+  }
+
+  function correctIdx(item) { return item.order.indexOf(0); }
+
+  function renderQuestion() {
+    const item = S.deck[S.i], q = item.q, n = S.deck.length, exam = S.mode === "exam";
+    const pick = S.picks[S.i], answered = pick !== null;
+
+    $("qcount").innerHTML = `Question ${S.i + 1} <span>of ${n}</span>`;
+    const done = S.picks.filter(p => p !== null).length;
+    $("bar").style.width = pct(exam ? done : S.i + (answered ? 1 : 0), n) + "%";
+    if (exam) {
+      $("tally").innerHTML = `<span>${done} answered</span><span style="color:var(--flag)">${S.flags.filter(Boolean).length} flagged</span>`;
+    } else {
+      const right = S.deck.reduce((a, it, k) => a + (S.picks[k] !== null && S.picks[k] === correctIdx(it) ? 1 : 0), 0);
+      const wrong = S.picks.filter(p => p !== null).length - right;
+      $("tally").innerHTML = `<span class="g">✓ ${right}</span><span class="b">✗ ${wrong}</span>`;
+    }
+    $("timer").hidden = !exam; if (exam) updateTimer();
+
+    const t = TOPICS[q.t];
+    $("qmeta").innerHTML = `<span class="tag">Domain ${t.d}</span><span class="tag">${esc(t.name)}</span>` + (q.x ? `<span class="tag extra" title="This topic is on the exam but not in your study notes yet">Not in your notes</span>` : "");
+    $("stem").textContent = q.q;
+
+    const reveal = !exam && answered;
+    const ci = correctIdx(item);
+    $("opts").innerHTML = item.order.map((oi, k) => {
+      let state = "", mark = "";
+      if (reveal) {
+        if (k === ci) { state = "correct"; mark = k === pick ? "✓ Your answer" : "✓ Correct"; }
+        else if (k === pick) { state = "wrong"; mark = "✗ Your answer"; }
+        else state = "dim";
+      } else if (k === pick) state = "selected";
+      return `<li><button class="opt" id="opt-${k}" data-k="${k}" data-state="${state}" ${reveal ? "disabled" : ""} aria-pressed="${k === pick}">` +
+        `<span class="letter">${LETTERS[k]}</span><span class="txt">${esc(q.o[oi][0])}</span><span class="mark">${mark}</span></button></li>`;
+    }).join("");
+
+    const fb = $("feedback");
+    if (reveal) {
+      const ok = pick === ci;
+      fb.hidden = false;
+      fb.className = "feedback";
+      fb.innerHTML =
+        `<div class="fb-head ${ok ? "good" : "bad"}"><strong>${ok ? "Correct" : "Not quite. The answer is " + LETTERS[ci] + "."}</strong>` +
+        `<span>${esc(q.o[0][0])}</span></div>` +
+        `<div class="fb-body"><p>${esc(q.o[0][1])}</p>` +
+        `<div class="why-title">Why the other options are wrong</div><ul class="why">` +
+        item.order.map((oi, k) => oi === 0 ? "" : `<li class="${k === pick ? "is-picked" : ""}"><b>${LETTERS[k]}</b><span><span class="ot">${esc(q.o[oi][0])}.</span> ${esc(q.o[oi][1])}</span></li>`).join("") +
+        `</ul></div>`;
+    } else { fb.hidden = true; fb.innerHTML = ""; }
+
+    // actions
+    $("prev").hidden = !exam;
+    $("prev").disabled = S.i === 0;
+    $("flag").hidden = !exam;
+    $("flag").classList.toggle("flagged", !!S.flags[S.i]);
+    $("flag").textContent = S.flags[S.i] ? "Flagged" : "Flag for review";
+    $("flag").setAttribute("aria-pressed", String(!!S.flags[S.i]));
+    const last = S.i === n - 1;
+    if (exam) { $("next").disabled = false; $("next").textContent = last ? "Review and finish" : "Next →"; }
+    else { $("next").disabled = !answered; $("next").textContent = last ? "See results" : "Next →"; }
+    $("quit").textContent = exam ? "Leave exam" : "End session";
+    $("kbd").textContent = exam ? "Keys: A–D or 1–4 to select · ← → to move · F to flag" : "Keys: A–D or 1–4 to answer · Enter for next";
+    $("navpanel").hidden = !exam;
+    $("quit-confirm").hidden = true;
+    $("finish-confirm").hidden = true;
+    if (exam) renderNav();
+  }
+
+  function renderNav() {
+    $("navgrid").innerHTML = S.deck.map((_, k) =>
+      `<button id="nav-${k}" data-k="${k}" class="${S.picks[k] !== null ? "answered" : ""} ${S.flags[k] ? "flagged" : ""} ${k === S.i ? "current" : ""}" aria-label="Question ${k + 1}${S.picks[k] !== null ? ", answered" : ""}${S.flags[k] ? ", flagged" : ""}">${k + 1}</button>`
+    ).join("");
+  }
+
+  function choose(k) {
+    if (!S || S.done) return;
+    const exam = S.mode === "exam";
+    if (!exam && S.picks[S.i] !== null) return;
+    S.picks[S.i] = k;
+    if (!exam) {
+      const item = S.deck[S.i];
+      record(item.q, k === correctIdx(item)); persist();
+      renderQuestion();
+      const fb = $("feedback");
+      if (fb && fb.getBoundingClientRect().top > window.innerHeight * 0.6) fb.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "nearest" });
+      $("next").focus({ preventScroll: true });
+    } else {
+      renderQuestion();
+    }
+  }
+
+  function go(delta) {
+    const j = S.i + delta;
+    if (j < 0) return;
+    if (j >= S.deck.length) { if (S.mode === "exam") askFinish(); else finish(); return; }
+    S.i = j; renderQuestion(); window.scrollTo(0, 0);
+  }
+
+  function askFinish() {
+    const un = S.picks.filter(p => p === null).length, fl = S.flags.filter(Boolean).length;
+    $("finish-msg").textContent = un || fl
+      ? `You have ${un} unanswered and ${fl} flagged question${fl === 1 ? "" : "s"}. On the real exam, unanswered questions count as wrong and there is no penalty for guessing.`
+      : "All questions are answered. Ready to see your score?";
+    $("finish-confirm").hidden = false;
+    $("finish-yes").focus();
+  }
+
+  function updateTimer() {
+    if (!S || S.mode !== "exam" || S.done) return;
+    const left = Math.max(0, S.deadline - Date.now());
+    const m = Math.floor(left / 60000), s = Math.floor((left % 60000) / 1000);
+    const el = $("timer");
+    el.textContent = `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+    el.classList.toggle("low", left < 5 * 60000);
+    el.setAttribute("aria-label", `${m} minutes ${s} seconds left`);
+    if (left <= 0) finish(true);
+  }
+
+  function finish(timeUp) {
+    if (!S || S.done) return;
+    S.done = true; S.timeUp = !!timeUp; S.ended = Date.now();
+    clearInterval(tick);
+    if (S.mode === "exam") { S.deck.forEach((it, k) => { if (S.picks[k] !== null) record(it.q, S.picks[k] === correctIdx(it)); }); persist(); }
+    renderResults();
+    show("results");
+  }
+
+  $("opts").addEventListener("click", e => { const b = e.target.closest(".opt"); if (b && !b.disabled) choose(+b.dataset.k); });
+  $("next").onclick = () => go(1);
+  $("prev").onclick = () => go(-1);
+  $("flag").onclick = () => { S.flags[S.i] = !S.flags[S.i]; renderQuestion(); };
+  $("navgrid").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; S.i = +b.dataset.k; renderQuestion(); window.scrollTo(0, 0); });
+  $("finish").onclick = askFinish;
+  $("finish-no").onclick = () => { $("finish-confirm").hidden = true; };
+  $("finish-yes").onclick = () => finish(false);
+  $("quit").onclick = () => {
+    const done = S.picks.filter(p => p !== null).length;
+    $("quit-msg").textContent = done
+      ? (S.mode === "exam" ? `End the exam now? The ${done} answered question${done === 1 ? "" : "s"} will be scored and the rest count as unanswered.` : `End this session? You'll see results for the ${done} question${done === 1 ? "" : "s"} you answered.`)
+      : "End this session and go back to the menu?";
+    $("quit-confirm").hidden = false;
+    $("quit-yes").focus();
+  };
+  $("quit-no").onclick = () => { $("quit-confirm").hidden = true; };
+  $("quit-yes").onclick = () => {
+    if (!S.picks.some(p => p !== null)) { clearInterval(tick); S = null; renderHome(); show("home"); return; }
+    if (S.mode === "practice") { const n = S.picks.findIndex(p => p === null); if (n > -1) { S.deck = S.deck.slice(0, n); S.picks = S.picks.slice(0, n); S.flags = S.flags.slice(0, n); } }
+    finish(false);
+  };
+
+  document.addEventListener("keydown", e => {
+    if ($("quiz").hidden || !S || S.done || e.metaKey || e.ctrlKey || e.altKey) return;
+    const tag = (e.target.tagName || "").toLowerCase();
+    const k = e.key.toLowerCase();
+    const map = { a: 0, b: 1, c: 2, d: 3, "1": 0, "2": 1, "3": 2, "4": 3 };
+    if (k in map) { e.preventDefault(); choose(map[k]); return; }
+    if (k === "enter" && tag !== "button") { if (!$("next").disabled) { e.preventDefault(); go(1); } return; }
+    if (k === "arrowright" && (S.mode === "exam" || S.picks[S.i] !== null)) { e.preventDefault(); go(1); }
+    if (k === "arrowleft" && S.mode === "exam") { e.preventDefault(); go(-1); }
+    if (k === "f" && S.mode === "exam") { e.preventDefault(); $("flag").click(); }
+  });
+
+  // ---------- results ----------
+  let rfilter = "wrong";
+  function renderResults() {
+    const n = S.deck.length;
+    const right = S.deck.reduce((a, it, k) => a + (S.picks[k] === correctIdx(it) ? 1 : 0), 0);
+    const answered = S.picks.filter(p => p !== null).length;
+    const p = pct(right, n), pass = right / n >= TARGET;
+    const mins = Math.max(1, Math.round((S.ended - S.started) / 60000));
+
+    $("res-mode").textContent = S.label + (S.timeUp ? " · time ran out" : "");
+    const r = 56, C = 2 * Math.PI * r, col = pass ? "var(--good)" : "var(--bad)";
+    $("dial").setAttribute("aria-label", `${p}% correct`);
+    $("dial").innerHTML =
+      `<circle cx="66" cy="66" r="${r}" fill="none" stroke="var(--line)" stroke-width="12"/>` +
+      `<circle cx="66" cy="66" r="${r}" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${(C * p / 100).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 66 66)"/>` +
+      `<text x="66" y="70" text-anchor="middle" font-size="28" font-weight="600">${p}%</text>` +
+      `<text x="66" y="92" text-anchor="middle" font-size="11" style="fill:var(--muted)">${right} / ${n}</text>`;
+    $("verdict").className = "verdict " + (pass ? "good" : "bad");
+    $("verdict").textContent = pass ? "Above the 70% target" : "Below the 70% target";
+    $("res-detail").textContent =
+      `${right} correct, ${answered - right} wrong` + (n - answered ? `, ${n - answered} unanswered` : "") + `. Time: ${mins} min` +
+      (S.mode === "exam" ? ` of ${EXAM_MIN}.` : ".") +
+      " The real exam reports a scaled score from 100 to 1000 and passes at 700. Scoring 70% or more here is a sensible target, 80% or more is comfortable.";
+
+    const wrongItems = S.deck.filter((it, k) => S.picks[k] !== correctIdx(it));
+    $("retry-missed").hidden = wrongItems.length === 0;
+
+    // topic breakdown
+    const by = {};
+    S.deck.forEach((it, k) => { const t = it.q.t; by[t] = by[t] || { n: 0, c: 0 }; by[t].n++; if (S.picks[k] === correctIdx(it)) by[t].c++; });
+    $("tbars").innerHTML = Object.keys(TOPICS).filter(t => by[t]).map(t => {
+      const v = pct(by[t].c, by[t].n);
+      return `<div class="tbar"><span>${esc(TOPICS[t].name)}</span><span class="num">${by[t].c}/${by[t].n}</span>` +
+        `<div class="track"><i style="width:${v}%;background:${v >= 70 ? "var(--good)" : "var(--bad)"}"></i></div></div>`;
+    }).join("");
+
+    document.getElementById("rf-flag").hidden = S.mode !== "exam";
+    rfilter = wrongItems.length ? "wrong" : "all";
+    renderReview();
+  }
+
+  function renderReview() {
+    document.querySelectorAll("#rfilter .pill").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.f === rfilter)));
+    const rows = [];
+    S.deck.forEach((it, k) => {
+      const ci = correctIdx(it), pick = S.picks[k];
+      const ok = pick === ci;
+      if (rfilter === "wrong" && ok) return;
+      if (rfilter === "flag" && !S.flags[k]) return;
+      const cls = pick === null ? "skip" : ok ? "ok" : "no";
+      const q = it.q;
+      rows.push(
+        `<details class="ritem ${cls}"><summary><span class="res">${pick === null ? "–" : ok ? "✓" : "✗"}</span>` +
+        `<span class="s">${k + 1}. ${esc(q.q)}<small>${esc(TOPICS[q.t].name)}${S.flags[k] ? " · flagged" : ""}${q.x ? " · not in your notes" : ""}</small></span></summary>` +
+        `<div class="rbody"><ul class="why">` +
+        it.order.map((oi, j) => `<li class="${j === ci ? "is-correct" : j === pick ? "is-picked" : ""}"><b>${LETTERS[j]}</b><span><span class="ot">${esc(q.o[oi][0])}${j === ci ? " (correct)" : j === pick ? " (your answer)" : ""}.</span> ${esc(q.o[oi][1])}</span></li>`).join("") +
+        `</ul>${pick === null ? `<p class="small" style="margin:0">You didn't answer this one.</p>` : ""}</div></details>`
+      );
+    });
+    $("review").innerHTML = rows.length ? rows.join("") : `<p class="empty">${rfilter === "wrong" ? "No wrong answers in this session." : "No flagged questions."}</p>`;
+  }
+  $("rfilter").addEventListener("click", e => { const b = e.target.closest(".pill"); if (!b) return; rfilter = b.dataset.f; renderReview(); });
+  $("retry-missed").onclick = () => {
+    const wrong = S.deck.filter((it, k) => S.picks[k] !== correctIdx(it)).map(it => it.q);
+    startSession("practice", wrong, "Retry of missed questions");
+  };
+  $("to-home").onclick = () => { S = null; renderHome(); show("home"); };
+
+  renderHome();
+  show("home");
+})();
+</script>
+
+</body>
+</html>
