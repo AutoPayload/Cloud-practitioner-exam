@@ -1,0 +1,258 @@
+
+<article class="chapter" id="t-srm" hidden>
+  <header class="ch-head">
+    <h2>Shared responsibility model</h2>
+    <p class="small"><span class="tag good">Must know</span> Read the whole chapter.</p>
+    <p class="lede">Security on AWS is split in two. AWS secures the cloud itself: the buildings, hardware and global network. You secure what you put in the cloud: your data, your users, your settings. This model is behind many exam questions.</p>
+  </header>
+  <figure class="diagram" style="margin:0">
+    <svg viewBox="0 0 720 350" role="img" aria-labelledby="srm-t">
+      <title id="srm-t">Shared responsibility model: the customer layer on top, the AWS layer below</title>
+      <rect x="10" y="10" width="700" height="190" rx="10" class="dg-cust"/>
+      <text x="26" y="34" class="dg-cust-text">CUSTOMER · SECURITY “IN” THE CLOUD</text>
+      <rect x="26" y="46" width="668" height="30" rx="6" class="dg-box"/><text x="360" y="66" text-anchor="middle" class="dg-text">Customer data</text>
+      <rect x="26" y="84" width="668" height="30" rx="6" class="dg-box"/><text x="360" y="104" text-anchor="middle" class="dg-text">Applications, identity and access management (IAM users, roles, MFA)</text>
+      <rect x="26" y="122" width="668" height="30" rx="6" class="dg-box"/><text x="360" y="142" text-anchor="middle" class="dg-text">Guest operating system patches, network and firewall settings (security groups)</text>
+      <rect x="26" y="160" width="216" height="30" rx="6" class="dg-box"/><text x="134" y="180" text-anchor="middle" class="dg-text">Client-side encryption</text>
+      <rect x="252" y="160" width="216" height="30" rx="6" class="dg-box"/><text x="360" y="180" text-anchor="middle" class="dg-text">Server-side encryption setting</text>
+      <rect x="478" y="160" width="216" height="30" rx="6" class="dg-box"/><text x="586" y="180" text-anchor="middle" class="dg-text">Network traffic protection</text>
+      <rect x="10" y="214" width="700" height="126" rx="10" class="dg-aws"/>
+      <text x="26" y="238" class="dg-accent-text">AWS · SECURITY “OF” THE CLOUD</text>
+      <rect x="26" y="250" width="158" height="30" rx="6" class="dg-box"/><text x="105" y="270" text-anchor="middle" class="dg-text">Compute</text>
+      <rect x="196" y="250" width="158" height="30" rx="6" class="dg-box"/><text x="275" y="270" text-anchor="middle" class="dg-text">Storage</text>
+      <rect x="366" y="250" width="158" height="30" rx="6" class="dg-box"/><text x="445" y="270" text-anchor="middle" class="dg-text">Database</text>
+      <rect x="536" y="250" width="158" height="30" rx="6" class="dg-box"/><text x="615" y="270" text-anchor="middle" class="dg-text">Networking</text>
+      <rect x="26" y="290" width="668" height="36" rx="6" class="dg-box"/><text x="360" y="313" text-anchor="middle" class="dg-text">Hardware, data centers, physical security · Regions · Availability Zones · Edge locations</text>
+    </svg>
+    <figcaption>The line between the two layers moves with the service. With EC2 you own the operating system. With RDS or S3, AWS owns more of the stack.</figcaption>
+  </figure>
+  <section class="blk">
+    <h3>Who does what, service by service</h3>
+    <div class="tbl wide"><table><thead><tr><th>Service</th><th>AWS is responsible for</th><th>You are responsible for</th></tr></thead><tbody>
+      <tr><td>EC2 (IaaS)</td><td>Hardware, host isolation, hypervisor, replacing faulty hardware</td><td>Guest OS patches, installed software, security groups, IAM roles, data on the instance</td></tr>
+      <tr><td>EBS, EFS, instance store</td><td>Infrastructure, replicating EBS and EFS data, replacing hardware</td><td>Backups and snapshots, encryption, understanding that instance store is temporary</td></tr>
+      <tr><td>RDS (managed)</td><td>Underlying instance (no SSH), OS and database patching, disks</td><td>Security group rules, database users and permissions, public vs private access, encryption setting, SSL</td></tr>
+      <tr><td>S3</td><td>Durability, availability, infrastructure, keeping employees out of your data</td><td>Bucket policies, Block Public Access, versioning, encryption choice, IAM access</td></tr>
+      <tr><td>Lambda (serverless)</td><td>Servers, OS, runtime patching, scaling</td><td>Your code, its IAM permissions, the data it handles</td></tr>
+      <tr><td>Outposts</td><td>The rack's hardware and software</td><td>Physical security of the rack in your data center</td></tr>
+    </tbody></table></div>
+    <ul>
+      <li><strong>Shared controls</strong> (both sides do their part): patch management, configuration management, awareness and training.</li>
+      <li><strong>Inherited controls</strong> (fully AWS): physical and environmental controls of the data centers.</li>
+      <li><strong>Compliance:</strong> AWS infrastructure is certified (PCI DSS, ISO, SOC), but <em>your workload</em> is not automatically compliant. You must configure it correctly.</li>
+    </ul>
+  </section>
+  <section class="blk">
+    <h3>How the exam asks about it</h3>
+    <div class="tbl"><table class="cues"><thead><tr><th>If the question says</th><th>Whose job</th></tr></thead><tbody>
+      <tr><td>patch the guest operating system of EC2</td><td>Customer</td></tr>
+      <tr><td>physical security of data centers, replace failed disks</td><td>AWS</td></tr>
+      <tr><td>configure security groups or NACLs</td><td>Customer</td></tr>
+      <tr><td>patch the database engine of RDS</td><td>AWS</td></tr>
+      <tr><td>encrypt application data, manage IAM users</td><td>Customer</td></tr>
+      <tr><td>patch management, configuration management, training</td><td>Shared</td></tr>
+      <tr><td>more managed service (EC2 → RDS → Lambda)</td><td>Less customer responsibility</td></tr>
+    </tbody></table></div>
+  </section>
+  <div class="callout hook"><span class="ct">Memory hook</span><p>AWS is responsible <strong>OF</strong> the cloud: think “<strong>O</strong>wn the <strong>F</strong>acilities.” You are responsible <strong>IN</strong> the cloud: everything you put <strong>IN</strong>. If you can configure it, it is your responsibility.</p></div>
+  <div class="callout trap"><span class="ct">Don't confuse</span><p>The AWS <strong>Acceptable Use Policy</strong> says what you must not do on AWS (spam, attacks, illegal content). The shared responsibility model says who secures what. They are different documents.</p></div>
+</article>
+
+<article class="chapter" id="t-iam" hidden>
+  <header class="ch-head">
+    <h2>IAM and identity</h2>
+    <p class="small"><span class="tag good">Must know</span> Read the whole chapter.</p>
+    <p class="lede">AWS Identity and Access Management (IAM) controls who can do what in your account. It is a global service and it is free. On top of IAM, AWS offers services for app users, single sign-on and temporary access.</p>
+  </header>
+  <section class="blk">
+    <h3>The building blocks</h3>
+    <div class="tbl wide"><table><thead><tr><th>Item</th><th>What it is</th><th>Remember</th></tr></thead><tbody>
+      <tr><td>Root user</td><td>The account owner, created with the account. It has full access.</td><td>Enable MFA, lock it away, don't use it daily, don't create access keys for it</td></tr>
+      <tr><td>IAM user</td><td>One person (or app) with long-term credentials.</td><td>One physical person = one IAM user</td></tr>
+      <tr><td>IAM group</td><td>A collection of users. Permissions attached to the group apply to its members.</td><td>Groups contain users only, never other groups</td></tr>
+      <tr><td>IAM role</td><td>Permissions that a service or user <em>assumes</em> temporarily.</td><td>Use roles for EC2, Lambda and cross-account access. No stored keys.</td></tr>
+      <tr><td>IAM policy</td><td>A JSON document that allows or denies actions on resources.</td><td>An explicit Deny always wins over an Allow</td></tr>
+    </tbody></table></div>
+    <p>A policy is a JSON document. Each statement has an <code>Effect</code> (Allow or Deny), an <code>Action</code> (such as <code>s3:GetObject</code>) and a <code>Resource</code>.</p>
+  </section>
+  <section class="blk">
+    <h3>Ways to access AWS</h3>
+    <div class="tbl"><table><thead><tr><th>Method</th><th>Protected by</th></tr></thead><tbody>
+      <tr><td>AWS Management Console (web)</td><td>Password + MFA</td></tr>
+      <tr><td>AWS CLI (command line)</td><td>Access keys (access key ID ≈ username, secret access key ≈ password)</td></tr>
+      <tr><td>AWS SDKs (code, e.g. Python Boto3)</td><td>Access keys, or a role when the code runs on AWS</td></tr>
+      <tr><td>AWS CloudShell (browser terminal)</td><td>Your console sign-in; the CLI is preinstalled</td></tr>
+    </tbody></table></div>
+    <p><strong>MFA devices:</strong> an authenticator app on a phone, a security key (such as YubiKey), or a hardware key fob.</p>
+  </section>
+  <section class="blk">
+    <h3>Best practices and audit tools</h3>
+    <ul>
+      <li>Use the root user only for account setup and root-only tasks. Enable MFA everywhere.</li>
+      <li>Give <strong>least privilege</strong>. Put users in groups and attach policies to groups.</li>
+      <li>Use a strong <strong>password policy</strong> (length, character types, expiration, no reuse).</li>
+      <li>Use <strong>roles</strong> for AWS services. Never put access keys in code or on an instance.</li>
+      <li><strong>IAM Credentials Report</strong> (account level): every user and the status of their passwords, keys and MFA.</li>
+      <li><strong>IAM Access Advisor</strong> (user level): which services a user can access and when each was last used. Use it to remove unused permissions.</li>
+    </ul>
+    <p><strong>Root-only tasks:</strong> change account settings (name, email, root password, root access keys), close the account, restore IAM user permissions, turn on IAM access to the Billing console, view certain tax invoices, register as a seller in the Reserved Instance Marketplace, enable MFA Delete on an S3 bucket, edit a bucket policy that locks everyone out, sign up for GovCloud.</p>
+  </section>
+  <section class="blk">
+    <h3>Identity services beyond IAM</h3>
+    <div class="tbl wide"><table><thead><tr><th>Service</th><th>Use it when</th></tr></thead><tbody>
+      <tr><td>AWS STS (Security Token Service)</td><td>You need temporary, limited credentials: assuming a role, federation, cross-account access.</td></tr>
+      <tr><td>Amazon Cognito</td><td>Your web or mobile app has many customers who sign up and sign in, including with Google or Facebook.</td></tr>
+      <tr><td>AWS IAM Identity Center</td><td>Employees need one login (single sign-on) for all AWS accounts in an organization and business apps like Salesforce or Microsoft 365.</td></tr>
+      <tr><td>AWS Directory Service</td><td>You need Microsoft Active Directory: <strong>Managed Microsoft AD</strong> (real AD in AWS, can trust on-prem AD), <strong>AD Connector</strong> (proxy to on-prem AD), <strong>Simple AD</strong> (basic, standalone).</td></tr>
+      <tr><td>AWS Organizations + SCPs</td><td>You manage many accounts and want guardrails that limit what each account can do (see Accounts and governance).</td></tr>
+    </tbody></table></div>
+  </section>
+  <section class="blk">
+    <h3>How the exam asks about it</h3>
+    <div class="tbl"><table class="cues"><thead><tr><th>If the question says</th><th>Think</th></tr></thead><tbody>
+      <tr><td>an EC2 app needs to read S3 securely</td><td>IAM role (instance profile)</td></tr>
+      <tr><td>list all users and whether they have MFA</td><td>IAM Credentials Report</td></tr>
+      <tr><td>find permissions a user never uses</td><td>IAM Access Advisor</td></tr>
+      <tr><td>millions of app users with social login</td><td>Amazon Cognito</td></tr>
+      <tr><td>single sign-on across many AWS accounts</td><td>IAM Identity Center</td></tr>
+      <tr><td>temporary credentials, assume a role</td><td>AWS STS</td></tr>
+      <tr><td>only the root user can do it</td><td>Close account, change root email, RI Marketplace seller, MFA Delete</td></tr>
+    </tbody></table></div>
+  </section>
+  <div class="callout trap"><span class="ct">Don't confuse</span><ul>
+    <li><strong>Credentials Report vs Access Advisor vs Access Analyzer.</strong> Report = all users' credential status. Advisor = one user's last-used services. Analyzer = resources shared <em>outside</em> your account.</li>
+    <li><strong>Cognito vs IAM Identity Center.</strong> Cognito is for your <em>customers</em>. Identity Center is for your <em>employees</em>.</li>
+  </ul></div>
+  <div class="callout new"><span class="ct">Your notes differ</span><p>Changing the Support plan is no longer root-only: an IAM user with the right permissions can do it.</p></div>
+</article>
+
+<article class="chapter" id="t-netsec" hidden>
+  <header class="ch-head">
+    <h2>Network and application protection</h2>
+    <p class="small"><span class="tag good">Must know</span> Read the whole chapter.</p>
+    <p class="lede">These services keep attackers away from your applications: firewalls at different layers, DDoS protection, and central management of all those rules. The exam also tests what you may and may not do when you security-test your own resources.</p>
+  </header>
+  <section class="blk">
+    <h3>Firewalls from the instance to the whole organization</h3>
+    <div class="tbl wide"><table><thead><tr><th>Control</th><th>Protects</th><th>Key facts</th></tr></thead><tbody>
+      <tr><td>Security group</td><td>An instance (its network interface)</td><td>Allow rules only, stateful (return traffic allowed), default: all inbound blocked, all outbound allowed</td></tr>
+      <tr><td>Network ACL (NACL)</td><td>A subnet</td><td>Allow and deny rules, stateless (return traffic must be allowed too), rules by IP</td></tr>
+      <tr><td>AWS WAF</td><td>Web apps on ALB, API Gateway, CloudFront</td><td>Layer 7 (HTTP). Blocks SQL injection and cross-site scripting. Geo-blocking and rate-based rules</td></tr>
+      <tr><td>AWS Network Firewall</td><td>A whole VPC</td><td>Layers 3–7, inbound, outbound, VPC to VPC, VPN and Direct Connect traffic</td></tr>
+      <tr><td>AWS Firewall Manager</td><td>All accounts in an organization</td><td>Central management of WAF rules, security groups, Shield Advanced and Network Firewall; applies to new resources automatically</td></tr>
+    </tbody></table></div>
+  </section>
+  <section class="blk">
+    <h3>DDoS protection</h3>
+    <ul>
+      <li><strong>AWS Shield Standard:</strong> free and automatic for every customer. Protects against common layer 3 and 4 attacks (SYN floods, UDP reflection).</li>
+      <li><strong>AWS Shield Advanced:</strong> a paid subscription. Adds protection for EC2, ELB, CloudFront, Global Accelerator and Route 53, 24/7 access to the Shield Response Team, and <strong>cost protection</strong> against bills caused by a DDoS attack.</li>
+      <li><strong>Best architecture against DDoS:</strong> put CloudFront and Route 53 in front (they absorb attacks at the edge), add WAF for layer 7, and scale with Auto Scaling.</li>
+    </ul>
+  </section>
+  <section class="blk">
+    <h3>Penetration testing and abuse</h3>
+    <ul>
+      <li>You <strong>may</strong> test your own EC2, NAT gateways, ELB, RDS, Aurora, CloudFront, API Gateway, Lambda, Lightsail and Elastic Beanstalk without asking AWS.</li>
+      <li>You <strong>may not</strong> run DoS or DDoS attacks (even simulated), port flooding, protocol flooding, request flooding, or DNS zone walking on Route 53 hosted zones.</li>
+      <li>If AWS resources attack you (spam, port scans, DDoS, malware), report it with the <strong>AWS Abuse</strong> form (Trust &amp; Safety team).</li>
+      <li>The <strong>AWS Acceptable Use Policy</strong> lists what nobody may do on AWS.</li>
+    </ul>
+  </section>
+  <section class="blk">
+    <h3>How the exam asks about it</h3>
+    <div class="tbl"><table class="cues"><thead><tr><th>If the question says</th><th>Think</th></tr></thead><tbody>
+      <tr><td>SQL injection, cross-site scripting, block countries</td><td>AWS WAF</td></tr>
+      <tr><td>free, automatic DDoS protection</td><td>Shield Standard</td></tr>
+      <tr><td>24/7 DDoS response team, DDoS cost protection</td><td>Shield Advanced</td></tr>
+      <tr><td>firewall rules across all accounts in the organization</td><td>Firewall Manager</td></tr>
+      <tr><td>deny a specific IP address at the subnet level</td><td>Network ACL</td></tr>
+      <tr><td>instance-level firewall, allow rules only</td><td>Security group</td></tr>
+      <tr><td>AWS IPs are attacking us</td><td>Report to AWS Abuse</td></tr>
+    </tbody></table></div>
+  </section>
+  <div class="callout trap"><span class="ct">Don't confuse</span><p><strong>Shield vs WAF.</strong> Shield stops floods of traffic (DDoS, layers 3 and 4). WAF inspects web requests (layer 7) and blocks attacks hidden inside them, like SQL injection. WAF <strong>cannot</strong> be attached to a Network Load Balancer or directly to EC2.</p></div>
+  <div class="callout hook"><span class="ct">Memory hook</span><p>A security group is a <strong>door guard with a guest list</strong>: only allow rules, and once you are in you can leave freely (stateful). A NACL is a <strong>border checkpoint</strong>: it can deny, and it checks you both ways (stateless).</p></div>
+</article>
+
+<article class="chapter" id="t-crypto" hidden>
+  <header class="ch-head">
+    <h2>Encryption and secrets</h2>
+    <p class="small"><span class="tag good">Must know</span> Read the whole chapter.</p>
+    <p class="lede">Encryption protects data when it is stored (at rest) and when it moves across the network (in transit). On the exam, the word “encryption” usually points to AWS KMS. Certificates for HTTPS come from ACM, and passwords belong in Secrets Manager or Parameter Store.</p>
+  </header>
+  <section class="blk">
+    <h3>Key facts</h3>
+    <ul>
+      <li><strong>At rest:</strong> data on a disk, in S3, in a database or an archive. <strong>In transit:</strong> data moving over the network, protected with TLS (HTTPS).</li>
+      <li><strong>Encryption on by default:</strong> CloudTrail logs, S3 Glacier storage classes, Storage Gateway, and since 2023 every new S3 object (SSE-S3).</li>
+      <li><strong>Opt-in encryption:</strong> EBS volumes, RDS, EFS, and SSE-KMS for S3.</li>
+      <li><strong>S3 options:</strong> SSE-S3 (default, S3-managed keys), SSE-KMS (KMS keys with audit trail), SSE-C (your own key sent with each request), client-side (you encrypt before upload).</li>
+    </ul>
+  </section>
+  <section class="blk">
+    <h3>The services</h3>
+    <div class="tbl wide"><table><thead><tr><th>Service</th><th>What it does</th><th>Pick it when</th></tr></thead><tbody>
+      <tr><td>AWS KMS</td><td>Creates and manages encryption keys. Integrated with most services. AWS runs the hardware and software.</td><td>“Encrypt data at rest,” “manage encryption keys,” “rotate keys”</td></tr>
+      <tr><td>AWS CloudHSM</td><td>A dedicated hardware security module. You fully manage the keys; AWS can't see them. FIPS 140-2 Level 3.</td><td>“Dedicated hardware,” “single tenant,” “we must control the keys ourselves”</td></tr>
+      <tr><td>AWS Certificate Manager (ACM)</td><td>Free public SSL/TLS certificates with automatic renewal, for ELB, CloudFront and API Gateway.</td><td>“HTTPS,” “SSL/TLS certificate,” “encryption in transit”</td></tr>
+      <tr><td>AWS Secrets Manager</td><td>Stores secrets and <strong>rotates them automatically</strong> (built-in for RDS). Paid per secret.</td><td>“Rotate database credentials every 30 days”</td></tr>
+      <tr><td>SSM Parameter Store</td><td>Stores configuration values and secrets, optionally encrypted with KMS. Free standard tier, no built-in rotation.</td><td>“Store configuration and secrets centrally at low cost”</td></tr>
+    </tbody></table></div>
+    <p><strong>KMS key types:</strong> <em>customer managed</em> (you create and control them, including rotation) and <em>AWS managed</em> (AWS creates and manages them for a service in your account).</p>
+  </section>
+  <section class="blk">
+    <h3>How the exam asks about it</h3>
+    <div class="tbl"><table class="cues"><thead><tr><th>If the question says</th><th>Think</th></tr></thead><tbody>
+      <tr><td>managed service to create and control encryption keys</td><td>AWS KMS</td></tr>
+      <tr><td>FIPS 140-2 Level 3, dedicated, customer-controlled keys</td><td>AWS CloudHSM</td></tr>
+      <tr><td>free SSL/TLS certificate for a load balancer</td><td>AWS Certificate Manager</td></tr>
+      <tr><td>automatically rotate RDS passwords</td><td>AWS Secrets Manager</td></tr>
+      <tr><td>encrypt before the data leaves our servers</td><td>Client-side encryption</td></tr>
+    </tbody></table></div>
+  </section>
+  <div class="callout trap"><span class="ct">Don't confuse</span><p><strong>KMS vs CloudHSM:</strong> KMS is shared, fully managed and the default answer. CloudHSM is dedicated hardware and you do the key management. <strong>Secrets Manager vs Parameter Store:</strong> both store secrets, but only Secrets Manager rotates them automatically.</p></div>
+</article>
+
+<article class="chapter" id="t-detect" hidden>
+  <header class="ch-head">
+    <h2>Detection, audit and compliance</h2>
+    <p class="small"><span class="tag good">Must know</span> Read the whole chapter.</p>
+    <p class="lede">Many security questions are “pick the right service” questions, and these services sound alike. Learn one sharp sentence for each one and you will get most of these questions right.</p>
+  </header>
+  <section class="blk">
+    <h3>One sentence per service</h3>
+    <div class="tbl wide"><table><thead><tr><th>Service</th><th>What it does</th></tr></thead><tbody>
+      <tr><td>AWS CloudTrail</td><td>Records every API call: <strong>who did what, when, from where</strong>. On by default (90 days of event history). “Something was deleted” → check CloudTrail.</td></tr>
+      <tr><td>AWS Config</td><td>Records <strong>resource configuration over time</strong> and checks it against rules (“is SSH open to the world?”, “which buckets are public?”).</td></tr>
+      <tr><td>Amazon GuardDuty</td><td><strong>Threat detection</strong> with ML from CloudTrail, VPC Flow Logs and DNS logs. One click, no agents. Finds crypto mining and compromised instances.</td></tr>
+      <tr><td>Amazon Inspector</td><td><strong>Vulnerability scanning</strong> (CVEs) of EC2 instances, ECR container images and Lambda functions.</td></tr>
+      <tr><td>Amazon Macie</td><td>Finds <strong>sensitive data (PII)</strong> in S3 buckets using ML.</td></tr>
+      <tr><td>AWS Security Hub</td><td><strong>One dashboard</strong> for security findings from many services and accounts, plus automated best-practice checks (needs AWS Config).</td></tr>
+      <tr><td>Amazon Detective</td><td>Investigates the <strong>root cause</strong> of findings with graphs and ML.</td></tr>
+      <tr><td>IAM Access Analyzer</td><td>Finds resources <strong>shared outside your account</strong> or organization (S3 buckets, roles, KMS keys).</td></tr>
+      <tr><td>AWS Artifact</td><td>Downloads AWS <strong>compliance reports</strong> (SOC, PCI, ISO) and accepts agreements like the HIPAA BAA.</td></tr>
+      <tr><td>AWS Trusted Advisor</td><td>Checks your account against best practices, including security checks such as open ports, root MFA and public buckets.</td></tr>
+    </tbody></table></div>
+    <p><strong>Where to find security information:</strong> the AWS Security Center (aws.amazon.com/security), the AWS Security Blog, the Knowledge Center and re:Post. Third-party security tools are sold in AWS Marketplace.</p>
+  </section>
+  <section class="blk">
+    <h3>How the exam asks about it</h3>
+    <div class="tbl"><table class="cues"><thead><tr><th>If the question says</th><th>Think</th></tr></thead><tbody>
+      <tr><td>who deleted the bucket? which user made the API call?</td><td>CloudTrail</td></tr>
+      <tr><td>how did this resource's configuration change over time?</td><td>AWS Config</td></tr>
+      <tr><td>detect malicious activity, compromised instances</td><td>GuardDuty</td></tr>
+      <tr><td>software vulnerabilities, CVEs, container image scanning</td><td>Inspector</td></tr>
+      <tr><td>PII, credit card numbers, passports in S3</td><td>Macie</td></tr>
+      <tr><td>aggregate security findings across accounts</td><td>Security Hub</td></tr>
+      <tr><td>root cause of a security finding</td><td>Detective</td></tr>
+      <tr><td>SOC 2 or PCI report for an auditor</td><td>AWS Artifact</td></tr>
+    </tbody></table></div>
+  </section>
+  <div class="callout trap"><span class="ct">Don't confuse</span><ul>
+    <li><strong>CloudTrail vs Config vs CloudWatch.</strong> CloudTrail = <em>who</em> did it (API calls). Config = <em>what</em> the resource looks like and looked like. CloudWatch = <em>how it performs</em> (metrics, logs, alarms).</li>
+    <li><strong>GuardDuty vs Inspector.</strong> GuardDuty watches <em>behavior</em> (logs) for attacks happening now. Inspector scans <em>software</em> for known weaknesses before they are exploited.</li>
+    <li><strong>Artifact vs Config.</strong> Artifact gives <em>AWS's</em> compliance reports. Config checks <em>your</em> resources' compliance.</li>
+  </ul></div>
+  <div class="callout hook"><span class="ct">Memory hook</span><p><strong>Macie</strong> sounds like “my PII.” <strong>Inspector</strong> inspects software. <strong>GuardDuty</strong> is the guard on duty watching for intruders. <strong>Detective</strong> finds out why. <strong>Artifact</strong> is the museum of AWS certificates.</p></div>
+</article>

@@ -1,0 +1,210 @@
+
+<article class="chapter" id="t-concepts" hidden>
+  <header class="ch-head">
+    <h2>Cloud concepts and economics</h2>
+    <p class="small"><span class="tag good">Must know</span> Read the whole chapter.</p>
+    <p class="lede">Cloud computing is renting IT (servers, storage, databases, software) over the internet and paying only for what you use. AWS owns and runs the hardware. You create and delete resources in minutes, whenever you need them.</p>
+  </header>
+
+  <section class="blk">
+    <h3>The five characteristics of cloud computing</h3>
+    <div class="tbl"><table><thead><tr><th>Characteristic</th><th>What it means in plain words</th></tr></thead><tbody>
+      <tr><td>On-demand self-service</td><td>You create resources yourself, any time, without calling or emailing the provider.</td></tr>
+      <tr><td>Broad network access</td><td>You reach the resources over the network from any device: laptop, phone, server.</td></tr>
+      <tr><td>Multi-tenancy and resource pooling</td><td>Many customers share the same physical hardware, but each one is isolated and private.</td></tr>
+      <tr><td>Rapid elasticity and scalability</td><td>Resources grow and shrink quickly and automatically with demand.</td></tr>
+      <tr><td>Measured service</td><td>Usage is metered, so you pay exactly for what you used.</td></tr>
+    </tbody></table></div>
+  </section>
+
+  <section class="blk">
+    <h3>The six advantages of cloud computing</h3>
+    <p>This list is tested almost word for word. Learn to recognize each one from a short story.</p>
+    <div class="tbl"><table><thead><tr><th>Advantage</th><th>The story the exam tells</th></tr></thead><tbody>
+      <tr><td>Trade fixed expense (CAPEX) for variable expense (OPEX)</td><td>“We don't want to buy servers up front. We want to pay as we go.”</td></tr>
+      <tr><td>Benefit from massive economies of scale</td><td>“AWS is huge, so its prices are lower than we could get alone.”</td></tr>
+      <tr><td>Stop guessing capacity</td><td>“We bought servers for our peak week and they sat idle the rest of the year.”</td></tr>
+      <tr><td>Increase speed and agility</td><td>“Developers get a new environment in minutes, not weeks.”</td></tr>
+      <tr><td>Stop spending money running and maintaining data centers</td><td>“We want our staff to work on our product, not on racking and cooling servers.”</td></tr>
+      <tr><td>Go global in minutes</td><td>“We want low latency for users in Europe and Asia by next week.”</td></tr>
+    </tbody></table></div>
+  </section>
+
+  <section class="blk">
+    <h3>Deployment models</h3>
+    <div class="two">
+      <div class="card"><h4>Public cloud</h4><p>Run by a provider such as AWS and used over the internet. It delivers all six advantages.</p></div>
+      <div class="card"><h4>Private cloud</h4><p>Used by one organization only and not exposed to the public. Full control, but none of the economies of scale.</p></div>
+      <div class="card"><h4>Hybrid cloud</h4><p>Part stays on premises and part runs in the cloud, connected together. It is common during long migrations or for compliance.</p></div>
+    </div>
+  </section>
+
+  <section class="blk">
+    <h3>Service models: who manages what</h3>
+    <p>Each model moves more layers from you to the provider. The more the provider manages, the less you control and the less you have to operate.</p>
+    <div class="tbl wide"><table><thead><tr><th>Layer</th><th>On premises</th><th>IaaS (EC2)</th><th>PaaS (Elastic Beanstalk)</th><th>SaaS (e.g. Gmail)</th></tr></thead><tbody>
+      <tr><td>Applications</td><td>You</td><td>You</td><td>You</td><td>Provider</td></tr>
+      <tr><td>Your data and who can access it</td><td>You</td><td>You</td><td>You</td><td>You</td></tr>
+      <tr><td>Runtime and middleware</td><td>You</td><td>You</td><td>Provider</td><td>Provider</td></tr>
+      <tr><td>Operating system</td><td>You</td><td>You</td><td>Provider</td><td>Provider</td></tr>
+      <tr><td>Virtualization</td><td>You</td><td>Provider</td><td>Provider</td><td>Provider</td></tr>
+      <tr><td>Servers, storage, networking</td><td>You</td><td>Provider</td><td>Provider</td><td>Provider</td></tr>
+    </tbody></table></div>
+  </section>
+
+  <section class="blk">
+    <h3>Scalability, elasticity, high availability and agility</h3>
+    <ul>
+      <li><strong>Vertical scaling (scale up or down):</strong> make one instance bigger, for example t2.micro → t2.large. It is common for databases and is limited by hardware.</li>
+      <li><strong>Horizontal scaling (scale out or in):</strong> add or remove instances. It is how modern web apps scale, using an Auto Scaling group and a load balancer.</li>
+      <li><strong>Elasticity:</strong> scaling that happens automatically with demand, so you pay only for what you need at each moment.</li>
+      <li><strong>High availability:</strong> the app keeps running when a data center fails. The minimum is running in <strong>at least two Availability Zones</strong>.</li>
+      <li><strong>Fault tolerance:</strong> the system keeps working with no interruption even when a component fails. It is a stronger promise than high availability.</li>
+      <li><strong>Agility:</strong> new resources are a click away, so experimenting is fast and cheap. This is about speed, not about load.</li>
+    </ul>
+  </section>
+
+  <section class="blk">
+    <h3>Cloud economics</h3>
+    <ul>
+      <li><strong>You pay for three things:</strong> compute time, data stored, and data transferred <em>out</em>. Data transferred <em>in</em> is free.</li>
+      <li><strong>Fixed vs variable costs:</strong> on premises you buy hardware up front (a fixed cost you pay even when it sits idle). On AWS most costs are variable and follow usage.</li>
+      <li><strong>Total cost of ownership (TCO):</strong> on premises you also pay for power, cooling, rent, hardware refreshes and the staff who run them. The cloud removes most of these indirect costs.</li>
+      <li><strong>Licensing:</strong> either <em>license included</em> (the software cost is part of the hourly price) or <em>bring your own license</em> (BYOL, reuse licenses you already own; server-bound licenses often need Dedicated Hosts).</li>
+      <li><strong>Right sizing:</strong> pick the smallest instance that does the job, and keep checking. It is the easiest way to cut costs.</li>
+      <li><strong>Managed services and automation</strong> reduce operational cost, because AWS does the patching, backups and scaling.</li>
+    </ul>
+  </section>
+
+  <section class="blk">
+    <h3>How the exam asks about it</h3>
+    <div class="tbl"><table class="cues"><thead><tr><th>If the question says</th><th>Think</th></tr></thead><tbody>
+      <tr><td>pay only for what we use, no upfront investment</td><td>CAPEX → OPEX (variable expense)</td></tr>
+      <tr><td>servers idle most of the year, bought for the peak</td><td>Stop guessing capacity</td></tr>
+      <tr><td>environment in minutes instead of weeks</td><td>Agility (speed)</td></tr>
+      <tr><td>adds servers during a spike and removes them after</td><td>Elasticity</td></tr>
+      <tr><td>survive the failure of a data center</td><td>High availability: at least 2 AZs</td></tr>
+      <tr><td>provider manages everything; we just use the app</td><td>SaaS</td></tr>
+      <tr><td>upload code, AWS manages the platform</td><td>PaaS (Elastic Beanstalk)</td></tr>
+      <tr><td>we control the operating system</td><td>IaaS (EC2)</td></tr>
+      <tr><td>reuse licenses we already own</td><td>BYOL (often with Dedicated Hosts)</td></tr>
+    </tbody></table></div>
+  </section>
+
+  <div class="callout trap"><span class="ct">Don't confuse</span>
+    <p><strong>Economies of scale vs stop guessing capacity.</strong> The first is about AWS's size making prices lower. The second is about matching capacity to your real demand.</p>
+  </div>
+  <div class="callout hook"><span class="ct">Memory hook</span>
+    <p>Six advantages: <strong>“Trade, Scale, Guess, Speed, Stop, Global.”</strong> Trade CAPEX for OPEX, economies of Scale, stop Guessing capacity, Speed and agility, Stop running data centers, go Global in minutes.</p>
+  </div>
+</article>
+
+<article class="chapter" id="t-wa" hidden>
+  <header class="ch-head">
+    <h2>Well-Architected Framework</h2>
+    <p class="small"><span class="tag good">Must know</span> Read the whole chapter.</p>
+    <p class="lede">AWS's checklist for building good systems in the cloud. It has six pillars. Exam questions describe a practice and ask which pillar it belongs to, so learn the keywords of each pillar.</p>
+  </header>
+  <section class="blk">
+    <h3>The six pillars and their keywords</h3>
+    <div class="tbl wide"><table><thead><tr><th>Pillar</th><th>Goal</th><th>Keywords that point to it</th></tr></thead><tbody>
+      <tr><td>Operational Excellence</td><td>Run and monitor systems, and keep improving processes.</td><td>operations as code, small reversible changes, runbooks, learn from failures, observability, CloudFormation</td></tr>
+      <tr><td>Security</td><td>Protect data, systems and assets.</td><td>strong identity foundation, least privilege, traceability, encryption at rest and in transit, security at every layer, incident response</td></tr>
+      <tr><td>Reliability</td><td>Recover from failures and meet demand.</td><td>recover automatically, test recovery, scale horizontally, stop guessing capacity, multi-AZ, backups, service quotas</td></tr>
+      <tr><td>Performance Efficiency</td><td>Use resources efficiently as needs and technology change.</td><td>right resource type, serverless, go global in minutes, experiment more often, democratize advanced technology, mechanical sympathy</td></tr>
+      <tr><td>Cost Optimization</td><td>Deliver value at the lowest price.</td><td>pay for use, measure efficiency, analyze and attribute spend (tags), Savings Plans, Spot, stop spending on data centers</td></tr>
+      <tr><td>Sustainability</td><td>Reduce environmental impact.</td><td>maximize utilization, reduce idle resources, efficient hardware (Graviton), managed services, move cold data, carbon footprint</td></tr>
+    </tbody></table></div>
+  </section>
+  <section class="blk">
+    <h3>General design principles</h3>
+    <ul>
+      <li>Stop guessing capacity. Test systems at production scale.</li>
+      <li>Automate to make experiments easy. Allow evolutionary architectures that change over time.</li>
+      <li>Drive architectures with data. Improve through <strong>game days</strong> (simulated events such as a flash sale).</li>
+      <li>Cloud design principles: scalability, <strong>disposable resources</strong> (servers are replaceable), automation, <strong>loose coupling</strong> (a failure in one part doesn't break the rest), and <strong>services, not servers</strong> (prefer managed services).</li>
+    </ul>
+  </section>
+  <section class="blk">
+    <h3>Tools</h3>
+    <ul>
+      <li><strong>AWS Well-Architected Tool:</strong> free. You answer questions about a workload and get a report of risks per pillar with advice.</li>
+      <li><strong>AWS Customer Carbon Footprint Tool:</strong> tracks and forecasts the carbon emissions of your AWS usage.</li>
+    </ul>
+  </section>
+  <section class="blk">
+    <h3>How the exam asks about it</h3>
+    <div class="tbl"><table class="cues"><thead><tr><th>If the question says</th><th>Pillar</th></tr></thead><tbody>
+      <tr><td>deploy infrastructure changes as code in small, reversible steps</td><td>Operational Excellence</td></tr>
+      <tr><td>grant least privilege and enable traceability</td><td>Security</td></tr>
+      <tr><td>automatically recover from failure; test recovery procedures</td><td>Reliability</td></tr>
+      <tr><td>use serverless and experiment with new instance types</td><td>Performance Efficiency</td></tr>
+      <tr><td>use tags to see which team spends what</td><td>Cost Optimization</td></tr>
+      <tr><td>reduce idle capacity to lower environmental impact</td><td>Sustainability</td></tr>
+      <tr><td>review a workload against best practices, free</td><td>AWS Well-Architected Tool</td></tr>
+    </tbody></table></div>
+  </section>
+  <div class="callout trap"><span class="ct">Don't confuse</span>
+    <p><strong>Reliability vs Performance Efficiency.</strong> Reliability is about <em>surviving failures and meeting demand</em>. Performance Efficiency is about <em>choosing the right, efficient resources</em>. <strong>Scalability is not a pillar</strong>. It is a common distractor.</p>
+  </div>
+  <div class="callout hook"><span class="ct">Memory hook</span><p><strong>“SPORCS”</strong>: Security, Performance efficiency, Operational excellence, Reliability, Cost optimization, Sustainability. One letter per pillar.</p></div>
+</article>
+
+<article class="chapter" id="t-caf" hidden>
+  <header class="ch-head">
+    <h2>Cloud adoption and migration</h2>
+    <p class="small"><span class="tag good">Must know</span> Read the whole chapter.</p>
+    <p class="lede">How a company moves to AWS. The Cloud Adoption Framework (CAF) organizes the people and process side. The 7 Rs are the options for each application. A set of migration services does the technical work.</p>
+  </header>
+  <section class="blk">
+    <h3>AWS Cloud Adoption Framework (CAF): six perspectives</h3>
+    <div class="two">
+      <div class="card"><h4>Business perspectives</h4><p><strong>Business:</strong> cloud investments drive business outcomes. <strong>People:</strong> culture, organizational structure, leadership, workforce and training. <strong>Governance:</strong> orchestrate initiatives, maximize benefits, minimize risk.</p></div>
+      <div class="card"><h4>Technical perspectives</h4><p><strong>Platform:</strong> build a scalable hybrid cloud platform and modernize workloads. <strong>Security:</strong> confidentiality, integrity and availability of data and workloads. <strong>Operations:</strong> deliver cloud services at the level the business needs.</p></div>
+    </div>
+    <ul>
+      <li><strong>Transformation domains:</strong> Technology, Process, Organization, Product.</li>
+      <li><strong>Transformation phases, in order:</strong> <strong>Envision</strong> (find opportunities) → <strong>Align</strong> (find capability gaps, create an action plan) → <strong>Launch</strong> (pilots in production) → <strong>Scale</strong> (expand the pilots).</li>
+      <li><strong>Business outcomes AWS promises:</strong> reduced business risk, improved ESG (environmental, social and governance) performance, increased revenue, increased operational efficiency.</li>
+    </ul>
+  </section>
+  <section class="blk">
+    <h3>The 7 Rs of migration</h3>
+    <div class="tbl wide"><table><thead><tr><th>Strategy</th><th>What you do</th><th>Typical example</th></tr></thead><tbody>
+      <tr><td>Retire</td><td>Turn it off. Nobody needs it.</td><td>An old reporting app nobody opens</td></tr>
+      <tr><td>Retain</td><td>Keep it where it is for now.</td><td>A mainframe with unresolved dependencies</td></tr>
+      <tr><td>Relocate</td><td>Move it to the cloud version of the same platform.</td><td>VMware vSphere → VMware Cloud on AWS</td></tr>
+      <tr><td>Rehost (“lift and shift”)</td><td>Move it as it is.</td><td>Physical server → EC2 with Application Migration Service</td></tr>
+      <tr><td>Replatform (“lift and reshape”)</td><td>Move it with a few cloud optimizations.</td><td>Self-managed MySQL → Amazon RDS</td></tr>
+      <tr><td>Repurchase (“drop and shop”)</td><td>Replace it with a different product, often SaaS.</td><td>On-premises CRM → Salesforce</td></tr>
+      <tr><td>Refactor / re-architect</td><td>Redesign it to be cloud native.</td><td>Monolith → microservices and serverless</td></tr>
+    </tbody></table></div>
+  </section>
+  <section class="blk">
+    <h3>Migration services</h3>
+    <div class="tbl wide"><table><thead><tr><th>Service</th><th>Use it to</th></tr></thead><tbody>
+      <tr><td>AWS Application Discovery Service</td><td>Collect data about on-premises servers (utilization, dependencies) to plan a migration. It can run agentless or with agents.</td></tr>
+      <tr><td>Migration Evaluator</td><td>Build a data-driven business case: what would it cost to run this on AWS?</td></tr>
+      <tr><td>AWS Application Migration Service (MGN)</td><td>Rehost (lift and shift) servers into AWS with continuous replication and a short cutover.</td></tr>
+      <tr><td>AWS Database Migration Service (DMS)</td><td>Migrate databases while the source stays online. It works for the same engine or a different one (for example SQL Server → Aurora).</td></tr>
+      <tr><td>AWS Schema Conversion Tool / DMS Schema Conversion</td><td>Convert a database schema and code to a different engine (for example Oracle → Aurora PostgreSQL) before DMS moves the data.</td></tr>
+      <tr><td>AWS Migration Hub</td><td>One place to track the progress of a migration across tools.</td></tr>
+      <tr><td>Snow family, DataSync</td><td>Move large amounts of data offline (Snowball) or online (DataSync).</td></tr>
+    </tbody></table></div>
+  </section>
+  <section class="blk">
+    <h3>How the exam asks about it</h3>
+    <div class="tbl"><table class="cues"><thead><tr><th>If the question says</th><th>Think</th></tr></thead><tbody>
+      <tr><td>culture, training, leadership, organizational change</td><td>CAF People perspective</td></tr>
+      <tr><td>manage risk, align portfolio, orchestrate initiatives</td><td>CAF Governance perspective</td></tr>
+      <tr><td>move the application with no changes</td><td>Rehost</td></tr>
+      <tr><td>move the database to a managed service, same app</td><td>Replatform</td></tr>
+      <tr><td>replace with a SaaS product</td><td>Repurchase</td></tr>
+      <tr><td>migrate a database with minimal downtime</td><td>AWS DMS</td></tr>
+      <tr><td>plan a migration by discovering on-premises servers</td><td>Application Discovery Service</td></tr>
+    </tbody></table></div>
+  </section>
+  <div class="callout hook"><span class="ct">Memory hook</span>
+    <p>CAF phases: <strong>“Every Airplane Leaves Soon”</strong> = Envision, Align, Launch, Scale. Business perspectives are the <strong>BPG</strong> side (Business, People, Governance); technical ones are <strong>PSO</strong> (Platform, Security, Operations).</p>
+  </div>
+</article>

@@ -1,0 +1,137 @@
+
+  <section class="view" id="v-skills" hidden aria-labelledby="skills-title">
+    <div class="read">
+      <div class="stack">
+        <span class="eyebrow">How the questions work and how to beat them</span>
+        <h1 id="skills-title">Exam skills</h1>
+        <p class="lede">Knowing the services is half of the job. The other half is reading the question well: find what is asked, spot the word that decides the answer, and remove the traps.</p>
+      </div>
+
+      <section class="stack" aria-labelledby="s-score">
+        <h2 id="s-score">How the exam is scored</h2>
+        <ul class="stack" style="gap:6px">
+          <li><strong>65 questions in 90 minutes.</strong> 50 are scored. 15 are unscored trial questions that AWS is testing for future exams. You can't tell which ones they are, so if a question looks strange, don't panic: it may not count.</li>
+          <li><strong>Scaled score from 100 to 1,000; you pass at 700.</strong> The exam is compensatory: you pass on your total score, not on each domain.</li>
+          <li><strong>No penalty for guessing.</strong> A blank answer counts as wrong, so answer every question.</li>
+          <li><strong>Multiple-response questions give no partial credit.</strong> You must pick all the correct options.</li>
+        </ul>
+      </section>
+
+      <section class="stack" aria-labelledby="s-types">
+        <h2 id="s-types">The two question types</h2>
+        <div class="two">
+          <div class="card"><h4>Multiple choice</h4><p>One correct answer and three distractors. Most questions are this type. In this guide, square letter buttons mean “pick one” and round ones mean “pick several.”</p></div>
+          <div class="card"><h4>Multiple response</h4><p>Two (sometimes more) correct answers out of five or more options. The question says <strong>(Select TWO.)</strong>. Each correct option must be true by itself. The exam won't warn you if you pick the wrong number.</p></div>
+        </div>
+      </section>
+
+      <section class="stack" aria-labelledby="s-anatomy">
+        <h2 id="s-anatomy">Anatomy of a question</h2>
+        <p>Almost every question has the same three parts. Look for them as you read.</p>
+        <div class="qcard">
+          <p class="stem"><span class="hl-s">A company runs its web application on Amazon EC2 instances in a single Availability Zone.</span> <span class="hl-r">The company wants the application to stay available if that Availability Zone fails.</span> Which solution meets this requirement with the <span class="hl-q">LEAST operational overhead</span>?</p>
+          <div class="legend-hl"><span class="hl-s">Scenario: background, often with details that don't matter</span><span class="hl-r">Requirement: what must be true</span><span class="hl-q">Qualifier: how to choose between answers that work</span></div>
+        </div>
+        <p>Here several answers could work (run a second copy by hand, write scripts, use an Auto Scaling group across two AZs behind a load balancer). The qualifier <em>least operational overhead</em> picks the managed, automatic option: <strong>an Auto Scaling group across multiple AZs with an Elastic Load Balancer</strong>.</p>
+      </section>
+
+      <section class="stack" aria-labelledby="s-words">
+        <h2 id="s-words">Words that change the answer</h2>
+        <div class="tbl wide"><table><thead><tr><th>When you see</th><th>Prefer</th></tr></thead><tbody>
+          <tr><td>MOST cost-effective, LOWEST cost</td><td>The cheapest option that still meets <em>every</em> requirement: Spot for interruptible work, Glacier classes for archives, serverless for spiky use, right sizing.</td></tr>
+          <tr><td>LEAST operational overhead, fully managed, MOST operationally efficient</td><td>Managed or serverless services: RDS instead of a database on EC2, Fargate or Lambda instead of servers, AWS Backup instead of scripts.</td></tr>
+          <tr><td>highly available</td><td>Multiple Availability Zones, load balancer, Auto Scaling, RDS Multi-AZ.</td></tr>
+          <tr><td>fault tolerant, no interruption</td><td>Redundant components running at the same time.</td></tr>
+          <tr><td>disaster recovery, a whole Region fails</td><td>Another Region, backups, replication.</td></tr>
+          <tr><td>scalable, elastic, unpredictable traffic</td><td>Auto Scaling, serverless, DynamoDB, SQS as a buffer.</td></tr>
+          <tr><td>securely, least privilege</td><td>IAM roles instead of keys, encryption, private access, MFA.</td></tr>
+          <tr><td>global users, low latency</td><td>CloudFront, Global Accelerator, multiple Regions, Route 53 latency routing.</td></tr>
+          <tr><td>decouple, loosely coupled</td><td>SQS or SNS.</td></tr>
+          <tr><td>real time, streaming</td><td>Kinesis.</td></tr>
+          <tr><td>audit, who did it, API calls</td><td>CloudTrail.</td></tr>
+          <tr><td>customer's responsibility</td><td>Whatever the customer configures: data, IAM, security groups, guest OS on EC2.</td></tr>
+          <tr><td>NOT, EXCEPT</td><td>Flip your thinking: find the one false or unsuitable option.</td></tr>
+        </tbody></table></div>
+      </section>
+
+      <section class="stack" aria-labelledby="s-steps">
+        <h2 id="s-steps">Answer any question in five steps</h2>
+        <ol class="stack" style="gap:8px">
+          <li><strong>Read the last sentence first.</strong> It tells you what is being asked: a service, a responsibility, a benefit, a cost option.</li>
+          <li><strong>Find the requirement and the qualifier.</strong> Say them in four or five words: “survive AZ failure, least effort.”</li>
+          <li><strong>Predict the answer before you read the options.</strong> If your prediction is there, it is probably right.</li>
+          <li><strong>Eliminate.</strong> Remove options from the wrong category (for example a database when the need is networking), options that are true but don't answer the question, and solutions that are too complicated.</li>
+          <li><strong>Choose the simplest AWS-managed option that meets every requirement.</strong> If you are still unsure after about a minute, pick your best guess, flag it, and move on.</li>
+        </ol>
+      </section>
+
+      <section class="stack" aria-labelledby="s-examples">
+        <h2 id="s-examples">Worked examples</h2>
+        <p>Try each one before you open the walk-through.</p>
+        <details class="ritem">
+          <summary><span class="res" style="background:var(--accent-soft);color:var(--accent)">1</span><span class="s">A company runs MySQL on Amazon EC2. The team spends hours every month on OS patches, database patches and backups. Which change reduces this work the MOST? <small>A. Move to a larger EC2 instance · B. Migrate to Amazon RDS for MySQL · C. Buy a Reserved Instance · D. Use EC2 User Data to install patches</small></span></summary>
+          <div class="rbody"><ol><li>Asked: a way to reduce operational work.</li><li>Requirement: less patching and backup effort. Qualifier: MOST.</li><li>Predict: a managed database.</li><li>Eliminate: A adds power, not less work. C lowers cost, not work. D only runs at first boot.</li><li><strong>Answer: B.</strong> RDS automates OS and engine patching and backups. This is also the Replatform migration strategy.</li></ol></div>
+        </details>
+        <details class="ritem">
+          <summary><span class="res" style="background:var(--accent-soft);color:var(--accent)">2</span><span class="s">According to the AWS shared responsibility model, which of the following is the customer's responsibility when using Amazon RDS? <small>A. Patching the database engine · B. Managing the underlying host · C. Configuring security group rules that control database access · D. Replacing failed storage</small></span></summary>
+          <div class="rbody"><ol><li>Asked: a customer responsibility for a <em>managed</em> service.</li><li>Rule: if you configure it, it's yours.</li><li>Eliminate: A, B and D are done by AWS for RDS.</li><li><strong>Answer: C.</strong> Network access rules, database users and the encryption setting stay with the customer.</li></ol></div>
+        </details>
+        <details class="ritem">
+          <summary><span class="res" style="background:var(--accent-soft);color:var(--accent)">3</span><span class="s">A company runs nightly image-processing jobs. The jobs can be stopped and restarted at any time. Which EC2 purchasing option is the MOST cost-effective? <small>A. On-Demand · B. Spot Instances · C. Dedicated Hosts · D. 3-year Reserved Instances</small></span></summary>
+          <div class="rbody"><ol><li>Qualifier: MOST cost-effective. Key detail: can be interrupted.</li><li>“Can be interrupted” plus “cheapest” always points to Spot (up to 90% off).</li><li>RIs need steady 24/7 use; Dedicated Hosts are the most expensive.</li><li><strong>Answer: B.</strong></li></ol></div>
+        </details>
+        <details class="ritem">
+          <summary><span class="res" style="background:var(--accent-soft);color:var(--accent)">4</span><span class="s">Which of the following is NOT a benefit of AWS Organizations consolidated billing? <small>A. One bill for all accounts · B. Combined usage for volume discounts · C. Sharing Reserved Instance discounts · D. Automatic encryption of all member accounts' data</small></span></summary>
+          <div class="rbody"><ol><li>NOT question: find the false one.</li><li>A, B and C are the three classic benefits of consolidated billing.</li><li><strong>Answer: D.</strong> Billing has nothing to do with encryption.</li></ol></div>
+        </details>
+      </section>
+
+      <section class="stack" aria-labelledby="s-traps">
+        <h2 id="s-traps">Traps to watch for</h2>
+        <ul class="stack" style="gap:6px">
+          <li><strong>Look-alike names:</strong> CloudTrail, CloudWatch, CloudFormation, CloudFront; Inspector and GuardDuty; Shield and WAF; Transcribe, Translate and Textract. Say what each does before you choose.</li>
+          <li><strong>A real service used for the wrong job:</strong> Snowball for a transfer that takes hours online, Direct Connect when the company needs a connection today, Glacier for data read every day.</li>
+          <li><strong>Over-engineered answers:</strong> a working but complicated solution is usually wrong at this level. AWS prefers the managed feature built for the job.</li>
+          <li><strong>Swapped responsibilities:</strong> options where the customer patches the hypervisor, or AWS configures your security groups.</li>
+          <li><strong>Absolute words</strong> like “always,” “never,” “all,” “guarantees 100%” are usually wrong.</li>
+          <li><strong>Exact percentages</strong> are rarely the point. Know the order (Spot is cheapest), not the decimals.</li>
+        </ul>
+      </section>
+
+      <section class="stack" aria-labelledby="s-time">
+        <h2 id="s-time">Managing your 90 minutes</h2>
+        <div class="tbl"><table><thead><tr><th>Phase</th><th>Time</th><th>What to do</th></tr></thead><tbody>
+          <tr><td>First pass</td><td class="num">~55 min</td><td>Answer every question you know. When unsure, choose your best guess, flag it, and move on. That is about 50 seconds per question.</td></tr>
+          <tr><td>Second pass</td><td class="num">~25 min</td><td>Return to flagged questions. Change an answer only if you find a clear reason.</td></tr>
+          <tr><td>Final check</td><td class="num">~10 min</td><td>Make sure nothing is blank and every “Select TWO” has two answers.</td></tr>
+        </tbody></table></div>
+        <p class="small">With ESL +30 you have 120 minutes, so use about 75, 30 and 15 minutes.</p>
+      </section>
+
+      <section class="stack" aria-labelledby="s-day">
+        <h2 id="s-day">Booking and exam day</h2>
+        <div class="two">
+          <div class="card"><h4>Before you book</h4><ul>
+            <li>Create your AWS Certification account and schedule with Pearson VUE, at a test center or online.</li>
+            <li><strong>Choose the language you read fastest.</strong> The exam is offered in Spanish (Latin America and Spain). Learn the service names in English either way: they are product names.</li>
+            <li>If you take the exam in English and it isn't your first language, request <strong>ESL +30</strong> (30 extra minutes) in your account <em>before</em> you schedule. You request it once, and it applies to all future exams.</li>
+          </ul></div>
+          <div class="card"><h4>Online exam (at home)</h4><ul>
+            <li>Run the system test on the same computer a few days before.</li>
+            <li>A quiet, private room and an empty desk: no phone, papers or second screen.</li>
+            <li>Check in 30 minutes early with your ID. Plan for no breaks: you can't leave the camera view or read questions aloud.</li>
+          </ul></div>
+          <div class="card"><h4>Test center</h4><ul>
+            <li>Arrive 15–30 minutes early with the ID listed in your confirmation email.</li>
+            <li>Lockers hold your belongings. You get a whiteboard or scratch paper at some centers.</li>
+          </ul></div>
+        </div>
+        <div class="callout tip"><span class="ct">Exam-day checklist</span><ul>
+          <li>Sleep 7–8 hours. Eat something light. No new topics today; review the cheat sheet at most.</li>
+          <li>ID ready, system test passed (online), and arrive or log in early.</li>
+          <li>Read the last sentence first, find the qualifier, predict, eliminate, then choose.</li>
+          <li>Never leave a question blank. Flag and move on after about a minute.</li>
+        </ul></div>
+      </section>
+    </div>
+  </section>

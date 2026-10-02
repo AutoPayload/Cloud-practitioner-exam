@@ -1,0 +1,76 @@
+
+  <section class="view" id="v-method" hidden aria-labelledby="method-title">
+    <div class="read">
+      <div class="stack">
+        <span class="eyebrow">The fastest path to a pass</span>
+        <h1 id="method-title">10-day fast track</h1>
+        <p class="lede">About 75 minutes a day for 10 days, then exam simulations until you are ready. Topics you already studied in your course go faster: read them quickly and go straight to the questions. Tick each task when you finish it. Your ticks are saved in this browser.</p>
+      </div>
+
+      <section class="stack" aria-labelledby="m-rules">
+        <h2 id="m-rules">Four rules that save time</h2>
+        <ul class="stack" style="gap:6px">
+          <li><strong>Practice more than you read.</strong> A chapter takes 5 to 10 minutes to read. Spend most of your time on questions.</li>
+          <li><strong>Answer first, then read why.</strong> After each question, read why the wrong options are wrong. Most of the learning happens there.</li>
+          <li><strong>Must know or Skim.</strong> Read <span class="tag good">Must know</span> chapters fully. In <span class="tag skim">Skim</span> chapters, read the “How the exam asks” table first, and the rest only if something there surprises you.</li>
+          <li><strong>Flashcards every day, about 15 minutes.</strong> On the Flashcards page, set “New cards per session” to 40.</li>
+        </ul>
+      </section>
+
+      <section class="stack" aria-labelledby="m-plan">
+        <div class="row between"><h2 id="m-plan">Your 10 days</h2><span class="small" id="plan-count"></span></div>
+        <p>“Practice all” means the button at the end of each chapter that starts all of its questions.</p>
+        <div class="plan">
+          <div class="week"><h4>Day 1 · Cloud concepts <small>about 80 min</small></h4>
+            <label class="task"><input type="checkbox" data-plan="f1a" id="plan-f1a"><span>Choose the exam language. The exam is offered in Spanish (Latin America and Spain). If you choose English, request <strong>ESL +30</strong> (30 extra minutes) in your AWS Certification account <em>before</em> you book. Details are on the <a href="#skills">Exam skills</a> page.</span></label>
+            <label class="task"><input type="checkbox" data-plan="f1b" id="plan-f1b"><span>Read <a href="#t-concepts">cloud concepts</a>, <a href="#t-wa">Well-Architected</a> and <a href="#t-caf">adoption and migration</a>. Do “Practice all” for each one.</span></label>
+            <label class="task"><input type="checkbox" data-plan="f1c" id="plan-f1c"><span>Flashcards, 15 minutes. Select Domains 1 and 2.</span></label>
+          </div>
+          <div class="week"><h4>Day 2 · Security, part 1 <small>about 80 min</small></h4>
+            <label class="task"><input type="checkbox" data-plan="f2a" id="plan-f2a"><span>Read <a href="#t-srm">shared responsibility</a>, <a href="#t-iam">IAM</a>, <a href="#t-netsec">network protection</a> and <a href="#t-crypto">encryption</a>. Do “Practice all” for each one.</span></label>
+            <label class="task"><input type="checkbox" data-plan="f2b" id="plan-f2b"><span>Flashcards, 15 minutes. Domains 1 and 2.</span></label>
+          </div>
+          <div class="week"><h4>Day 3 · Detection and global infrastructure <small>about 70 min</small></h4>
+            <label class="task"><input type="checkbox" data-plan="f3a" id="plan-f3a"><span>Read <a href="#t-detect">detection and compliance</a> and <a href="#t-infra">global infrastructure</a>. Skim <a href="#t-edge">DNS and content delivery</a>. Do “Practice all” for all three.</span></label>
+            <label class="task"><input type="checkbox" data-plan="f3b" id="plan-f3b"><span>Flashcards, 15 minutes. From today, select all four domains.</span></label>
+          </div>
+          <div class="week"><h4>Day 4 · Compute <small>about 75 min</small></h4>
+            <label class="task"><input type="checkbox" data-plan="f4a" id="plan-f4a"><span>Read <a href="#t-ec2">EC2</a>. Skim <a href="#t-elb">load balancing</a>. Read <a href="#t-containers">containers and serverless</a> (new). Do “Practice all” for all three.</span></label>
+            <label class="task"><input type="checkbox" data-plan="f4b" id="plan-f4b"><span>Flashcards, 15 minutes.</span></label>
+          </div>
+          <div class="week"><h4>Day 5 · Storage <small>about 70 min</small></h4>
+            <label class="task"><input type="checkbox" data-plan="f5a" id="plan-f5a"><span>Skim <a href="#t-storage">EBS, EFS and FSx</a>. Read <a href="#t-s3">Amazon S3</a>. Skim <a href="#t-transfer">hybrid storage and transfer</a>. Do “Practice all” for all three.</span></label>
+            <label class="task"><input type="checkbox" data-plan="f5b" id="plan-f5b"><span>Flashcards, 15 minutes.</span></label>
+          </div>
+          <div class="week"><h4>Day 6 · Databases, networking, integration (new) <small>about 75 min</small></h4>
+            <label class="task"><input type="checkbox" data-plan="f6a" id="plan-f6a"><span>Read <a href="#t-db">databases and analytics</a>. Skim <a href="#t-network">VPC</a> and <a href="#t-integration">application integration</a>. Do “Practice all” for all three.</span></label>
+            <label class="task"><input type="checkbox" data-plan="f6b" id="plan-f6b"><span>Flashcards, 15 minutes.</span></label>
+          </div>
+          <div class="week"><h4>Day 7 · Operations, AI and other services (new) <small>about 70 min</small></h4>
+            <label class="task"><input type="checkbox" data-plan="f7a" id="plan-f7a"><span>Skim <a href="#t-monitor">monitoring</a>, <a href="#t-deploy">deploying and managing</a>, <a href="#t-ml">AI and ML</a> and <a href="#t-other">more services</a>. Do “Practice all” for each one.</span></label>
+            <label class="task"><input type="checkbox" data-plan="f7b" id="plan-f7b"><span>Flashcards, 15 minutes.</span></label>
+          </div>
+          <div class="week"><h4>Day 8 · Billing, pricing and support (new) <small>about 80 min</small></h4>
+            <label class="task"><input type="checkbox" data-plan="f8a" id="plan-f8a"><span>Read <a href="#t-pricing">pricing</a>, <a href="#t-accounts">accounts</a>, <a href="#t-costtools">cost tools</a> and <a href="#t-support">support</a>. Do “Practice all” for each one.</span></label>
+            <label class="task"><input type="checkbox" data-plan="f8b" id="plan-f8b"><span>Flashcards, 15 minutes.</span></label>
+          </div>
+          <div class="week"><h4>Day 9 · First exam simulation <small>about 110 min</small></h4>
+            <label class="task"><input type="checkbox" data-plan="f9a" id="plan-f9a"><span>Take an <a href="#practice">exam simulation</a>: 65 questions in 90 minutes. Then read the explanation of every question you got wrong.</span></label>
+            <label class="task"><input type="checkbox" data-plan="f9b" id="plan-f9b"><span>Flashcards: only the cards that are due.</span></label>
+          </div>
+          <div class="week"><h4>Day 10 · Fix weak spots <small>about 75 min</small></h4>
+            <label class="task"><input type="checkbox" data-plan="f10a" id="plan-f10a"><span>On the Practice exam page, choose “Missed questions” and repeat until the list is empty.</span></label>
+            <label class="task"><input type="checkbox" data-plan="f10b" id="plan-f10b"><span>Study the <a href="#compare">Compare</a> page: cover the right column of each table and say the answer out loud.</span></label>
+            <label class="task"><input type="checkbox" data-plan="f10c" id="plan-f10c"><span>Reread your two weakest chapters (see “By topic” in your simulation results).</span></label>
+          </div>
+          <div class="week"><h4>After day 10 · Until you are ready <small>1 simulation a day</small></h4>
+            <label class="task"><input type="checkbox" data-plan="f11a" id="plan-f11a"><span>One exam simulation a day, then clear the Missed questions it creates. Book the real exam after three simulations in a row at 80% or more.</span></label>
+            <label class="task"><input type="checkbox" data-plan="f11b" id="plan-f11b"><span>The day before the exam: read the <a href="#cheat">Cheat sheet</a> and do your due flashcards. No new topics. Sleep well.</span></label>
+            <label class="task"><input type="checkbox" data-plan="f11c" id="plan-f11c"><span>Exam day: follow the checklist on the <a href="#skills">Exam skills</a> page.</span></label>
+          </div>
+        </div>
+        <div class="callout tip"><span class="ct">More time?</span><p>With 3 to 4 weeks, spread each day over two days and take one simulation a week. Keep the same order.</p></div>
+        <p class="small">Optional, 15 minutes, if you have an AWS account: turn on MFA for the root user and create a monthly budget with an email alert. This protects you from surprise charges. You don't need it to pass.</p>
+      </section>
+    </div>
+  </section>

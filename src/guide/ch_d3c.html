@@ -1,0 +1,289 @@
+
+<article class="chapter" id="t-network" hidden>
+  <header class="ch-head">
+    <h2>VPC and hybrid networking</h2>
+    <p class="small"><span class="tag skim">Skim</span> Read the “How the exam asks” table first. Read the rest only if something there surprises you.</p>
+    <p class="lede">A VPC (Virtual Private Cloud) is your own private network in a Region. You split it into subnets, one per AZ, and control traffic with route tables and firewalls. The exam asks only one or two networking questions, at a basic level.</p>
+  </header>
+  <figure class="diagram" style="margin:0">
+    <svg viewBox="0 0 720 300" role="img" aria-labelledby="vpc-t">
+      <title id="vpc-t">A VPC with public and private subnets in two AZs, an internet gateway, a NAT gateway, and a VPN or Direct Connect link to on premises</title>
+      <rect x="10" y="10" width="540" height="280" rx="10" class="dg-aws"/>
+      <text x="26" y="32" class="dg-accent-text">VPC · 10.0.0.0/16 · ONE REGION</text>
+      <rect x="26" y="46" width="250" height="230" rx="8" class="dg-dash"/><text x="151" y="64" text-anchor="middle" class="dg-small">AZ A</text>
+      <rect x="290" y="46" width="250" height="230" rx="8" class="dg-dash"/><text x="415" y="64" text-anchor="middle" class="dg-small">AZ B</text>
+      <rect x="40" y="76" width="222" height="84" rx="6" class="dg-d1"/><text x="151" y="98" text-anchor="middle" class="dg-head">Public subnet</text>
+      <text x="151" y="120" text-anchor="middle" class="dg-text">load balancer, NAT gateway</text><text x="151" y="140" text-anchor="middle" class="dg-small">ROUTE → INTERNET GATEWAY</text>
+      <rect x="304" y="76" width="222" height="84" rx="6" class="dg-d1"/><text x="415" y="98" text-anchor="middle" class="dg-head">Public subnet</text>
+      <text x="415" y="120" text-anchor="middle" class="dg-text">load balancer</text><text x="415" y="140" text-anchor="middle" class="dg-small">ROUTE → INTERNET GATEWAY</text>
+      <rect x="40" y="176" width="222" height="86" rx="6" class="dg-d3"/><text x="151" y="198" text-anchor="middle" class="dg-head">Private subnet</text>
+      <text x="151" y="220" text-anchor="middle" class="dg-text">app servers, databases</text><text x="151" y="240" text-anchor="middle" class="dg-small">OUTBOUND ONLY VIA NAT</text>
+      <rect x="304" y="176" width="222" height="86" rx="6" class="dg-d3"/><text x="415" y="198" text-anchor="middle" class="dg-head">Private subnet</text>
+      <text x="415" y="220" text-anchor="middle" class="dg-text">app servers, databases</text><text x="415" y="240" text-anchor="middle" class="dg-small">OUTBOUND ONLY VIA NAT</text>
+      <rect x="580" y="30" width="130" height="56" rx="8" class="dg-box"/><text x="645" y="54" text-anchor="middle" class="dg-text">Internet</text><text x="645" y="72" text-anchor="middle" class="dg-small">VIA INTERNET GATEWAY</text>
+      <path d="M550 58 H580" class="dg-line"/>
+      <rect x="580" y="200" width="130" height="62" rx="8" class="dg-cust"/><text x="645" y="226" text-anchor="middle" class="dg-text">On premises</text><text x="645" y="246" text-anchor="middle" class="dg-small">CUSTOMER GATEWAY</text>
+      <path d="M550 231 H580" class="dg-line"/>
+      <text x="645" y="130" text-anchor="middle" class="dg-small">SITE-TO-SITE VPN</text>
+      <text x="645" y="146" text-anchor="middle" class="dg-small">(INTERNET, ENCRYPTED)</text>
+      <text x="645" y="170" text-anchor="middle" class="dg-small">OR DIRECT CONNECT</text>
+      <text x="645" y="186" text-anchor="middle" class="dg-small">(PRIVATE LINE)</text>
+    </svg>
+  </figure>
+  <section class="blk">
+    <h3>Components</h3>
+    <div class="tbl wide"><table><thead><tr><th>Component</th><th>What it does</th></tr></thead><tbody>
+      <tr><td>VPC</td><td>Private network in one Region, defined by an IP range (CIDR).</td></tr>
+      <tr><td>Subnet</td><td>A slice of the VPC in <strong>one AZ</strong>. Public (has a route to the internet gateway) or private.</td></tr>
+      <tr><td>Internet gateway</td><td>Connects the VPC to the internet.</td></tr>
+      <tr><td>NAT gateway</td><td>Lets instances in private subnets reach the internet (for updates) while staying unreachable from outside.</td></tr>
+      <tr><td>Security group / NACL</td><td>Instance firewall (stateful, allow only) / subnet firewall (stateless, allow and deny).</td></tr>
+      <tr><td>VPC Flow Logs</td><td>Record the IP traffic going in and out of network interfaces, for troubleshooting.</td></tr>
+      <tr><td>VPC peering</td><td>Private connection between two VPCs. No overlapping IP ranges. <strong>Not transitive</strong>.</td></tr>
+      <tr><td>VPC endpoints / PrivateLink</td><td>Reach AWS services (like S3, DynamoDB) or partner services privately, without the internet.</td></tr>
+      <tr><td>Transit Gateway</td><td>A hub that connects thousands of VPCs and on-premises networks (hub and spoke, transitive).</td></tr>
+      <tr><td>Site-to-Site VPN</td><td>Encrypted connection to on premises <strong>over the public internet</strong>. Quick to set up.</td></tr>
+      <tr><td>AWS Direct Connect</td><td>A <strong>dedicated private physical line</strong> to AWS. Consistent performance. Takes weeks to set up.</td></tr>
+      <tr><td>AWS Client VPN</td><td>Connects individual users' computers into the VPC.</td></tr>
+    </tbody></table></div>
+    <p><strong>IP addresses:</strong> an instance's public IPv4 changes on stop and start; an <strong>Elastic IP</strong> stays fixed. Public IPv4 addresses cost money; IPv6 is free.</p>
+  </section>
+  <section class="blk">
+    <h3>How the exam asks about it</h3>
+    <div class="tbl"><table class="cues"><thead><tr><th>If the question says</th><th>Think</th></tr></thead><tbody>
+      <tr><td>private instances need to download updates</td><td>NAT gateway</td></tr>
+      <tr><td>dedicated, private, consistent connection to on premises</td><td>Direct Connect</td></tr>
+      <tr><td>connect to on premises quickly, encrypted, over the internet</td><td>Site-to-Site VPN</td></tr>
+      <tr><td>connect many VPCs and on-premises networks through one hub</td><td>Transit Gateway</td></tr>
+      <tr><td>access S3 without going over the internet</td><td>VPC endpoint (gateway endpoint)</td></tr>
+      <tr><td>capture information about IP traffic</td><td>VPC Flow Logs</td></tr>
+      <tr><td>block one IP address at the subnet</td><td>Network ACL</td></tr>
+    </tbody></table></div>
+  </section>
+  <div class="callout trap"><span class="ct">Don't confuse</span><p><strong>VPN vs Direct Connect.</strong> VPN uses the public internet with encryption; it is ready in minutes. Direct Connect is a private cable; it is faster and more consistent but takes weeks, and it isn't encrypted by default. <strong>Internet gateway vs NAT gateway:</strong> the internet gateway allows traffic both ways; NAT allows only outbound.</p></div>
+</article>
+
+<article class="chapter" id="t-integration" hidden>
+  <header class="ch-head">
+    <h2>Application integration</h2>
+    <p class="small"><span class="tag skim">Skim</span> Read the “How the exam asks” table first. Read the rest only if something there surprises you.</p>
+    <p class="lede">Integration services let parts of an application talk to each other without being tightly connected. That is called <strong>decoupling</strong>: if one part is slow or fails, the others keep working, and each part scales on its own.</p>
+  </header>
+  <figure class="diagram" style="margin:0">
+    <svg viewBox="0 0 720 220" role="img" aria-labelledby="int-t">
+      <title id="int-t">SQS queue with one consumer group, SNS topic fanning out to many subscribers, and Kinesis stream</title>
+      <text x="115" y="22" text-anchor="middle" class="dg-small">SQS · QUEUE</text>
+      <rect x="10" y="40" width="70" height="40" rx="6" class="dg-box"/><text x="45" y="65" text-anchor="middle" class="dg-text">Producer</text>
+      <path d="M80 60 H96" class="dg-line"/><path d="M96 60 l-7 -4 v8 z" class="dg-arrow"/>
+      <rect x="96" y="40" width="54" height="40" rx="6" class="dg-d1"/><text x="123" y="65" text-anchor="middle" class="dg-text">queue</text>
+      <path d="M150 60 H166" class="dg-line"/><path d="M166 60 l-7 -4 v8 z" class="dg-arrow"/>
+      <rect x="166" y="40" width="64" height="40" rx="6" class="dg-box"/><text x="198" y="65" text-anchor="middle" class="dg-text">Worker</text>
+      <text x="120" y="110" text-anchor="middle" class="dg-text">Consumers poll and</text><text x="120" y="128" text-anchor="middle" class="dg-text">delete each message</text>
+      <text x="120" y="146" text-anchor="middle" class="dg-small">KEPT UP TO 14 DAYS</text>
+      <text x="360" y="22" text-anchor="middle" class="dg-small">SNS · PUB/SUB</text>
+      <rect x="258" y="80" width="64" height="40" rx="6" class="dg-box"/><text x="290" y="105" text-anchor="middle" class="dg-text">Publisher</text>
+      <path d="M322 100 H338" class="dg-line"/><path d="M338 100 l-7 -4 v8 z" class="dg-arrow"/>
+      <rect x="338" y="80" width="50" height="40" rx="6" class="dg-d2"/><text x="363" y="105" text-anchor="middle" class="dg-text">topic</text>
+      <path d="M388 92 L408 56 M388 100 H408 M388 108 L408 144" class="dg-line"/>
+      <rect x="408" y="40" width="64" height="30" rx="6" class="dg-box"/><text x="440" y="60" text-anchor="middle" class="dg-text">email</text>
+      <rect x="408" y="85" width="64" height="30" rx="6" class="dg-box"/><text x="440" y="105" text-anchor="middle" class="dg-text">SQS</text>
+      <rect x="408" y="130" width="64" height="30" rx="6" class="dg-box"/><text x="440" y="150" text-anchor="middle" class="dg-text">Lambda</text>
+      <text x="365" y="190" text-anchor="middle" class="dg-text">Every subscriber gets every message</text>
+      <text x="610" y="22" text-anchor="middle" class="dg-small">KINESIS · STREAM</text>
+      <rect x="500" y="40" width="210" height="40" rx="6" class="dg-d3"/><text x="605" y="65" text-anchor="middle" class="dg-text">click streams, IoT, logs →</text>
+      <text x="605" y="110" text-anchor="middle" class="dg-text">Real-time data processed</text><text x="605" y="128" text-anchor="middle" class="dg-text">and analyzed as it arrives</text>
+      <text x="605" y="146" text-anchor="middle" class="dg-small">BIG DATA, REAL TIME</text>
+    </svg>
+  </figure>
+  <section class="blk">
+    <h3>The services</h3>
+    <div class="tbl wide"><table><thead><tr><th>Service</th><th>Pattern</th><th>Key facts</th></tr></thead><tbody>
+      <tr><td>Amazon SQS</td><td>Queue</td><td>Producers send messages, consumers poll them. Messages are kept up to 14 days (4 by default) and deleted after processing. Standard (unlimited throughput) or FIFO (strict order).</td></tr>
+      <tr><td>Amazon SNS</td><td>Publish/subscribe</td><td>One message to many subscribers: email, SMS, mobile push, SQS, Lambda, HTTP. No storage of messages.</td></tr>
+      <tr><td>Amazon EventBridge</td><td>Event bus</td><td>Routes events from AWS services, SaaS partners and your apps to targets using rules. Also runs schedules (cron). Formerly CloudWatch Events.</td></tr>
+      <tr><td>Amazon MSK</td><td>Managed Kafka</td><td>Managed Apache Kafka. Pick it when a company already uses Kafka for streaming.</td></tr>
+      <tr><td>Amazon Kinesis</td><td>Stream</td><td>Real-time big data streaming (clicks, IoT, logs). <strong>Amazon Data Firehose</strong> loads streams into S3, Redshift or OpenSearch.</td></tr>
+      <tr><td>Amazon MQ</td><td>Managed broker</td><td>Managed ActiveMQ or RabbitMQ for apps that use open protocols (MQTT, AMQP, STOMP) when you migrate them. You don't have to rewrite them.</td></tr>
+      <tr><td>AWS Step Functions</td><td>Workflow</td><td>Visual, serverless workflows that coordinate Lambda functions and other services, with retries, branches and human approval steps.</td></tr>
+      <tr><td>Amazon SES</td><td>Email</td><td>Send transactional and marketing email at scale.</td></tr>
+    </tbody></table></div>
+  </section>
+  <section class="blk">
+    <h3>How the exam asks about it</h3>
+    <div class="tbl"><table class="cues"><thead><tr><th>If the question says</th><th>Think</th></tr></thead><tbody>
+      <tr><td>decouple components, buffer requests, process later</td><td>Amazon SQS</td></tr>
+      <tr><td>messages must be processed in exact order</td><td>SQS FIFO queue</td></tr>
+      <tr><td>send one notification to many subscribers, email or SMS</td><td>Amazon SNS</td></tr>
+      <tr><td>react to events, schedule a Lambda every hour</td><td>Amazon EventBridge</td></tr>
+      <tr><td>real-time streaming data, click streams, IoT</td><td>Amazon Kinesis</td></tr>
+      <tr><td>migrate an app that uses RabbitMQ or ActiveMQ</td><td>Amazon MQ</td></tr>
+      <tr><td>coordinate several Lambda functions in a workflow</td><td>AWS Step Functions</td></tr>
+    </tbody></table></div>
+  </section>
+  <div class="callout trap"><span class="ct">Don't confuse</span><p><strong>SQS vs SNS.</strong> SQS is a <em>queue</em>: each message is processed once by one consumer, and it waits until someone takes it. SNS is a <em>megaphone</em>: every subscriber hears every message right now, and nothing is stored.</p></div>
+  <div class="callout hook"><span class="ct">Memory hook</span><p><strong>SQS</strong> = <strong>Q</strong>ueue. <strong>SNS</strong> = <strong>N</strong>otification. <strong>Kinesis</strong> = kinetic, data in motion.</p></div>
+</article>
+
+<article class="chapter" id="t-monitor" hidden>
+  <header class="ch-head">
+    <h2>Monitoring and observability</h2>
+    <p class="small"><span class="tag skim">Skim</span> Read the “How the exam asks” table first. Read the rest only if something there surprises you.</p>
+    <p class="lede">Monitoring tells you how your systems perform, who changed what, and whether AWS itself has a problem that affects you. The key skill is picking the right tool among CloudWatch, CloudTrail, Config, X-Ray and the Health Dashboard.</p>
+  </header>
+  <section class="blk">
+    <h3>Amazon CloudWatch</h3>
+    <ul>
+      <li><strong>Metrics:</strong> numbers over time for every service: EC2 CPU, network, status checks (every 5 minutes by default, every 1 minute with detailed monitoring). <strong>EC2 memory is not collected by default</strong>; install the CloudWatch agent.</li>
+      <li><strong>Alarms:</strong> act when a metric crosses a threshold: send an SNS notification, trigger Auto Scaling, stop or reboot an instance. States: OK, ALARM, INSUFFICIENT_DATA. <strong>Billing alarms</strong> use metrics stored in us-east-1.</li>
+      <li><strong>Logs:</strong> collect application and system logs from EC2 (with the agent), Lambda, ECS, CloudTrail and more.</li>
+      <li><strong>Dashboards:</strong> graphs of your metrics in one view.</li>
+    </ul>
+  </section>
+  <section class="blk">
+    <h3>The other tools</h3>
+    <div class="tbl wide"><table><thead><tr><th>Tool</th><th>Answers the question</th></tr></thead><tbody>
+      <tr><td>AWS CloudTrail</td><td>Who made this API call, when and from where? (audit, governance). CloudTrail Insights spots unusual activity.</td></tr>
+      <tr><td>AWS Config</td><td>What did this resource's configuration look like over time, and is it compliant?</td></tr>
+      <tr><td>AWS X-Ray</td><td>Where is the slow part of my distributed app? It traces requests across microservices.</td></tr>
+      <tr><td>AWS Health Dashboard</td><td>Is AWS having a problem? <em>Service health</em> shows public status for all Regions. <em>Your account health</em> (formerly Personal Health Dashboard) shows events that affect <em>your</em> resources, like scheduled maintenance.</td></tr>
+      <tr><td>Amazon EventBridge</td><td>How do I react automatically when something happens?</td></tr>
+    </tbody></table></div>
+  </section>
+  <section class="blk">
+    <h3>How the exam asks about it</h3>
+    <div class="tbl"><table class="cues"><thead><tr><th>If the question says</th><th>Think</th></tr></thead><tbody>
+      <tr><td>monitor CPU utilization, set an alarm</td><td>CloudWatch</td></tr>
+      <tr><td>alert when the bill passes $100</td><td>CloudWatch billing alarm or AWS Budgets</td></tr>
+      <tr><td>who terminated the instance?</td><td>CloudTrail</td></tr>
+      <tr><td>trace requests through microservices, find bottlenecks</td><td>X-Ray</td></tr>
+      <tr><td>AWS scheduled maintenance on my instances</td><td>AWS Health Dashboard (your account)</td></tr>
+      <tr><td>collect memory usage from EC2</td><td>CloudWatch agent</td></tr>
+    </tbody></table></div>
+  </section>
+  <div class="callout hook"><span class="ct">Memory hook</span><p><strong>CloudWatch</strong> watches <em>performance</em>. <strong>CloudTrail</strong> leaves a <em>trail</em> of footprints (who did what). <strong>Config</strong> is the <em>configuration</em> history. <strong>X-Ray</strong> sees <em>inside</em> the request path.</p></div>
+</article>
+
+<article class="chapter" id="t-deploy" hidden>
+  <header class="ch-head">
+    <h2>Deploying and managing resources</h2>
+    <p class="small"><span class="tag skim">Skim</span> Read the “How the exam asks” table first. Read the rest only if something there surprises you.</p>
+    <p class="lede">There are several ways to create resources on AWS: click in the console, type commands, write code, or describe the whole setup in a template (infrastructure as code). For anything you repeat, the exam prefers automation.</p>
+  </header>
+  <section class="blk">
+    <h3>Ways to interact with AWS</h3>
+    <ul>
+      <li><strong>Management Console:</strong> the web interface. Good for learning and one-time tasks.</li>
+      <li><strong>AWS CLI and SDKs:</strong> scripts and code that call AWS APIs. Good for repeatable tasks.</li>
+      <li><strong>AWS CloudShell:</strong> a browser terminal with the CLI already installed and your credentials loaded.</li>
+      <li><strong>Infrastructure as code (IaC):</strong> templates that create the same environment every time, in any Region or account.</li>
+    </ul>
+  </section>
+  <section class="blk">
+    <h3>The services</h3>
+    <div class="tbl wide"><table><thead><tr><th>Service</th><th>What it does</th></tr></thead><tbody>
+      <tr><td>AWS CloudFormation</td><td>IaC with JSON or YAML templates. Creates a <strong>stack</strong> of resources in the right order; delete the stack to remove it all. Free (you pay for the resources).</td></tr>
+      <tr><td>AWS CDK</td><td>Define infrastructure in a programming language (TypeScript, Python, Java, .NET); it generates CloudFormation.</td></tr>
+      <tr><td>AWS Elastic Beanstalk</td><td>PaaS: upload your code and Beanstalk creates and manages EC2, load balancing, Auto Scaling and monitoring. You only own the code.</td></tr>
+      <tr><td>AWS CodeCommit / CodeBuild / CodeDeploy / CodePipeline / CodeArtifact</td><td>Git repositories / build and test / deploy to EC2 and <strong>on-premises</strong> servers / orchestrate CI/CD pipelines / store code dependencies (npm, pip, Maven).</td></tr>
+      <tr><td>AWS Systems Manager</td><td>Manage fleets of EC2 and <strong>on-premises</strong> servers: patching, run commands, inventory. <strong>Session Manager</strong> gives a shell with no SSH keys and no port 22. <strong>Parameter Store</strong> holds configuration and secrets.</td></tr>
+      <tr><td>AWS AppConfig</td><td>Change application settings and feature flags safely at run time, with gradual rollout and automatic rollback.</td></tr>
+    </tbody></table></div>
+  </section>
+  <section class="blk">
+    <h3>How the exam asks about it</h3>
+    <div class="tbl"><table class="cues"><thead><tr><th>If the question says</th><th>Think</th></tr></thead><tbody>
+      <tr><td>provision the same infrastructure repeatedly as code</td><td>CloudFormation</td></tr>
+      <tr><td>define infrastructure in Python or TypeScript</td><td>AWS CDK</td></tr>
+      <tr><td>developers just upload code; AWS handles capacity and deployment</td><td>Elastic Beanstalk</td></tr>
+      <tr><td>patch a fleet of servers, including on premises</td><td>Systems Manager (Patch Manager)</td></tr>
+      <tr><td>shell access with no SSH keys and no open ports</td><td>Systems Manager Session Manager</td></tr>
+      <tr><td>automate build, test and deploy (CI/CD)</td><td>CodePipeline (with CodeBuild and CodeDeploy)</td></tr>
+      <tr><td>one-time task from the browser</td><td>Management Console or CloudShell</td></tr>
+    </tbody></table></div>
+  </section>
+  <div class="callout trap"><span class="ct">Don't confuse</span><p><strong>CloudFormation vs Elastic Beanstalk.</strong> CloudFormation builds <em>any</em> infrastructure you describe. Beanstalk builds a standard web app environment for your code. <strong>CodeDeploy vs Systems Manager:</strong> CodeDeploy deploys application versions; Systems Manager operates and patches the servers. Both work on premises too.</p></div>
+</article>
+
+<article class="chapter" id="t-ml" hidden>
+  <header class="ch-head">
+    <h2>AI and machine learning</h2>
+    <p class="small"><span class="tag skim">Skim</span> Read the “How the exam asks” table first. Read the rest only if something there surprises you.</p>
+    <p class="lede">AWS offers ready-made AI services that you call with an API, with no ML knowledge needed. SageMaker AI is for building your own models. Bedrock and Amazon Q are for generative AI. On the exam, match the input (image, audio, text, document) to the service.</p>
+  </header>
+  <section class="blk">
+    <h3>Match the task to the service</h3>
+    <div class="tbl wide"><table><thead><tr><th>Service</th><th>Input → output</th><th>Typical use</th></tr></thead><tbody>
+      <tr><td>Amazon Rekognition</td><td>Images, video → objects, faces, text, labels</td><td>Content moderation, face verification, celebrity recognition</td></tr>
+      <tr><td>Amazon Transcribe</td><td>Speech → text</td><td>Call transcripts, subtitles</td></tr>
+      <tr><td>Amazon Polly</td><td>Text → lifelike speech</td><td>Apps and devices that talk</td></tr>
+      <tr><td>Amazon Translate</td><td>Text → another language</td><td>Localize websites and documents</td></tr>
+      <tr><td>Amazon Comprehend</td><td>Text → sentiment, key phrases, entities, topics (NLP)</td><td>Analyze customer reviews and emails</td></tr>
+      <tr><td>Amazon Lex</td><td>Voice or text conversation → intent (chatbot)</td><td>Chatbots and call-center bots (same technology as Alexa)</td></tr>
+      <tr><td>Amazon Connect</td><td>Cloud contact center</td><td>Phone and chat customer service, often with Lex</td></tr>
+      <tr><td>Amazon Textract</td><td>Scanned documents → text, forms, tables</td><td>Invoices, tax forms, ID documents</td></tr>
+      <tr><td>Amazon Kendra</td><td>Documents → natural-language search answers</td><td>Enterprise search across SharePoint, S3, wikis</td></tr>
+      <tr><td>Amazon Personalize</td><td>User behavior → real-time recommendations</td><td>“Customers who bought this also bought…”</td></tr>
+      <tr><td>Amazon SageMaker AI</td><td>Your data → your own ML models</td><td>Build, train and deploy custom models</td></tr>
+      <tr><td>Amazon Bedrock</td><td>Prompts → generative AI from foundation models (Anthropic, Amazon, Meta and others) through one API</td><td>Build generative AI apps without managing models</td></tr>
+      <tr><td>Amazon Q</td><td>Questions → answers from a generative AI assistant</td><td>Help for developers (Q Developer) and employees with company data (Q Business)</td></tr>
+    </tbody></table></div>
+  </section>
+  <section class="blk">
+    <h3>How the exam asks about it</h3>
+    <div class="tbl"><table class="cues"><thead><tr><th>If the question says</th><th>Think</th></tr></thead><tbody>
+      <tr><td>detect faces or inappropriate content in images</td><td>Rekognition</td></tr>
+      <tr><td>convert call recordings to text</td><td>Transcribe</td></tr>
+      <tr><td>read text aloud</td><td>Polly</td></tr>
+      <tr><td>find sentiment in customer reviews</td><td>Comprehend</td></tr>
+      <tr><td>extract data from scanned forms</td><td>Textract</td></tr>
+      <tr><td>build a chatbot</td><td>Lex</td></tr>
+      <tr><td>build and train your own model</td><td>SageMaker AI</td></tr>
+      <tr><td>use foundation models to build a generative AI app</td><td>Bedrock</td></tr>
+    </tbody></table></div>
+  </section>
+  <div class="callout trap"><span class="ct">Don't confuse</span><p><strong>Transcribe vs Polly:</strong> Transcribe turns speech into text, Polly turns text into speech. <strong>Textract vs Comprehend:</strong> Textract <em>extracts</em> text from documents; Comprehend <em>understands</em> the meaning of text. <strong>Kendra vs OpenSearch:</strong> Kendra answers questions in plain language; OpenSearch is a search and log analytics engine.</p></div>
+</article>
+
+<article class="chapter" id="t-other" hidden>
+  <header class="ch-head">
+    <h2>More services to recognize</h2>
+    <p class="small"><span class="tag skim">Skim</span> Read the “How the exam asks” table first. Read the rest only if something there surprises you.</p>
+    <p class="lede">The exam includes services you only need to recognize from a one-line description. They often appear as distractors. If you can match each name to its purpose, you can eliminate wrong answers quickly.</p>
+  </header>
+  <section class="blk">
+    <h3>End-user computing, front end and IoT</h3>
+    <div class="tbl wide"><table><thead><tr><th>Service</th><th>What it does</th></tr></thead><tbody>
+      <tr><td>Amazon WorkSpaces</td><td>Managed virtual desktops (Desktop as a Service), Windows or Linux. Replaces on-premises VDI.</td></tr>
+      <tr><td>Amazon AppStream 2.0</td><td>Streams <em>one desktop application</em> to a web browser.</td></tr>
+      <tr><td>Amazon WorkSpaces Secure Browser</td><td>A managed, disposable web browser for safely reaching internal websites and SaaS apps (formerly WorkSpaces Web).</td></tr>
+      <tr><td>AWS Amplify</td><td>Build and host full-stack web and mobile apps quickly (auth, storage, APIs, hosting, CI/CD).</td></tr>
+      <tr><td>AWS AppSync</td><td>Managed <strong>GraphQL</strong> APIs with real-time and offline data sync.</td></tr>
+      <tr><td>AWS Device Farm</td><td>Test apps on real phones, tablets and browsers.</td></tr>
+      <tr><td>AWS IoT Core</td><td>Connect billions of IoT devices to AWS securely (MQTT).</td></tr>
+      <tr><td>AWS IoT Greengrass</td><td>Run AWS logic locally on edge devices.</td></tr>
+    </tbody></table></div>
+  </section>
+  <section class="blk">
+    <h3>Business apps, communication and specialty</h3>
+    <div class="tbl wide"><table><thead><tr><th>Service</th><th>What it does</th></tr></thead><tbody>
+      <tr><td>Amazon Pinpoint</td><td>Targeted marketing campaigns over email, SMS, push and voice, with segments and templates.</td></tr>
+      <tr><td>Amazon SES</td><td>Send bulk and transactional email.</td></tr>
+      <tr><td>AWS Ground Station</td><td>Control satellites and download their data into AWS.</td></tr>
+      <tr><td>AWS Fault Injection Service (FIS)</td><td>Chaos engineering: inject failures (CPU stress, instance stops) to test resilience.</td></tr>
+      <tr><td>AWS Launch Wizard</td><td>Guided deployment of third-party apps like SQL Server or SAP.</td></tr>
+      <tr><td>AWS License Manager</td><td>Track and control software licenses (Microsoft, Oracle) across AWS and on premises.</td></tr>
+    </tbody></table></div>
+  </section>
+  <section class="blk">
+    <h3>How the exam asks about it</h3>
+    <div class="tbl"><table class="cues"><thead><tr><th>If the question says</th><th>Think</th></tr></thead><tbody>
+      <tr><td>virtual desktops for remote employees</td><td>Amazon WorkSpaces</td></tr>
+      <tr><td>stream a single application to a browser</td><td>AppStream 2.0</td></tr>
+      <tr><td>GraphQL API</td><td>AWS AppSync</td></tr>
+      <tr><td>test a mobile app on real devices</td><td>Device Farm</td></tr>
+      <tr><td>connect millions of sensors</td><td>AWS IoT Core</td></tr>
+      <tr><td>marketing campaigns by SMS and email</td><td>Amazon Pinpoint</td></tr>
+      <tr><td>chaos engineering, inject failures</td><td>AWS Fault Injection Service</td></tr>
+    </tbody></table></div>
+  </section>
+</article>

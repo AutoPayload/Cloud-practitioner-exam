@@ -1,0 +1,205 @@
+
+<article class="chapter" id="t-storage" hidden>
+  <header class="ch-head">
+    <h2>EBS, EFS and FSx</h2>
+    <p class="small"><span class="tag skim">Skim</span> Read the “How the exam asks” table first. Read the rest only if something there surprises you.</p>
+    <p class="lede">Storage for your servers comes in three shapes. <strong>Block</strong> storage is a disk for one instance (EBS, instance store). <strong>File</strong> storage is a shared folder for many instances (EFS, FSx). <strong>Object</strong> storage holds files reached over the web (S3). Pick by how the data is used.</p>
+  </header>
+  <section class="blk">
+    <h3>The options</h3>
+    <div class="tbl wide"><table><thead><tr><th>Service</th><th>Type</th><th>Key facts</th></tr></thead><tbody>
+      <tr><td>Amazon EBS</td><td>Block (network disk)</td><td>Attached to one instance at a time. <strong>Locked to one AZ</strong>: to move it, take a snapshot. Keeps data after the instance stops.</td></tr>
+      <tr><td>EBS snapshots</td><td>Backup</td><td>Point-in-time backups. You can copy them to another AZ or Region.</td></tr>
+      <tr><td>EC2 instance store</td><td>Block (physical disk)</td><td>The fastest I/O, but <strong>temporary</strong>: data is lost when the instance stops or fails. Use it for caches and scratch data.</td></tr>
+      <tr><td>Amazon EFS</td><td>File (NFS, Linux)</td><td>Shared by <strong>hundreds of instances across AZs</strong>. Grows and shrinks automatically, pay per use. <strong>EFS-IA</strong> with a lifecycle policy saves up to 92% on rarely used files.</td></tr>
+      <tr><td>FSx for Windows File Server</td><td>File (SMB, Windows)</td><td>Windows shares with NTFS and Active Directory integration.</td></tr>
+      <tr><td>FSx for Lustre</td><td>File (HPC, Linux)</td><td>Very high performance for HPC and ML. Integrates with S3.</td></tr>
+      <tr><td>FSx for NetApp ONTAP / OpenZFS</td><td>File</td><td>Managed versions of those popular file systems, for easy migration.</td></tr>
+    </tbody></table></div>
+  </section>
+  <section class="blk">
+    <h3>How the exam asks about it</h3>
+    <div class="tbl"><table class="cues"><thead><tr><th>If the question says</th><th>Think</th></tr></thead><tbody>
+      <tr><td>boot volume, database disk for one instance, persists</td><td>Amazon EBS</td></tr>
+      <tr><td>highest IOPS, temporary data, OK to lose</td><td>Instance store</td></tr>
+      <tr><td>shared file system for many Linux instances, multi-AZ</td><td>Amazon EFS</td></tr>
+      <tr><td>Windows file share, SMB, Active Directory</td><td>FSx for Windows File Server</td></tr>
+      <tr><td>HPC, machine learning, sub-millisecond file access</td><td>FSx for Lustre</td></tr>
+      <tr><td>move an EBS volume to another AZ</td><td>Snapshot, then create a new volume</td></tr>
+    </tbody></table></div>
+  </section>
+  <div class="callout trap"><span class="ct">Don't confuse</span><p><strong>EBS vs EFS:</strong> EBS is one disk for one instance in one AZ. EFS is one shared folder for many instances across AZs. <strong>EBS vs instance store:</strong> EBS survives a stop; instance store doesn't.</p></div>
+  <div class="callout hook"><span class="ct">Memory hook</span><p>EBS = <strong>B</strong>lock = a USB stick for <strong>one</strong> computer. EFS = <strong>F</strong>ile = a shared <strong>F</strong>older for many. S3 = a giant bucket of objects on the web.</p></div>
+</article>
+
+<article class="chapter" id="t-s3" hidden>
+  <header class="ch-head">
+    <h2>Amazon S3</h2>
+    <p class="small"><span class="tag good">Must know</span> Read the whole chapter.</p>
+    <p class="lede">Amazon S3 is object storage with no size limit, used for backups, data lakes, static websites and media. You store objects (files) in buckets. It is designed for 11 nines of durability. Expect several questions on storage classes and security.</p>
+  </header>
+  <section class="blk">
+    <h3>Buckets and objects</h3>
+    <ul>
+      <li>A <strong>bucket</strong> is created in one Region, but by default its name must be unique across all AWS accounts.</li>
+      <li>An <strong>object</strong> has a <strong>key</strong> (its full path, like <code>photos/2025/cat.jpg</code>), the data, metadata and tags. S3 has no real folders.</li>
+      <li>Max object size is <strong>50 TB</strong> (it was 5 TB until December 2025, so older questions may say 5 TB). Big files are uploaded in parts (<strong>multipart upload</strong>).</li>
+      <li><strong>Durability</strong> of 99.999999999% (11 nines) for every class. <strong>Availability</strong> varies by class (Standard 99.99%).</li>
+    </ul>
+  </section>
+  <section class="blk">
+    <h3>Security</h3>
+    <ul>
+      <li><strong>IAM policies</strong> (user-based) and <strong>bucket policies</strong> (resource-based; used for public access, cross-account access, forcing encryption).</li>
+      <li>Access is allowed if an IAM policy <em>or</em> the bucket policy allows it, <em>and</em> nothing explicitly denies it.</li>
+      <li><strong>Block Public Access</strong> stops accidental public buckets and can be set for the whole account.</li>
+      <li><strong>Encryption:</strong> SSE-S3 on by default for new objects. SSE-KMS for key control and auditing. Client-side if you must encrypt before upload.</li>
+      <li><strong>Pre-signed URL:</strong> temporary access to one private object, without making it public.</li>
+      <li><strong>MFA Delete</strong> (enabled by the root user) requires MFA to permanently delete versions.</li>
+    </ul>
+  </section>
+  <section class="blk">
+    <h3>Features</h3>
+    <div class="tbl wide"><table><thead><tr><th>Feature</th><th>What it does</th></tr></thead><tbody>
+      <tr><td>Versioning</td><td>Keeps every version of an object. Protects against accidental deletes and overwrites.</td></tr>
+      <tr><td>Replication (CRR / SRR)</td><td>Copies objects to another bucket asynchronously, in another Region (CRR: compliance, latency) or the same Region (SRR: log aggregation, prod → test). Needs versioning on both buckets.</td></tr>
+      <tr><td>Lifecycle rules</td><td>Move objects to cheaper classes after N days, or delete them.</td></tr>
+      <tr><td>Object Lock</td><td>WORM (write once, read many). In compliance mode nobody can delete the object until retention ends.</td></tr>
+      <tr><td>Static website hosting</td><td>Serve HTML, CSS and images directly, with no servers.</td></tr>
+      <tr><td>Transfer Acceleration</td><td>Faster long-distance uploads through edge locations.</td></tr>
+      <tr><td>Event notifications</td><td>Trigger Lambda, SQS or SNS when an object is created.</td></tr>
+    </tbody></table></div>
+  </section>
+  <section class="blk">
+    <h3>Storage classes</h3>
+    <div class="tbl wide"><table><thead><tr><th>Class</th><th>Access pattern</th><th>Retrieval</th><th>Min. duration</th><th>AZs</th></tr></thead><tbody>
+      <tr><td>S3 Standard</td><td>Frequent</td><td class="num">milliseconds</td><td class="num">none</td><td class="num">≥3</td></tr>
+      <tr><td>S3 Intelligent-Tiering</td><td>Unknown or changing (auto-moves, no retrieval fees)</td><td class="num">milliseconds</td><td class="num">none</td><td class="num">≥3</td></tr>
+      <tr><td>S3 Standard-IA</td><td>Infrequent, but fast when needed</td><td class="num">milliseconds</td><td class="num">30 days</td><td class="num">≥3</td></tr>
+      <tr><td>S3 One Zone-IA</td><td>Infrequent, re-creatable data</td><td class="num">milliseconds</td><td class="num">30 days</td><td class="num">1</td></tr>
+      <tr><td>S3 Glacier Instant Retrieval</td><td>About once a quarter</td><td class="num">milliseconds</td><td class="num">90 days</td><td class="num">≥3</td></tr>
+      <tr><td>S3 Glacier Flexible Retrieval</td><td>Archive, 1–2 times a year</td><td class="num">1 min – 12 h</td><td class="num">90 days</td><td class="num">≥3</td></tr>
+      <tr><td>S3 Glacier Deep Archive</td><td>Long-term archive, rarely read</td><td class="num">12 – 48 h</td><td class="num">180 days</td><td class="num">≥3</td></tr>
+      <tr><td>S3 Express One Zone</td><td>Highest performance, single-digit ms</td><td class="num">milliseconds</td><td class="num">none</td><td class="num">1</td></tr>
+    </tbody></table></div>
+  </section>
+  <section class="blk">
+    <h3>How the exam asks about it</h3>
+    <div class="tbl"><table class="cues"><thead><tr><th>If the question says</th><th>Think</th></tr></thead><tbody>
+      <tr><td>unknown or changing access patterns, no retrieval fees</td><td>S3 Intelligent-Tiering</td></tr>
+      <tr><td>infrequent access but must survive an AZ loss, fast</td><td>S3 Standard-IA</td></tr>
+      <tr><td>cheapest for secondary, re-creatable copies</td><td>S3 One Zone-IA</td></tr>
+      <tr><td>archive, retrieval within 12–48 hours is fine, lowest cost</td><td>S3 Glacier Deep Archive</td></tr>
+      <tr><td>move data to cheaper classes automatically after 30 days</td><td>S3 Lifecycle rules</td></tr>
+      <tr><td>nobody can delete records for 7 years (WORM)</td><td>S3 Object Lock</td></tr>
+      <tr><td>recover from accidental overwrite</td><td>S3 Versioning</td></tr>
+      <tr><td>share one private file for 15 minutes</td><td>Pre-signed URL</td></tr>
+    </tbody></table></div>
+  </section>
+  <div class="callout trap"><span class="ct">Don't confuse</span><p><strong>Durability vs availability.</strong> Durability (11 nines, the same for every class) is about not <em>losing</em> data. Availability (99.5% to 99.99%) is about being able to <em>reach</em> it right now. <strong>Versioning vs Object Lock:</strong> versioning keeps old copies but an admin can still delete them; Object Lock prevents deletion.</p></div>
+  <div class="callout hook"><span class="ct">Memory hook</span><p>Minimum durations go <strong>0 → 30 → 90 → 180</strong> days as the classes get colder. Glacier retrieval gets slower as it gets colder: <strong>Instant (ms) → Flexible (minutes to hours) → Deep Archive (half a day to two days)</strong>.</p></div>
+</article>
+
+<article class="chapter" id="t-transfer" hidden>
+  <header class="ch-head">
+    <h2>Hybrid storage, transfer and backup</h2>
+    <p class="small"><span class="tag skim">Skim</span> Read the “How the exam asks” table first. Read the rest only if something there surprises you.</p>
+    <p class="lede">These services connect your data center to AWS storage, move large amounts of data into AWS, and protect your data with backups and disaster recovery.</p>
+  </header>
+  <section class="blk">
+    <h3>Moving and bridging data</h3>
+    <div class="tbl wide"><table><thead><tr><th>Service</th><th>Use it when</th></tr></thead><tbody>
+      <tr><td>AWS Snowball Edge</td><td>Moving terabytes to petabytes <strong>offline</strong> on a shipped device, when the network would take more than a week. It can also run EC2 and Lambda at the edge (ships, mines, trucks).</td></tr>
+      <tr><td>AWS DataSync</td><td>Moving large data <strong>online</strong> from on-premises NFS/SMB storage to S3, EFS or FSx, on a schedule, copying only changes after the first run.</td></tr>
+      <tr><td>AWS Storage Gateway</td><td>On-premises apps need to keep using cloud storage through standard protocols: <strong>File Gateway</strong> (files in S3), <strong>Volume Gateway</strong> (block volumes backed by S3), <strong>Tape Gateway</strong> (virtual tapes to replace physical backup tapes).</td></tr>
+      <tr><td>AWS Transfer Family</td><td>Partners must upload files over <strong>SFTP, FTPS or FTP</strong> directly into S3 or EFS.</td></tr>
+    </tbody></table></div>
+    <p><strong>Rule of thumb:</strong> if moving the data over the network would take more than a week, use Snowball.</p>
+  </section>
+  <section class="blk">
+    <h3>Backup and disaster recovery</h3>
+    <ul>
+      <li><strong>AWS Backup:</strong> one place to define backup plans (schedule, retention, lifecycle) for EC2, EBS, S3, RDS, Aurora, DynamoDB, EFS, FSx and Storage Gateway. It works across Regions and across accounts.</li>
+      <li><strong>AWS Elastic Disaster Recovery (DRS):</strong> continuously replicates physical, virtual or cloud servers into AWS and fails over in minutes. It is good for ransomware recovery.</li>
+    </ul>
+  </section>
+  <section class="blk">
+    <h3>How the exam asks about it</h3>
+    <div class="tbl"><table class="cues"><thead><tr><th>If the question says</th><th>Think</th></tr></thead><tbody>
+      <tr><td>petabytes, slow internet, ship a device</td><td>Snowball Edge</td></tr>
+      <tr><td>edge computing with no internet (ship, mine)</td><td>Snowball Edge</td></tr>
+      <tr><td>scheduled online transfer to S3 or EFS</td><td>DataSync</td></tr>
+      <tr><td>on-premises apps use S3 as a file share</td><td>Storage Gateway (File Gateway)</td></tr>
+      <tr><td>replace physical tape backups</td><td>Storage Gateway (Tape Gateway)</td></tr>
+      <tr><td>SFTP uploads into S3</td><td>AWS Transfer Family</td></tr>
+      <tr><td>centralize backups across services and accounts</td><td>AWS Backup</td></tr>
+      <tr><td>recover servers into AWS in minutes</td><td>Elastic Disaster Recovery</td></tr>
+    </tbody></table></div>
+  </section>
+  <div class="callout trap"><span class="ct">Don't confuse</span><p><strong>DataSync vs Storage Gateway.</strong> DataSync <em>moves</em> data into AWS (a migration or a recurring copy). Storage Gateway lets on-premises apps <em>keep using</em> cloud storage every day (a hybrid bridge).</p></div>
+</article>
+
+<article class="chapter" id="t-db" hidden>
+  <header class="ch-head">
+    <h2>Databases and analytics</h2>
+    <p class="small"><span class="tag good">Must know</span> Read the whole chapter.</p>
+    <p class="lede">AWS has a purpose-built database for each kind of data. The exam describes the data (tables, key-value, JSON documents, graphs, time series) or the job (transactions, analytics, caching) and asks which service fits. Managed databases mean AWS handles patching, backups and high availability.</p>
+  </header>
+  <section class="blk">
+    <h3>Relational (SQL)</h3>
+    <ul>
+      <li><strong>Amazon RDS:</strong> managed PostgreSQL, MySQL, MariaDB, Oracle, SQL Server, Db2. Automated backups, point-in-time restore, patching. No SSH access. Used for OLTP (transactions).</li>
+      <li><strong>RDS Multi-AZ:</strong> a standby copy in another AZ with automatic failover. It is for <strong>high availability</strong>, not for reads.</li>
+      <li><strong>RDS read replicas:</strong> up to 15 read-only copies to <strong>scale reads</strong>. They can be in other Regions.</li>
+      <li><strong>Amazon Aurora:</strong> AWS's own MySQL- and PostgreSQL-compatible engine. Up to 5× faster than MySQL on RDS, storage grows automatically, data is copied across 3 AZs. <strong>Aurora Serverless</strong> scales automatically for intermittent or unpredictable workloads.</li>
+    </ul>
+  </section>
+  <section class="blk">
+    <h3>NoSQL, in-memory and specialized</h3>
+    <div class="tbl wide"><table><thead><tr><th>Service</th><th>Data model</th><th>Pick it when</th></tr></thead><tbody>
+      <tr><td>Amazon DynamoDB</td><td>Key-value, serverless</td><td>Single-digit millisecond latency at any scale, millions of requests per second. <strong>DAX</strong> adds a microsecond cache. <strong>Global tables</strong> give active-active multi-Region.</td></tr>
+      <tr><td>Amazon ElastiCache</td><td>In-memory (Redis/Valkey, Memcached)</td><td>Cache database queries or sessions to cut latency and read load.</td></tr>
+      <tr><td>Amazon MemoryDB</td><td>Durable in-memory (Redis-compatible)</td><td>You need Redis speed <em>and</em> durability as a primary database.</td></tr>
+      <tr><td>Amazon DocumentDB</td><td>Document (JSON), MongoDB-compatible</td><td>A MongoDB workload.</td></tr>
+      <tr><td>Amazon Neptune</td><td>Graph</td><td>Social networks, recommendations, fraud detection, knowledge graphs.</td></tr>
+      <tr><td>Amazon Timestream</td><td>Time series</td><td>IoT sensor data, metrics over time.</td></tr>
+      <tr><td>Amazon Managed Blockchain</td><td>Blockchain (Hyperledger Fabric, Ethereum)</td><td>Several parties transact without a trusted central authority.</td></tr>
+    </tbody></table></div>
+  </section>
+  <section class="blk">
+    <h3>Analytics</h3>
+    <div class="tbl wide"><table><thead><tr><th>Service</th><th>What it does</th></tr></thead><tbody>
+      <tr><td>Amazon Redshift</td><td>Data warehouse for <strong>OLAP</strong> analytics: columnar storage, SQL, petabyte scale. Redshift Serverless needs no cluster management.</td></tr>
+      <tr><td>Amazon Athena</td><td><strong>Serverless SQL queries directly on files in S3</strong>. You pay per TB scanned. Good for logs and ad-hoc analysis.</td></tr>
+      <tr><td>Amazon EMR</td><td>Managed Hadoop and Spark clusters for big data processing.</td></tr>
+      <tr><td>AWS Glue</td><td>Serverless <strong>ETL</strong> (extract, transform, load) and the Glue Data Catalog of your datasets.</td></tr>
+      <tr><td>Amazon QuickSight</td><td>Business intelligence <strong>dashboards</strong> and visualizations.</td></tr>
+      <tr><td>Amazon OpenSearch Service</td><td>Search and log analytics (the successor of Elasticsearch on AWS).</td></tr>
+      <tr><td>AWS Data Exchange</td><td>Find, subscribe to and use third-party data sets (for example financial or weather data) in AWS.</td></tr>
+      <tr><td>Amazon Kinesis</td><td>Real-time streaming data (see Application integration).</td></tr>
+    </tbody></table></div>
+  </section>
+  <section class="blk">
+    <h3>How the exam asks about it</h3>
+    <div class="tbl"><table class="cues"><thead><tr><th>If the question says</th><th>Think</th></tr></thead><tbody>
+      <tr><td>relational, SQL, transactions, managed</td><td>Amazon RDS or Aurora</td></tr>
+      <tr><td>database failover to another AZ</td><td>RDS Multi-AZ</td></tr>
+      <tr><td>scale read-heavy traffic</td><td>Read replicas (or ElastiCache)</td></tr>
+      <tr><td>key-value, serverless, millisecond latency at any scale</td><td>DynamoDB</td></tr>
+      <tr><td>microsecond reads for DynamoDB</td><td>DAX</td></tr>
+      <tr><td>data warehouse, OLAP, BI on petabytes</td><td>Redshift</td></tr>
+      <tr><td>SQL queries on files in S3, no servers</td><td>Athena</td></tr>
+      <tr><td>relationships between users (friends, likes)</td><td>Neptune</td></tr>
+      <tr><td>MongoDB compatible</td><td>DocumentDB</td></tr>
+      <tr><td>ETL, prepare data for analytics</td><td>AWS Glue</td></tr>
+      <tr><td>dashboards for business users</td><td>QuickSight</td></tr>
+      <tr><td>migrate a database with minimal downtime</td><td>AWS DMS</td></tr>
+    </tbody></table></div>
+  </section>
+  <div class="callout trap"><span class="ct">Don't confuse</span><ul>
+    <li><strong>Multi-AZ vs read replicas.</strong> Multi-AZ is for <em>availability</em> (failover). Read replicas are for <em>performance</em> (more reads).</li>
+    <li><strong>RDS vs Redshift.</strong> RDS runs the app's day-to-day transactions (OLTP). Redshift runs big analytic queries over history (OLAP).</li>
+    <li><strong>Athena vs Redshift.</strong> Athena queries files in S3 with no infrastructure. Redshift is a data warehouse you load data into.</li>
+  </ul></div>
+  <div class="callout hook"><span class="ct">Memory hook</span><p><strong>Neptune</strong> is the planet with many connections (graph). <strong>Timestream</strong> = a stream of time. <strong>DocumentDB</strong> = documents (JSON, MongoDB). <strong>Redshift</strong> = shift your data to red-hot analytics. <strong>Athena</strong>, goddess of wisdom, answers questions about S3.</p></div>
+</article>

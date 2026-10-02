@@ -1,0 +1,185 @@
+
+<article class="chapter" id="t-pricing" hidden>
+  <header class="ch-head">
+    <h2>Pricing models and free tier</h2>
+    <p class="small"><span class="tag good">Must know</span> Read the whole chapter.</p>
+    <p class="lede">AWS pricing follows a few simple rules: pay for what you use, pay less when you commit, and pay less when you use more. The exam checks that you can pick the cheapest option that still meets the requirement.</p>
+  </header>
+  <section class="blk">
+    <h3>The pricing principles</h3>
+    <ul>
+      <li><strong>Pay as you go:</strong> no upfront cost, no long-term contract.</li>
+      <li><strong>Save when you commit:</strong> Reserved Instances (EC2, RDS, ElastiCache, Redshift, OpenSearch), DynamoDB reserved capacity, and Savings Plans.</li>
+      <li><strong>Pay less by using more:</strong> tiered volume discounts, for example S3 storage and data transfer out.</li>
+      <li><strong>Pay less as AWS grows:</strong> AWS lowers prices as its scale grows.</li>
+    </ul>
+  </section>
+  <section class="blk">
+    <h3>Savings Plans</h3>
+    <div class="tbl wide"><table><thead><tr><th>Plan</th><th>Discount</th><th>Flexibility</th></tr></thead><tbody>
+      <tr><td>Compute Savings Plans</td><td class="num">up to 66%</td><td>Any instance family, size, OS, tenancy and Region, and also <strong>Fargate and Lambda</strong></td></tr>
+      <tr><td>EC2 Instance Savings Plans</td><td class="num">up to 72%</td><td>One instance family in one Region (e.g. M5 in us-east-1); any size, OS, tenancy</td></tr>
+    </tbody></table></div>
+    <p>You commit to a dollar amount per hour for 1 or 3 years. Usage above the commitment is billed On-Demand. Cost Explorer recommends a commitment for you.</p>
+  </section>
+  <section class="blk">
+    <h3>What you pay for, service by service</h3>
+    <div class="tbl wide"><table><thead><tr><th>Service</th><th>Main price drivers</th></tr></thead><tbody>
+      <tr><td>EC2</td><td>Instance type and size, running time, Region, OS and licenses, purchase option, EBS, data transfer out, Elastic IPs and public IPv4</td></tr>
+      <tr><td>Lambda</td><td>Number of requests and duration (GB-seconds)</td></tr>
+      <tr><td>Fargate</td><td>vCPU and memory allocated to the containers</td></tr>
+      <tr><td>S3</td><td>Storage class and GB stored, number of requests, data transfer out, retrievals for IA and Glacier classes</td></tr>
+      <tr><td>EBS</td><td>GB provisioned per month (even if unused), provisioned IOPS, snapshots</td></tr>
+      <tr><td>RDS</td><td>Instance hours, engine, storage, Multi-AZ, backups beyond the free amount, data transfer out</td></tr>
+      <tr><td>CloudFront</td><td>Data transfer out by geography, number of requests</td></tr>
+    </tbody></table></div>
+    <p><strong>Data transfer:</strong> data coming <em>in</em> to AWS is free. Traffic between instances in the same AZ over private IPs is free. Traffic between AZs, between Regions and out to the internet costs money.</p>
+    <p><strong>Free to use</strong> (you pay only for the resources they create): IAM, VPC, CloudFormation, Elastic Beanstalk, Auto Scaling, AWS Organizations and consolidated billing.</p>
+  </section>
+  <section class="blk">
+    <h3>Free tier and the Free Plan</h3>
+    <ul>
+      <li><strong>Classic Free Tier</strong> (used in most exam questions) has three kinds of offers: <strong>Always Free</strong> (for example Lambda, 1 million requests a month), <strong>12 months free</strong> for new accounts, and short <strong>free trials</strong>.</li>
+      <li><strong>Free plan</strong> (new accounts since July 2025): credits replace the 12-months-free offers (Always Free still applies), and you pay nothing; the plan ends after 6 months or when the credits run out. The <strong>Paid plan</strong> charges you after the credits are used.</li>
+    </ul>
+  </section>
+  <section class="blk">
+    <h3>How the exam asks about it</h3>
+    <div class="tbl"><table class="cues"><thead><tr><th>If the question says</th><th>Think</th></tr></thead><tbody>
+      <tr><td>commit for discounts across EC2, Fargate and Lambda</td><td>Compute Savings Plans</td></tr>
+      <tr><td>biggest discount, fixed instance family and Region</td><td>EC2 Instance Savings Plans or Standard RIs</td></tr>
+      <tr><td>which data transfer is free?</td><td>Inbound from the internet (and same-AZ private IP)</td></tr>
+      <tr><td>reduce data transfer costs between instances</td><td>Keep them in the same AZ, use private IPs</td></tr>
+      <tr><td>price drops the more you store</td><td>Volume (tiered) pricing</td></tr>
+    </tbody></table></div>
+  </section>
+</article>
+
+<article class="chapter" id="t-accounts" hidden>
+  <header class="ch-head">
+    <h2>Accounts and governance</h2>
+    <p class="small"><span class="tag good">Must know</span> Read the whole chapter.</p>
+    <p class="lede">Large companies run many AWS accounts, for example one per team or per environment. AWS Organizations groups them, gives one bill, and applies guardrails. Control Tower sets all of this up the right way.</p>
+  </header>
+  <section class="blk">
+    <h3>AWS Organizations</h3>
+    <ul>
+      <li>One <strong>management account</strong> and many <strong>member accounts</strong>, grouped into <strong>organizational units (OUs)</strong> such as Dev, Prod or Finance.</li>
+      <li><strong>Consolidated billing:</strong> one bill and one payment method. Usage is combined for <strong>volume discounts</strong>, and Reserved Instance and Savings Plans discounts are <strong>shared</strong> across accounts. It is free.</li>
+      <li><strong>Service control policies (SCPs):</strong> guardrails that set the <em>maximum</em> permissions for accounts or OUs, for example “nobody may use services outside eu-west-1.” They apply to every user and role in a member account, <strong>including its root user</strong>. They don't apply to the management account, and they never grant permissions by themselves.</li>
+    </ul>
+  </section>
+  <section class="blk">
+    <h3>Related services</h3>
+    <div class="tbl wide"><table><thead><tr><th>Service</th><th>Use it to</th></tr></thead><tbody>
+      <tr><td>AWS Control Tower</td><td>Set up and govern a secure multi-account environment (a landing zone) in a few clicks, with preventive and detective controls and a compliance dashboard. It runs on top of Organizations.</td></tr>
+      <tr><td>AWS Resource Access Manager (RAM)</td><td>Share resources (subnets, Transit Gateways, Route 53 Resolver rules, License Manager configurations) with other accounts instead of duplicating them.</td></tr>
+      <tr><td>AWS Service Catalog</td><td>Offer users a catalog of pre-approved, correctly configured products (CloudFormation templates) they can launch themselves.</td></tr>
+      <tr><td>Tags and Resource Groups</td><td>Label resources (Environment=Prod, Team=Data). <strong>Cost allocation tags</strong> show costs per tag in billing reports. Tag Editor manages tags in bulk.</td></tr>
+      <tr><td>AWS IAM Identity Center</td><td>One sign-in for users across all accounts in the organization.</td></tr>
+    </tbody></table></div>
+    <p><strong>Why many accounts:</strong> separate billing per team, isolation between dev and prod, separate service quotas, regulatory boundaries, and a central account for logs (send all CloudTrail logs to one S3 bucket).</p>
+  </section>
+  <section class="blk">
+    <h3>How the exam asks about it</h3>
+    <div class="tbl"><table class="cues"><thead><tr><th>If the question says</th><th>Think</th></tr></thead><tbody>
+      <tr><td>one bill for all accounts, combined volume discounts</td><td>Organizations consolidated billing</td></tr>
+      <tr><td>prevent member accounts from using a service or Region</td><td>Service control policy (SCP)</td></tr>
+      <tr><td>set up a new multi-account environment with best practices</td><td>AWS Control Tower</td></tr>
+      <tr><td>share subnets or a Transit Gateway with another account</td><td>AWS Resource Access Manager</td></tr>
+      <tr><td>users may only launch approved configurations</td><td>AWS Service Catalog</td></tr>
+      <tr><td>see costs per project or department</td><td>Cost allocation tags</td></tr>
+    </tbody></table></div>
+  </section>
+  <div class="callout trap"><span class="ct">Don't confuse</span><p><strong>SCP vs IAM policy.</strong> An IAM policy <em>grants</em> permissions to users and roles. An SCP only <em>limits</em> what an account can do; a user needs both an IAM Allow and no SCP block. <strong>Organizations vs Control Tower:</strong> Organizations is the engine; Control Tower is the automated setup with best-practice guardrails on top of it.</p></div>
+</article>
+
+<article class="chapter" id="t-costtools" hidden>
+  <header class="ch-head">
+    <h2>Cost management tools</h2>
+    <p class="small"><span class="tag good">Must know</span> Read the whole chapter.</p>
+    <p class="lede">AWS gives you tools to estimate costs before you build, see where money goes, get alerts before you overspend, and find savings. The exam asks which tool fits each moment.</p>
+  </header>
+  <section class="blk">
+    <h3>Estimate, track, control, optimize</h3>
+    <div class="tbl wide"><table><thead><tr><th>Tool</th><th>Moment</th><th>What it does</th></tr></thead><tbody>
+      <tr><td>AWS Pricing Calculator</td><td>Before you build</td><td>Estimates the monthly cost of an architecture you plan.</td></tr>
+      <tr><td>Billing and Cost Management console</td><td>Track</td><td>Your bills, payments, credits and a high-level view of spending.</td></tr>
+      <tr><td>AWS Cost Explorer</td><td>Track and analyze</td><td>Graphs of past cost and usage by service, account or tag, <strong>forecasts</strong>, and Reserved Instance and Savings Plans recommendations.</td></tr>
+      <tr><td>Cost and Usage Report (Data Exports)</td><td>Detailed analysis</td><td>The <strong>most detailed</strong> line-by-line billing data, delivered to S3 and queried with Athena, Redshift or QuickSight.</td></tr>
+      <tr><td>AWS Budgets</td><td>Control</td><td>Set a budget for cost, usage, RI or Savings Plans and get alerts on <strong>actual or forecasted</strong> amounts. Budget actions can even apply a restriction automatically.</td></tr>
+      <tr><td>CloudWatch billing alarm</td><td>Control</td><td>A simple alarm on actual estimated charges (metric stored in us-east-1).</td></tr>
+      <tr><td>AWS Cost Anomaly Detection</td><td>Control</td><td>Machine learning spots unusual spending and alerts you, with root-cause hints. No thresholds needed.</td></tr>
+      <tr><td>AWS Compute Optimizer</td><td>Optimize</td><td>Recommends better sizes for EC2, Auto Scaling groups, EBS, Lambda and more, based on real utilization.</td></tr>
+      <tr><td>AWS Trusted Advisor</td><td>Optimize</td><td>Best-practice checks in six categories: cost optimization, performance, security, fault tolerance, service limits, operational excellence.</td></tr>
+      <tr><td>Service Quotas</td><td>Operate</td><td>See your limits (quotas) and request increases; alarm when you get close.</td></tr>
+      <tr><td>AWS Billing Conductor</td><td>Rebill</td><td>Custom pricing and billing views, for resellers or to bill each internal team for its own usage.</td></tr>
+    </tbody></table></div>
+  </section>
+  <section class="blk">
+    <h3>How the exam asks about it</h3>
+    <div class="tbl"><table class="cues"><thead><tr><th>If the question says</th><th>Think</th></tr></thead><tbody>
+      <tr><td>estimate the cost of a new workload before deploying</td><td>AWS Pricing Calculator</td></tr>
+      <tr><td>visualize spending over the last months and forecast</td><td>AWS Cost Explorer</td></tr>
+      <tr><td>alert when forecasted cost exceeds a budget</td><td>AWS Budgets</td></tr>
+      <tr><td>most granular hourly billing data for analysis</td><td>Cost and Usage Report</td></tr>
+      <tr><td>detect unexpected spend spikes automatically</td><td>Cost Anomaly Detection</td></tr>
+      <tr><td>right-size underused EC2 instances</td><td>Compute Optimizer (or Trusted Advisor)</td></tr>
+      <tr><td>check for idle resources, open ports and service limits</td><td>Trusted Advisor</td></tr>
+    </tbody></table></div>
+  </section>
+  <div class="callout trap"><span class="ct">Don't confuse</span><p><strong>Pricing Calculator vs Cost Explorer.</strong> The calculator estimates the <em>future</em> cost of something you haven't built. Cost Explorer analyzes what you <em>already</em> spent (and forecasts from it). <strong>Budgets vs billing alarm:</strong> Budgets can alert on forecasts and track usage and reservations; a billing alarm watches only the actual total.</p></div>
+  <div class="callout hook"><span class="ct">Memory hook</span><p>Before: <strong>Calculator</strong>. After: <strong>Explorer</strong>. Guard rails: <strong>Budgets</strong>. Surprises: <strong>Anomaly Detection</strong>. Every detail: <strong>Cost and Usage Report</strong>.</p></div>
+</article>
+
+<article class="chapter" id="t-support" hidden>
+  <header class="ch-head">
+    <h2>Support plans and resources</h2>
+    <p class="small"><span class="tag good">Must know</span> Read the whole chapter.</p>
+    <p class="lede">Support plans decide how fast AWS answers you and who helps you. AWS changed the plan lineup in December 2025, but exam questions were written for the classic lineup, so learn both.</p>
+  </header>
+  <section class="blk">
+    <h3>Classic plans, cheapest first (what most exam questions use)</h3>
+    <div class="tbl wide"><table><thead><tr><th>Plan</th><th>Access to engineers</th><th>Fastest response</th><th>Stand-out features</th></tr></thead><tbody>
+      <tr><td>Basic (free)</td><td>No technical cases (account and billing help only)</td><td class="num">—</td><td>Documentation, re:Post, core Trusted Advisor checks, AWS Health Dashboard</td></tr>
+      <tr><td>Developer</td><td>Business-hours email, Cloud Support Associates</td><td class="num">&lt;12 business h (system impaired)</td><td>General guidance &lt;24 business hours</td></tr>
+      <tr><td>Business</td><td>24/7 phone, email, chat, Cloud Support Engineers</td><td class="num">&lt;1 h (production down)</td><td>Full Trusted Advisor checks, AWS Support API, third-party software help</td></tr>
+      <tr><td>Enterprise On-Ramp</td><td>24/7</td><td class="num">&lt;30 min (business-critical down)</td><td>A pool of Technical Account Managers (TAMs), Concierge Support Team</td></tr>
+      <tr><td>Enterprise</td><td>24/7</td><td class="num">&lt;15 min (business-critical down)</td><td><strong>Designated TAM</strong>, Concierge Support Team (billing and account help), Infrastructure Event Management, Well-Architected reviews</td></tr>
+    </tbody></table></div>
+  </section>
+  <section class="blk">
+    <h3>New plan names (December 2025)</h3>
+    <p><strong>Basic</strong> stays free. <strong>Business Support+</strong> replaces Developer and Business: 24/7 access to engineers and the full Trusted Advisor checks. <strong>Enterprise</strong> keeps the designated TAM and the 15-minute response. <strong>Unified Operations</strong> is the new top plan, with a team of specialists.</p>
+  </section>
+  <section class="blk">
+    <h3>Other places to get help</h3>
+    <div class="tbl wide"><table><thead><tr><th>Resource</th><th>What it offers</th></tr></thead><tbody>
+      <tr><td>AWS re:Post</td><td>Community questions and answers, reviewed by experts (replaced the AWS Forums).</td></tr>
+      <tr><td>AWS Knowledge Center</td><td>Articles answering the most frequent support questions.</td></tr>
+      <tr><td>AWS Marketplace</td><td>Buy third-party software (AMIs, SaaS, containers); the charges appear on your AWS bill.</td></tr>
+      <tr><td>AWS Partner Network (APN)</td><td>Consulting and technology partners (system integrators and software vendors) that help you build and migrate. Partners get training, certification and other benefits.</td></tr>
+      <tr><td>AWS Professional Services</td><td>AWS's own experts for large projects, working with partners.</td></tr>
+      <tr><td>AWS Managed Services (AMS)</td><td>AWS operates your infrastructure for you: patching, monitoring, backups, change requests.</td></tr>
+      <tr><td>AWS IQ</td><td>Hire AWS Certified freelancers for a short project.</td></tr>
+      <tr><td>AWS Trust &amp; Safety</td><td>Report abuse coming from AWS resources.</td></tr>
+      <tr><td>AWS Skill Builder, whitepapers, Solutions Library, blogs</td><td>Free training, best-practice papers and ready-made reference solutions.</td></tr>
+      <tr><td>AWS Prescriptive Guidance</td><td>Free AWS-written strategies, guides and patterns for migration and modernization.</td></tr>
+      <tr><td>AWS Activate</td><td>A program for startups with AWS credits, technical support, training and community.</td></tr>
+    </tbody></table></div>
+  </section>
+  <section class="blk">
+    <h3>How the exam asks about it</h3>
+    <div class="tbl"><table class="cues"><thead><tr><th>If the question says</th><th>Think</th></tr></thead><tbody>
+      <tr><td>designated Technical Account Manager</td><td>Enterprise</td></tr>
+      <tr><td>response within 15 minutes for business-critical outages</td><td>Enterprise</td></tr>
+      <tr><td>cheapest plan with 24/7 phone support and full Trusted Advisor</td><td>Business (classic) / Business Support+</td></tr>
+      <tr><td>billing and account best-practice help (Concierge)</td><td>Enterprise or Enterprise On-Ramp</td></tr>
+      <tr><td>cheapest plan for test environments, email support</td><td>Developer (classic)</td></tr>
+      <tr><td>buy third-party software billed through AWS</td><td>AWS Marketplace</td></tr>
+      <tr><td>find a consulting firm to help migrate</td><td>AWS Partner Network</td></tr>
+      <tr><td>AWS runs our infrastructure operations for us</td><td>AWS Managed Services</td></tr>
+    </tbody></table></div>
+  </section>
+  <div class="callout hook"><span class="ct">Memory hook</span><p>Response times shrink as plans grow: <strong>12 h → 1 h → 30 min → 15 min</strong> (Developer → Business → Enterprise On-Ramp → Enterprise). “<strong>T</strong>AM” goes with “<strong>T</strong>op” plans.</p></div>
+</article>

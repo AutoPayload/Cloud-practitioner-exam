@@ -1,0 +1,242 @@
+
+  <section class="view" id="v-compare" hidden aria-labelledby="cmp-title">
+    <div class="read" style="max-width:900px">
+      <div class="stack">
+        <span class="eyebrow">The pairs the exam loves to mix up</span>
+        <h1 id="cmp-title">Compare</h1>
+        <p class="lede">Most wrong answers on this exam are a real service from the right family doing the wrong job. These tables put the look-alikes side by side. Study one table at a time: cover the right column and say it out loud.</p>
+      </div>
+      <div class="chips" id="cmp-jump" aria-label="Jump to a comparison">
+        <button class="pill" data-scroll="c-mon">Monitoring</button>
+        <button class="pill" data-scroll="c-sec">Threat detection</button>
+        <button class="pill" data-scroll="c-fw">Firewalls and DDoS</button>
+        <button class="pill" data-scroll="c-keys">Keys and secrets</button>
+        <button class="pill" data-scroll="c-id">Identity</button>
+        <button class="pill" data-scroll="c-sto">Storage</button>
+        <button class="pill" data-scroll="c-mov">Data transfer</button>
+        <button class="pill" data-scroll="c-cmp">Compute</button>
+        <button class="pill" data-scroll="c-db">Databases</button>
+        <button class="pill" data-scroll="c-ana">Analytics</button>
+        <button class="pill" data-scroll="c-int">Integration</button>
+        <button class="pill" data-scroll="c-edge">Edge and DNS</button>
+        <button class="pill" data-scroll="c-net">Hybrid networking</button>
+        <button class="pill" data-scroll="c-dep">Deployment</button>
+        <button class="pill" data-scroll="c-gov">Governance</button>
+        <button class="pill" data-scroll="c-cost">Cost tools</button>
+        <button class="pill" data-scroll="c-ml">AI services</button>
+        <button class="pill" data-scroll="c-loc">Where AWS runs</button>
+        <button class="pill" data-scroll="c-dr">Disaster recovery</button>
+        <button class="pill" data-scroll="c-words">Cloud vocabulary</button>
+      </div>
+
+      <section class="cmp" id="c-mon"><h3>CloudWatch vs CloudTrail vs Config vs X-Ray</h3>
+        <div class="tbl wide"><table><thead><tr><th>Service</th><th>Question it answers</th><th>Example</th></tr></thead><tbody>
+          <tr><td>CloudWatch</td><td>How is it performing? Alert me.</td><td>CPU above 80% → alarm → add instances</td></tr>
+          <tr><td>CloudTrail</td><td>Who did what, and when?</td><td>Which user deleted the S3 bucket yesterday</td></tr>
+          <tr><td>Config</td><td>What is the configuration, and is it compliant over time?</td><td>Which security groups allow SSH from anywhere</td></tr>
+          <tr><td>X-Ray</td><td>Where is the slow part of the request?</td><td>Tracing a request through five microservices</td></tr>
+        </tbody></table></div>
+        <p class="bottom">performance → CloudWatch, people and API calls → CloudTrail, settings → Config, request tracing → X-Ray.</p>
+      </section>
+
+      <section class="cmp" id="c-sec"><h3>GuardDuty vs Inspector vs Macie vs Detective vs Security Hub</h3>
+        <div class="tbl wide"><table><thead><tr><th>Service</th><th>Looks at</th><th>Finds</th></tr></thead><tbody>
+          <tr><td>GuardDuty</td><td>CloudTrail, VPC Flow Logs, DNS logs</td><td>Active threats: compromised instances, crypto mining, unusual API calls</td></tr>
+          <tr><td>Inspector</td><td>EC2, ECR images, Lambda code</td><td>Software vulnerabilities (CVEs) and network exposure</td></tr>
+          <tr><td>Macie</td><td>Objects in S3</td><td>Sensitive data such as PII</td></tr>
+          <tr><td>Detective</td><td>Findings plus logs, as a graph</td><td>The root cause of a security issue</td></tr>
+          <tr><td>Security Hub</td><td>Findings from all of the above, across accounts</td><td>One prioritized view, plus best-practice checks</td></tr>
+        </tbody></table></div>
+        <p class="bottom">GuardDuty guards, Inspector inspects software, Macie finds PII, Detective explains, Security Hub collects.</p>
+      </section>
+
+      <section class="cmp" id="c-fw"><h3>Security group vs NACL vs WAF vs Shield vs Network Firewall vs Firewall Manager</h3>
+        <div class="tbl wide"><table><thead><tr><th>Control</th><th>Level</th><th>Key trait</th></tr></thead><tbody>
+          <tr><td>Security group</td><td>Instance</td><td>Allow only, stateful</td></tr>
+          <tr><td>Network ACL</td><td>Subnet</td><td>Allow and deny, stateless</td></tr>
+          <tr><td>AWS WAF</td><td>Web app (ALB, API Gateway, CloudFront)</td><td>Layer 7: SQL injection, XSS, geo-blocking, rate limits</td></tr>
+          <tr><td>Shield Standard / Advanced</td><td>Edge and resources</td><td>DDoS protection; Advanced adds a response team and cost protection</td></tr>
+          <tr><td>Network Firewall</td><td>Whole VPC</td><td>Layers 3–7 filtering of all traffic</td></tr>
+          <tr><td>Firewall Manager</td><td>All accounts</td><td>Central management of all the rules above</td></tr>
+        </tbody></table></div>
+        <p class="bottom">floods → Shield, malicious web requests → WAF, one instance → security group, one subnet → NACL, many accounts → Firewall Manager.</p>
+      </section>
+
+      <section class="cmp" id="c-keys"><h3>KMS vs CloudHSM vs ACM vs Secrets Manager vs Parameter Store</h3>
+        <div class="tbl wide"><table><thead><tr><th>Service</th><th>Stores</th><th>Stand-out trait</th></tr></thead><tbody>
+          <tr><td>KMS</td><td>Encryption keys</td><td>Managed, integrated with almost every service</td></tr>
+          <tr><td>CloudHSM</td><td>Encryption keys on dedicated hardware</td><td>You control the keys; FIPS 140-2 Level 3</td></tr>
+          <tr><td>ACM</td><td>SSL/TLS certificates</td><td>Free public certificates, auto-renewal</td></tr>
+          <tr><td>Secrets Manager</td><td>Passwords, API keys</td><td>Automatic rotation (RDS built in)</td></tr>
+          <tr><td>Parameter Store</td><td>Configuration and secrets</td><td>Free (standard parameters), no automatic rotation</td></tr>
+        </tbody></table></div>
+      </section>
+
+      <section class="cmp" id="c-id"><h3>IAM vs IAM Identity Center vs Cognito vs STS vs Directory Service</h3>
+        <div class="tbl wide"><table><thead><tr><th>Service</th><th>Who signs in</th><th>Pick it for</th></tr></thead><tbody>
+          <tr><td>IAM</td><td>People and apps in your account</td><td>Users, groups, roles, policies</td></tr>
+          <tr><td>IAM Identity Center</td><td>Employees</td><td>Single sign-on to many AWS accounts and business apps</td></tr>
+          <tr><td>Cognito</td><td>Your app's customers</td><td>Sign-up and sign-in for web and mobile apps, social login</td></tr>
+          <tr><td>STS</td><td>Anyone assuming a role</td><td>Temporary credentials</td></tr>
+          <tr><td>Directory Service</td><td>Windows domain users</td><td>Microsoft Active Directory in AWS or connected to on premises</td></tr>
+        </tbody></table></div>
+      </section>
+
+      <section class="cmp" id="c-sto"><h3>EBS vs instance store vs EFS vs FSx vs S3</h3>
+        <div class="tbl wide"><table><thead><tr><th>Service</th><th>Type</th><th>Shared?</th><th>Survives stop?</th><th>Typical use</th></tr></thead><tbody>
+          <tr><td>EBS</td><td>Block</td><td>One instance, one AZ</td><td>Yes</td><td>Boot and database disks</td></tr>
+          <tr><td>Instance store</td><td>Block</td><td>One instance</td><td>No</td><td>Cache, scratch data</td></tr>
+          <tr><td>EFS</td><td>File (NFS, Linux)</td><td>Hundreds of instances, multi-AZ</td><td>Yes</td><td>Shared content, home folders</td></tr>
+          <tr><td>FSx</td><td>File (Windows SMB, Lustre, ONTAP, OpenZFS)</td><td>Many instances</td><td>Yes</td><td>Windows shares, HPC</td></tr>
+          <tr><td>S3</td><td>Object</td><td>Anyone with permission, over HTTP</td><td>Not attached to instances</td><td>Backups, media, data lakes, websites</td></tr>
+        </tbody></table></div>
+      </section>
+
+      <section class="cmp" id="c-mov"><h3>Snowball vs DataSync vs Storage Gateway vs Transfer Family vs Transfer Acceleration</h3>
+        <div class="tbl wide"><table><thead><tr><th>Service</th><th>How data moves</th><th>Pick it when</th></tr></thead><tbody>
+          <tr><td>Snowball Edge</td><td>Shipped device (offline)</td><td>Huge data, slow network, or edge computing</td></tr>
+          <tr><td>DataSync</td><td>Online, scheduled, incremental</td><td>Migrate or regularly copy file data to S3, EFS or FSx</td></tr>
+          <tr><td>Storage Gateway</td><td>Ongoing hybrid access</td><td>On-premises apps keep using cloud-backed storage</td></tr>
+          <tr><td>Transfer Family</td><td>SFTP, FTPS, FTP</td><td>Partners upload files with those protocols</td></tr>
+          <tr><td>S3 Transfer Acceleration</td><td>Through edge locations</td><td>Faster long-distance uploads to one bucket</td></tr>
+        </tbody></table></div>
+      </section>
+
+      <section class="cmp" id="c-cmp"><h3>EC2 vs Lambda vs Fargate vs ECS/EKS vs Batch vs Lightsail vs Elastic Beanstalk</h3>
+        <div class="tbl wide"><table><thead><tr><th>Service</th><th>You manage</th><th>Pick it when</th></tr></thead><tbody>
+          <tr><td>EC2</td><td>OS and everything above</td><td>Full control of the server</td></tr>
+          <tr><td>Lambda</td><td>Only your code</td><td>Event-driven code under 15 minutes</td></tr>
+          <tr><td>Fargate</td><td>Only your containers</td><td>Containers without servers</td></tr>
+          <tr><td>ECS / EKS</td><td>Containers (and instances, unless on Fargate)</td><td>Orchestrating containers (EKS = Kubernetes)</td></tr>
+          <tr><td>Batch</td><td>Job definitions</td><td>Many batch jobs, no time limit</td></tr>
+          <tr><td>Lightsail</td><td>Very little</td><td>Simple sites with a fixed monthly price</td></tr>
+          <tr><td>Elastic Beanstalk</td><td>Only your code</td><td>A standard web app with capacity, load balancing and scaling handled for you</td></tr>
+        </tbody></table></div>
+      </section>
+
+      <section class="cmp" id="c-db"><h3>RDS vs Aurora vs DynamoDB vs ElastiCache vs Redshift</h3>
+        <div class="tbl wide"><table><thead><tr><th>Service</th><th>Model</th><th>Pick it for</th></tr></thead><tbody>
+          <tr><td>RDS</td><td>Relational (SQL)</td><td>Classic app databases: MySQL, PostgreSQL, Oracle, SQL Server</td></tr>
+          <tr><td>Aurora</td><td>Relational, AWS-built</td><td>Higher performance MySQL/PostgreSQL; Serverless option</td></tr>
+          <tr><td>DynamoDB</td><td>Key-value NoSQL, serverless</td><td>Massive scale, single-digit ms latency</td></tr>
+          <tr><td>ElastiCache</td><td>In-memory</td><td>Caching to speed up reads and store sessions</td></tr>
+          <tr><td>Redshift</td><td>Columnar data warehouse</td><td>Analytics (OLAP) on large historical data</td></tr>
+        </tbody></table></div>
+        <p class="bottom">Multi-AZ = availability (failover); read replicas = performance (more reads).</p>
+      </section>
+
+      <section class="cmp" id="c-ana"><h3>Athena vs Redshift vs EMR vs Glue vs QuickSight vs OpenSearch</h3>
+        <div class="tbl wide"><table><thead><tr><th>Service</th><th>Role in an analytics pipeline</th></tr></thead><tbody>
+          <tr><td>Glue</td><td>Prepare and catalog the data (ETL)</td></tr>
+          <tr><td>Athena</td><td>Query files in S3 with SQL, serverless</td></tr>
+          <tr><td>Redshift</td><td>Store and query a data warehouse</td></tr>
+          <tr><td>EMR</td><td>Process big data with Hadoop or Spark clusters</td></tr>
+          <tr><td>QuickSight</td><td>Show dashboards to business users</td></tr>
+          <tr><td>OpenSearch</td><td>Search text and analyze logs</td></tr>
+        </tbody></table></div>
+      </section>
+
+      <section class="cmp" id="c-int"><h3>SQS vs SNS vs EventBridge vs Kinesis vs MQ vs Step Functions</h3>
+        <div class="tbl wide"><table><thead><tr><th>Service</th><th>Shape</th><th>Pick it when</th></tr></thead><tbody>
+          <tr><td>SQS</td><td>Queue, one consumer per message</td><td>Buffer work and decouple producers from consumers</td></tr>
+          <tr><td>SNS</td><td>Pub/sub, everyone gets a copy</td><td>Fan out notifications: email, SMS, many systems</td></tr>
+          <tr><td>EventBridge</td><td>Event bus with rules</td><td>React to AWS or SaaS events, run schedules</td></tr>
+          <tr><td>Kinesis</td><td>Real-time stream</td><td>Click streams, IoT, logs analyzed as they arrive</td></tr>
+          <tr><td>Amazon MQ</td><td>Managed ActiveMQ/RabbitMQ</td><td>Migrating apps that use standard messaging protocols</td></tr>
+          <tr><td>Step Functions</td><td>Workflow</td><td>Coordinate several steps with retries and branches</td></tr>
+        </tbody></table></div>
+      </section>
+
+      <section class="cmp" id="c-edge"><h3>Route 53 vs CloudFront vs Global Accelerator</h3>
+        <div class="tbl wide"><table><thead><tr><th>Service</th><th>Does</th><th>Caches?</th></tr></thead><tbody>
+          <tr><td>Route 53</td><td>DNS: sends users to the right endpoint (latency, weighted, failover)</td><td>No</td></tr>
+          <tr><td>CloudFront</td><td>CDN: serves content from edge caches</td><td>Yes</td></tr>
+          <tr><td>Global Accelerator</td><td>2 static anycast IPs, traffic travels on the AWS network, fast failover</td><td>No</td></tr>
+        </tbody></table></div>
+      </section>
+
+      <section class="cmp" id="c-net"><h3>Site-to-Site VPN vs Direct Connect vs Transit Gateway vs VPC peering</h3>
+        <div class="tbl wide"><table><thead><tr><th>Service</th><th>Connects</th><th>Trait</th></tr></thead><tbody>
+          <tr><td>Site-to-Site VPN</td><td>On premises ↔ VPC</td><td>Over the internet, encrypted, minutes to set up</td></tr>
+          <tr><td>Direct Connect</td><td>On premises ↔ AWS</td><td>Private dedicated line, consistent, weeks to set up</td></tr>
+          <tr><td>Transit Gateway</td><td>Many VPCs and on premises</td><td>Hub and spoke, transitive</td></tr>
+          <tr><td>VPC peering</td><td>Two VPCs</td><td>Private, not transitive, no overlapping IPs</td></tr>
+        </tbody></table></div>
+      </section>
+
+      <section class="cmp" id="c-dep"><h3>CloudFormation vs CDK vs Elastic Beanstalk vs CodeDeploy vs Systems Manager</h3>
+        <div class="tbl wide"><table><thead><tr><th>Service</th><th>Pick it for</th></tr></thead><tbody>
+          <tr><td>CloudFormation</td><td>Any infrastructure from JSON/YAML templates, repeatable in every Region and account</td></tr>
+          <tr><td>CDK</td><td>The same, written in a programming language</td></tr>
+          <tr><td>Elastic Beanstalk</td><td>Upload code, get a managed web environment</td></tr>
+          <tr><td>CodeDeploy</td><td>Deploy new application versions to EC2, Lambda, ECS or on-premises servers</td></tr>
+          <tr><td>Systems Manager</td><td>Patch, configure and access fleets of servers, including on premises</td></tr>
+        </tbody></table></div>
+      </section>
+
+      <section class="cmp" id="c-gov"><h3>Organizations vs SCPs vs Control Tower vs Service Catalog vs RAM</h3>
+        <div class="tbl wide"><table><thead><tr><th>Service</th><th>Pick it for</th></tr></thead><tbody>
+          <tr><td>Organizations</td><td>Group accounts, one consolidated bill</td></tr>
+          <tr><td>SCPs</td><td>Limit what accounts or OUs can do (guardrails)</td></tr>
+          <tr><td>Control Tower</td><td>Set up a well-governed multi-account landing zone automatically</td></tr>
+          <tr><td>Service Catalog</td><td>Let users launch only approved products</td></tr>
+          <tr><td>Resource Access Manager</td><td>Share resources between accounts</td></tr>
+        </tbody></table></div>
+      </section>
+
+      <section class="cmp" id="c-cost"><h3>Pricing Calculator vs Cost Explorer vs Budgets vs CUR vs Anomaly Detection vs Compute Optimizer vs Trusted Advisor</h3>
+        <div class="tbl wide"><table><thead><tr><th>Tool</th><th>Pick it for</th></tr></thead><tbody>
+          <tr><td>Pricing Calculator</td><td>Estimate before you build</td></tr>
+          <tr><td>Cost Explorer</td><td>Visualize past spend, forecast, get Savings Plans recommendations</td></tr>
+          <tr><td>Budgets</td><td>Alerts (actual or forecasted) on cost, usage and reservations</td></tr>
+          <tr><td>Cost and Usage Report</td><td>The most detailed billing data, for analysis</td></tr>
+          <tr><td>Cost Anomaly Detection</td><td>ML alerts on unusual spend</td></tr>
+          <tr><td>Compute Optimizer</td><td>Right-sizing recommendations from utilization</td></tr>
+          <tr><td>Trusted Advisor</td><td>Best-practice checks: cost, performance, security, fault tolerance, limits, operational excellence</td></tr>
+        </tbody></table></div>
+      </section>
+
+      <section class="cmp" id="c-ml"><h3>Rekognition vs Textract vs Comprehend vs Transcribe vs Polly vs Translate vs Lex</h3>
+        <div class="tbl wide"><table><thead><tr><th>Service</th><th>In → out</th></tr></thead><tbody>
+          <tr><td>Rekognition</td><td>Image or video → objects, faces, labels</td></tr>
+          <tr><td>Textract</td><td>Scanned document → text, forms, tables</td></tr>
+          <tr><td>Comprehend</td><td>Text → meaning: sentiment, entities, topics</td></tr>
+          <tr><td>Transcribe</td><td>Speech → text</td></tr>
+          <tr><td>Polly</td><td>Text → speech</td></tr>
+          <tr><td>Translate</td><td>Text → another language</td></tr>
+          <tr><td>Lex</td><td>Conversation → intent (chatbots)</td></tr>
+        </tbody></table></div>
+      </section>
+
+      <section class="cmp" id="c-loc"><h3>Region vs AZ vs edge location vs Local Zone vs Wavelength vs Outposts</h3>
+        <div class="tbl wide"><table><thead><tr><th>Location</th><th>What it is</th></tr></thead><tbody>
+          <tr><td>Region</td><td>A geographic area with several AZs</td></tr>
+          <tr><td>Availability Zone</td><td>One or more isolated data centers in a Region</td></tr>
+          <tr><td>Edge location</td><td>Cache and DNS site near users (CloudFront, Route 53)</td></tr>
+          <tr><td>Local Zone</td><td>AWS compute near a big city, extending a Region</td></tr>
+          <tr><td>Wavelength Zone</td><td>AWS compute inside a 5G telecom network</td></tr>
+          <tr><td>Outposts</td><td>AWS racks inside your own data center</td></tr>
+        </tbody></table></div>
+      </section>
+
+      <section class="cmp" id="c-dr"><h3>Disaster recovery strategies</h3>
+        <div class="tbl wide"><table><thead><tr><th>Strategy</th><th>What is running in the recovery Region</th><th>Recovery time</th><th>Cost</th></tr></thead><tbody>
+          <tr><td>Backup and restore</td><td>Nothing, only backups</td><td>Hours</td><td>Lowest</td></tr>
+          <tr><td>Pilot light</td><td>Core pieces (a database copy)</td><td>Tens of minutes</td><td>Low</td></tr>
+          <tr><td>Warm standby</td><td>A full copy at small size</td><td>Minutes</td><td>Higher</td></tr>
+          <tr><td>Multi-site active-active</td><td>A full copy at full size, serving traffic</td><td>Near zero</td><td>Highest</td></tr>
+        </tbody></table></div>
+      </section>
+
+      <section class="cmp" id="c-words"><h3>Scalability vs elasticity vs agility vs high availability vs fault tolerance</h3>
+        <div class="tbl wide"><table><thead><tr><th>Word</th><th>Means</th></tr></thead><tbody>
+          <tr><td>Scalability</td><td>Can handle more load (bigger or more resources)</td></tr>
+          <tr><td>Elasticity</td><td>Scales out and in automatically with demand</td></tr>
+          <tr><td>Agility</td><td>Resources in minutes, so you experiment and deliver faster</td></tr>
+          <tr><td>High availability</td><td>Keeps running when a component or AZ fails (multi-AZ)</td></tr>
+          <tr><td>Fault tolerance</td><td>Keeps running with no interruption at all when something fails</td></tr>
+          <tr><td>Durability</td><td>Data is not lost (S3: 11 nines)</td></tr>
+        </tbody></table></div>
+      </section>
+    </div>
+  </section>

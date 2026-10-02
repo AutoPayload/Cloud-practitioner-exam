@@ -1,0 +1,768 @@
+<title>CLF-C02 Practice Exam</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=IBM+Plex+Mono:wght@400;500;600&family=Public+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+/* Layout: one calm reading column, like an exam delivery console. A sticky status strip on top, the question below, and actions at the bottom. */
+:root {
+  --bg: #eceff3;
+  --surface: #ffffff;
+  --surface-2: #f5f7fa;
+  --ink: #16202b;
+  --muted: #5a6675;
+  --line: #d3dae3;
+  --accent: #0b6874;
+  --accent-ink: #ffffff;
+  --accent-soft: #dcefF1;
+  --good: #1d7548;
+  --good-soft: #e1f3e8;
+  --bad: #b3372b;
+  --bad-soft: #fbe6e3;
+  --flag: #8a5208;
+  --flag-soft: #fcefd9;
+  --shadow: 0 1px 2px rgb(22 32 43 / 6%), 0 4px 16px rgb(22 32 43 / 5%);
+  --font-display: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Public Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --radius: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1419; --surface: #161f27; --surface-2: #1c2731; --ink: #e5ecf2; --muted: #93a1af; --line: #2a3743;
+    --accent: #5bbac4; --accent-ink: #0b1a1e; --accent-soft: #173239;
+    --good: #58c78f; --good-soft: #15301f; --bad: #ff8a7a; --bad-soft: #3a1c19; --flag: #f0b45a; --flag-soft: #36280f;
+    --shadow: 0 1px 2px rgb(0 0 0 / 30%), 0 4px 16px rgb(0 0 0 / 25%);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1419; --surface: #161f27; --surface-2: #1c2731; --ink: #e5ecf2; --muted: #93a1af; --line: #2a3743;
+  --accent: #5bbac4; --accent-ink: #0b1a1e; --accent-soft: #173239;
+  --good: #58c78f; --good-soft: #15301f; --bad: #ff8a7a; --bad-soft: #3a1c19; --flag: #f0b45a; --flag-soft: #36280f;
+  --shadow: 0 1px 2px rgb(0 0 0 / 30%), 0 4px 16px rgb(0 0 0 / 25%);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 760px; margin: 0 auto; padding-inline: 16px; padding-block: 20px 64px; }
+h1, h2, h3 { font-family: var(--font-display); font-stretch: 85%; line-height: 1.15; text-wrap: balance; margin: 0; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 10px 18px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); cursor: pointer; font-weight: 600; font-size: 15px; }
+.btn:hover { border-color: var(--muted); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn.ghost { background: transparent; border-color: transparent; color: var(--muted); }
+.btn.ghost:hover { color: var(--ink); }
+.btn[disabled] { opacity: .45; cursor: not-allowed; }
+.btn.flagged { background: var(--flag-soft); border-color: var(--flag); color: var(--flag); }
+
+/* ---------- Home ---------- */
+.masthead { display: grid; gap: 6px; padding-block: 8px 20px; }
+.masthead h1 { font-size: clamp(30px, 6vw, 42px); font-weight: 800; letter-spacing: -.01em; }
+.masthead p { margin: 0; color: var(--muted); max-width: 60ch; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 6px; }
+.facts span { font-family: var(--font-mono); font-size: 13px; color: var(--muted); }
+.facts b { color: var(--ink); font-weight: 600; }
+
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px; display: grid; gap: 14px; }
+.stack { display: grid; gap: 16px; }
+.section-title { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.section-title h2 { font-size: 20px; font-weight: 700; }
+
+.modes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 620px) { .modes { grid-template-columns: 1fr; } }
+.mode { text-align: left; border: 1.5px solid var(--line); border-radius: 8px; background: var(--surface-2); padding: 12px 14px; cursor: pointer; display: grid; gap: 2px; min-width: 0; }
+.mode strong { font-family: var(--font-display); font-stretch: 90%; font-size: 17px; }
+.mode span { font-size: 13.5px; color: var(--muted); }
+.mode[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.mode[disabled] { opacity: .5; cursor: not-allowed; }
+
+.lengths { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.lengths .label { font-size: 14px; color: var(--muted); margin-right: 4px; }
+.pill { border: 1px solid var(--line); background: var(--surface-2); border-radius: 999px; padding: 6px 14px; min-height: 36px; cursor: pointer; font-family: var(--font-mono); font-size: 13px; }
+.pill[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+.domain { display: grid; gap: 8px; }
+.domain h3 { font-size: 16px; font-weight: 700; display: grid; gap: 2px; }
+.domain h3 .eyebrow { font-size: 11px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); background: var(--surface-2); border-radius: 8px; padding: 7px 11px; min-height: 40px; cursor: pointer; font-size: 14px; text-align: left; }
+.chip .count { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.chip .acc { font-family: var(--font-mono); font-size: 11px; padding: 1px 6px; border-radius: 4px; background: var(--bg); color: var(--muted); }
+.chip .acc.good { color: var(--good); background: var(--good-soft); }
+.chip .acc.bad { color: var(--bad); background: var(--bad-soft); }
+.chip[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.chip[aria-pressed="false"] { color: var(--muted); }
+.chip .tick { width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid var(--muted); display: inline-grid; place-items: center; flex: none; }
+.chip[aria-pressed="true"] .tick { background: var(--accent); border-color: var(--accent); }
+.chip[aria-pressed="true"] .tick::after { content: ""; width: 8px; height: 4px; border: solid var(--accent-ink); border-width: 0 0 2px 2px; transform: rotate(-45deg) translate(1px, -1px); }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.row.end { justify-content: flex-end; }
+.row.between { justify-content: space-between; }
+.small { font-size: 13.5px; color: var(--muted); }
+.linkish { background: none; border: 0; padding: 4px 2px; color: var(--accent); font-weight: 600; cursor: pointer; font-size: 14px; }
+
+.statline { display: flex; flex-wrap: wrap; gap: 8px 22px; }
+.statline div { display: grid; }
+.statline b { font-family: var(--font-mono); font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.statline span { font-size: 12.5px; color: var(--muted); }
+
+.confirm { border: 1px solid var(--bad); background: var(--bad-soft); border-radius: 8px; padding: 12px 14px; display: grid; gap: 10px; }
+.confirm.neutral { border-color: var(--flag); background: var(--flag-soft); }
+.confirm p { margin: 0; }
+
+/* ---------- Quiz ---------- */
+.strip { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: 10px; margin-bottom: 8px; display: grid; gap: 8px; }
+.strip-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.qcount { font-family: var(--font-mono); font-size: 14px; font-weight: 600; }
+.qcount span { color: var(--muted); font-weight: 400; }
+.tally { display: flex; gap: 12px; font-family: var(--font-mono); font-size: 14px; }
+.tally .g { color: var(--good); } .tally .b { color: var(--bad); }
+.timer { font-family: var(--font-mono); font-size: 15px; font-weight: 600; padding: 4px 10px; border-radius: 6px; background: var(--surface); border: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+.timer.low { color: var(--bad); border-color: var(--bad); }
+.bar { height: 6px; border-radius: 99px; background: var(--line); overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--accent); border-radius: 99px; transition: width .25s ease; }
+
+.qcard { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; display: grid; gap: 16px; }
+.qmeta { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+.tag { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .04em; padding: 2px 8px; border-radius: 4px; background: var(--surface-2); color: var(--muted); border: 1px solid var(--line); }
+.tag.extra { background: var(--flag-soft); color: var(--flag); border-color: transparent; }
+.stem { font-size: 18px; line-height: 1.55; margin: 0; font-weight: 500; }
+.hint { font-size: 13px; color: var(--muted); margin-top: -6px; }
+
+.opts { display: grid; gap: 10px; list-style: none; margin: 0; padding: 0; }
+.opt { width: 100%; display: grid; grid-template-columns: 32px minmax(0, 1fr) auto; gap: 12px; align-items: start; text-align: left; padding: 13px 14px; border-radius: 8px; border: 1.5px solid var(--line); background: var(--surface-2); cursor: pointer; font-size: 16px; line-height: 1.45; transition: border-color .12s, background-color .12s; }
+.opt:hover:not([disabled]) { border-color: var(--accent); }
+.opt .letter { width: 30px; height: 30px; border-radius: 6px; display: grid; place-items: center; font-family: var(--font-mono); font-weight: 600; font-size: 14px; background: var(--surface); border: 1px solid var(--line); }
+.opt .txt { padding-top: 3px; min-width: 0; }
+.opt .mark { font-family: var(--font-mono); font-size: 12px; font-weight: 600; padding-top: 6px; white-space: nowrap; }
+.opt[data-state="selected"] { border-color: var(--accent); background: var(--accent-soft); }
+.opt[data-state="selected"] .letter { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.opt[data-state="correct"] { border-color: var(--good); background: var(--good-soft); }
+.opt[data-state="correct"] .letter { background: var(--good); color: var(--surface); border-color: var(--good); }
+.opt[data-state="correct"] .mark { color: var(--good); }
+.opt[data-state="wrong"] { border-color: var(--bad); background: var(--bad-soft); }
+.opt[data-state="wrong"] .letter { background: var(--bad); color: var(--surface); border-color: var(--bad); }
+.opt[data-state="wrong"] .mark { color: var(--bad); }
+.opt[data-state="dim"] { opacity: .6; }
+.opt[disabled] { cursor: default; }
+
+.feedback { border-radius: 8px; border: 1px solid var(--line); overflow: hidden; }
+.fb-head { padding: 12px 14px; display: grid; gap: 2px; }
+.fb-head.good { background: var(--good-soft); }
+.fb-head.bad { background: var(--bad-soft); }
+.fb-head strong { font-family: var(--font-display); font-stretch: 90%; font-size: 19px; }
+.fb-head.good strong { color: var(--good); }
+.fb-head.bad strong { color: var(--bad); }
+.fb-body { padding: 14px; display: grid; gap: 12px; background: var(--surface); }
+.fb-body p { margin: 0; }
+.why { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.why li { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 10px; font-size: 14.5px; color: var(--muted); }
+.why li b { font-family: var(--font-mono); font-size: 12px; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 5px; border: 1px solid var(--line); color: var(--ink); }
+.why li .ot { color: var(--ink); font-weight: 600; }
+.why li.is-correct b { background: var(--good); color: var(--surface); border-color: var(--good); }
+.why li.is-picked b { background: var(--bad); color: var(--surface); border-color: var(--bad); }
+.why-title { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+
+.actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; margin-top: 16px; }
+.actions .right { display: flex; gap: 10px; flex-wrap: wrap; margin-left: auto; }
+@media (max-width: 520px) { .actions .right { width: 100%; } .actions .right #next { flex: 1; } }
+.kbd { font-family: var(--font-mono); font-size: 11.5px; color: var(--muted); }
+@media (max-width: 520px) { .kbd { display: none; } }
+
+.navgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 6px; }
+.navgrid button { height: 38px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface-2); font-family: var(--font-mono); font-size: 13px; cursor: pointer; position: relative; }
+.navgrid button.answered { background: var(--accent-soft); border-color: var(--accent); }
+.navgrid button.current { outline: 2px solid var(--ink); outline-offset: 1px; }
+.navgrid button.flagged::after { content: ""; position: absolute; top: 3px; right: 3px; width: 7px; height: 7px; border-radius: 50%; background: var(--flag); }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12.5px; color: var(--muted); }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 5px; border: 1px solid var(--line); background: var(--surface-2); }
+.legend i.a { background: var(--accent-soft); border-color: var(--accent); }
+.legend i.f { background: var(--flag); border-color: var(--flag); border-radius: 50%; }
+
+/* ---------- Results ---------- */
+.score { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 18px; align-items: center; }
+@media (max-width: 480px) { .score { grid-template-columns: 1fr; } }
+.dial { width: 132px; height: 132px; }
+.dial text { font-family: var(--font-mono); fill: var(--ink); }
+.verdict { font-family: var(--font-display); font-stretch: 85%; font-size: 26px; font-weight: 800; }
+.verdict.good { color: var(--good); } .verdict.bad { color: var(--bad); }
+.tbars { display: grid; gap: 10px; }
+.tbar { display: grid; grid-template-columns: minmax(0, 1fr) 64px; gap: 4px 12px; align-items: center; font-size: 14px; }
+.tbar .track { grid-column: 1 / -1; height: 8px; border-radius: 99px; background: var(--line); overflow: hidden; position: relative; }
+.tbar .track i { display: block; height: 100%; border-radius: 99px; }
+.tbar .track::after { content: ""; position: absolute; left: 70%; top: -2px; bottom: -2px; width: 2px; background: var(--ink); opacity: .35; }
+.tbar .num { font-family: var(--font-mono); font-size: 13px; text-align: right; color: var(--muted); }
+
+.review { display: grid; gap: 10px; }
+.ritem { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+.ritem summary { list-style: none; cursor: pointer; padding: 12px 14px; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; align-items: start; }
+.ritem summary::-webkit-details-marker { display: none; }
+.ritem summary .res { width: 26px; height: 26px; border-radius: 6px; display: grid; place-items: center; font-family: var(--font-mono); font-weight: 700; font-size: 13px; }
+.ritem.ok summary .res { background: var(--good-soft); color: var(--good); }
+.ritem.no summary .res { background: var(--bad-soft); color: var(--bad); }
+.ritem.skip summary .res { background: var(--surface-2); color: var(--muted); border: 1px solid var(--line); }
+.ritem summary .s { font-size: 15px; }
+.ritem summary .s small { display: block; color: var(--muted); font-family: var(--font-mono); font-size: 11.5px; margin-top: 2px; }
+.ritem .rbody { padding: 0 14px 14px; display: grid; gap: 10px; }
+.empty { color: var(--muted); font-size: 14px; padding: 8px 2px; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<div class="wrap">
+  <!-- HOME -->
+  <main id="home" class="stack" aria-labelledby="home-title">
+    <header class="masthead">
+      <span class="eyebrow">AWS Certified Cloud Practitioner · CLF-C02</span>
+      <h1 id="home-title">CLF-C02 Practice Exam</h1>
+      <p>Questions are written in the exam's style: a short scenario, four options and one best answer. Tap an answer to see whether it's right and why each option is right or wrong. This set covers your study notes up to and including Amazon S3.</p>
+      <div class="facts" id="facts"></div>
+    </header>
+
+    <section class="panel" aria-labelledby="mode-title">
+      <div class="section-title"><h2 id="mode-title">How do you want to practice?</h2></div>
+      <div class="modes" id="modes">
+        <button class="mode" id="mode-practice" data-mode="practice" aria-pressed="true"><strong>Practice</strong><span>See the answer and explanation right after each question.</span></button>
+        <button class="mode" id="mode-exam" data-mode="exam" aria-pressed="false"><strong>Exam simulation</strong><span>65 questions, 90 minutes, no feedback until you finish.</span></button>
+        <button class="mode" id="mode-missed" data-mode="missed" aria-pressed="false"><strong>Missed questions</strong><span id="missed-sub">Questions you got wrong the last time you answered them.</span></button>
+      </div>
+      <div class="lengths" id="lengths">
+        <span class="label">Questions per session</span>
+        <button class="pill" id="len-10" data-len="10" aria-pressed="false">10</button>
+        <button class="pill" id="len-20" data-len="20" aria-pressed="true">20</button>
+        <button class="pill" id="len-40" data-len="40" aria-pressed="false">40</button>
+        <button class="pill" id="len-all" data-len="all" aria-pressed="false">All</button>
+      </div>
+    </section>
+
+    <section class="panel" id="topics-panel" aria-labelledby="topics-title">
+      <div class="section-title">
+        <h2 id="topics-title">Topics</h2>
+        <div class="row"><button class="linkish" id="sel-all">Select all</button><button class="linkish" id="sel-none">Clear</button></div>
+      </div>
+      <div id="topics" class="stack"></div>
+      <p class="small" id="topic-note">Amber-tagged questions cover exam topics that aren't in your notes yet, such as Object Lock, Transfer Acceleration, Compute Savings Plans and AWS Backup.</p>
+    </section>
+
+    <div class="row between">
+      <p class="small" id="start-note" style="margin:0"></p>
+      <button class="btn primary" id="start">Start</button>
+    </div>
+
+    <section class="panel" aria-labelledby="progress-title">
+      <div class="section-title"><h2 id="progress-title">Your progress</h2><button class="linkish" id="reset">Reset progress</button></div>
+      <div class="statline" id="statline"></div>
+      <div id="reset-confirm" class="confirm" hidden>
+        <p>This clears your answer history and your list of missed questions on this device. It can't be undone.</p>
+        <div class="row"><button class="btn" id="reset-yes">Clear history</button><button class="btn ghost" id="reset-no">Keep it</button></div>
+      </div>
+      <p class="small" style="margin:0">Your progress is saved in this browser only.</p>
+    </section>
+  </main>
+
+  <!-- QUIZ -->
+  <main id="quiz" hidden aria-live="polite">
+    <div class="strip">
+      <div class="strip-top">
+        <div class="qcount" id="qcount"></div>
+        <div class="tally" id="tally"></div>
+        <div class="timer" id="timer" hidden></div>
+      </div>
+      <div class="bar" aria-hidden="true"><i id="bar"></i></div>
+    </div>
+
+    <article class="qcard" id="qcard">
+      <div class="qmeta" id="qmeta"></div>
+      <p class="stem" id="stem"></p>
+      <ul class="opts" id="opts"></ul>
+      <div id="feedback" hidden></div>
+    </article>
+
+    <div class="actions">
+      <button class="btn ghost" id="quit">End session</button>
+      <div class="right">
+        <button class="btn" id="prev" hidden>← Previous</button>
+        <button class="btn" id="flag" hidden>Flag for review</button>
+        <button class="btn primary" id="next">Next →</button>
+      </div>
+    </div>
+    <p class="kbd" id="kbd">Keys: A–D or 1–4 to answer · Enter for next</p>
+
+    <section class="panel" id="navpanel" hidden style="margin-top:14px">
+      <div class="section-title"><h2 style="font-size:17px">Question navigator</h2>
+        <div class="legend"><span><i class="a"></i>Answered</span><span><i class="f"></i>Flagged</span></div>
+      </div>
+      <div class="navgrid" id="navgrid"></div>
+      <div id="finish-confirm" class="confirm neutral" hidden>
+        <p id="finish-msg"></p>
+        <div class="row"><button class="btn primary" id="finish-yes">Finish and score</button><button class="btn ghost" id="finish-no">Keep working</button></div>
+      </div>
+      <div class="row end"><button class="btn" id="finish">Finish exam</button></div>
+    </section>
+
+    <div id="quit-confirm" class="confirm" hidden style="margin-top:14px">
+      <p id="quit-msg"></p>
+      <div class="row"><button class="btn" id="quit-yes">End and see results</button><button class="btn ghost" id="quit-no">Keep going</button></div>
+    </div>
+  </main>
+
+  <!-- RESULTS -->
+  <main id="results" hidden class="stack">
+    <section class="panel">
+      <span class="eyebrow" id="res-mode"></span>
+      <div class="score">
+        <svg class="dial" viewBox="0 0 132 132" role="img" id="dial"></svg>
+        <div style="display:grid;gap:6px;min-width:0">
+          <div class="verdict" id="verdict"></div>
+          <p class="small" id="res-detail" style="margin:0"></p>
+        </div>
+      </div>
+      <div class="row">
+        <button class="btn primary" id="retry-missed">Practice the ones I missed</button>
+        <button class="btn" id="to-home">Back to menu</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-title"><h2>By topic</h2><span class="small">Line marks the 70% target</span></div>
+      <div class="tbars" id="tbars"></div>
+    </section>
+
+    <section class="stack">
+      <div class="section-title">
+        <h2>Review answers</h2>
+        <div class="lengths" id="rfilter">
+          <button class="pill" id="rf-wrong" data-f="wrong" aria-pressed="true">Wrong</button>
+          <button class="pill" id="rf-flag" data-f="flag" aria-pressed="false">Flagged</button>
+          <button class="pill" id="rf-all" data-f="all" aria-pressed="false">All</button>
+        </div>
+      </div>
+      <div class="review" id="review"></div>
+    </section>
+  </main>
+</div>
+
+<script>
+const QB = [];
+function Q(t, x, q, o) { QB.push({ t, x: !!x, q, o }); }
+/*__QB__*/
+</script>
+<script>
+(function () {
+  "use strict";
+  const DOMAINS = {
+    1: { name: "Cloud Concepts", w: "24%" },
+    2: { name: "Security and Compliance", w: "30%" },
+    3: { name: "Cloud Technology and Services", w: "34%" }
+  };
+  const TOPICS = {
+    concepts: { d: 1, name: "Cloud concepts and economics" },
+    wa:       { d: 1, name: "Well-Architected Framework" },
+    caf:      { d: 1, name: "CAF, migration and right sizing" },
+    srm:      { d: 2, name: "Shared responsibility" },
+    iam:      { d: 2, name: "IAM, root and identity" },
+    netsec:   { d: 2, name: "DDoS, WAF and firewalls" },
+    crypto:   { d: 2, name: "Encryption and secrets" },
+    detect:   { d: 2, name: "Compliance and threat detection" },
+    infra:    { d: 3, name: "Global infrastructure" },
+    ec2:      { d: 3, name: "EC2 and purchasing options" },
+    storage:  { d: 3, name: "EBS, EFS and FSx" },
+    elb:      { d: 3, name: "Load balancing and Auto Scaling" },
+    s3:       { d: 3, name: "Amazon S3" },
+    transfer: { d: 3, name: "Snowball and hybrid storage" }
+  };
+  const EXAM_LEN = 65, EXAM_MIN = 90, TARGET = 0.7, LETTERS = ["A", "B", "C", "D"];
+  const KEY = "clf-c02-practice-v1";
+
+  // Stable id per question, from its text.
+  QB.forEach(q => {
+    let h = 5381;
+    for (let i = 0; i < q.q.length; i++) h = ((h << 5) + h + q.q.charCodeAt(i)) | 0;
+    q.id = q.t + "-" + (h >>> 0).toString(36);
+  });
+
+  // ---------- storage (per-viewer convenience; always optional) ----------
+  function load() {
+    try { const s = JSON.parse(localStorage.getItem(KEY) || "null"); if (s && typeof s === "object") return s; } catch (e) {}
+    return null;
+  }
+  const saved = load() || {};
+  const store = {
+    stats: saved.stats || {},
+    topics: Array.isArray(saved.topics) ? saved.topics.filter(t => TOPICS[t]) : Object.keys(TOPICS),
+    mode: ["practice", "exam", "missed"].includes(saved.mode) ? saved.mode : "practice",
+    len: ["10", "20", "40", "all"].includes(saved.len) ? saved.len : "20"
+  };
+  if (!store.topics.length) store.topics = Object.keys(TOPICS);
+  function persist() { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} }
+  function record(q, ok) {
+    const s = store.stats[q.id] || { n: 0, c: 0, last: null };
+    s.n++; if (ok) s.c++; s.last = ok ? 1 : 0;
+    store.stats[q.id] = s;
+  }
+
+  // ---------- helpers ----------
+  const $ = id => document.getElementById(id);
+  function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+  function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+  function pct(n, d) { return d ? Math.round((n / d) * 100) : 0; }
+  function missedList() { return QB.filter(q => store.stats[q.id] && store.stats[q.id].last === 0); }
+  function show(id) { ["home", "quiz", "results"].forEach(s => { $(s).hidden = s !== id; }); window.scrollTo(0, 0); }
+
+  // ---------- home ----------
+  function renderHome() {
+    const extra = QB.filter(q => q.x).length;
+    $("facts").innerHTML =
+      `<span><b>${QB.length}</b> questions</span><span><b>${Object.keys(TOPICS).length}</b> topics</span>` +
+      `<span><b>${extra}</b> beyond your notes</span><span>Real exam: <b>65 Qs · 90 min · 700/1000 to pass</b></span>`;
+
+    const missed = missedList().length;
+    if (store.mode === "missed" && !missed) store.mode = "practice";
+    document.querySelectorAll(".mode").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.mode === store.mode)));
+    $("mode-missed").disabled = missed === 0;
+    $("missed-sub").textContent = missed ? `${missed} question${missed === 1 ? "" : "s"} you got wrong the last time you answered.` : "Nothing here yet. Questions you miss will show up here.";
+
+    $("lengths").hidden = store.mode !== "practice";
+    document.querySelectorAll("#lengths .pill").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.len === store.len)));
+
+    let html = "";
+    for (const d of [1, 2, 3]) {
+      html += `<div class="domain"><h3><span class="eyebrow">Domain ${d} · ${DOMAINS[d].w} of the exam</span>${DOMAINS[d].name}</h3><div class="chips">`;
+      for (const [k, t] of Object.entries(TOPICS)) {
+        if (t.d !== d) continue;
+        const qs = QB.filter(q => q.t === k);
+        let n = 0, c = 0;
+        qs.forEach(q => { const s = store.stats[q.id]; if (s) { n++; if (s.last) c++; } });
+        const acc = n ? `<span class="acc ${pct(c, n) >= 70 ? "good" : "bad"}">${pct(c, n)}%</span>` : "";
+        const on = store.topics.includes(k);
+        html += `<button class="chip" id="topic-${k}" data-topic="${k}" aria-pressed="${on}"><span class="tick" aria-hidden="true"></span>${esc(t.name)} <span class="count">${qs.length}</span>${acc}</button>`;
+      }
+      html += `</div></div>`;
+    }
+    $("topics").innerHTML = html;
+    $("topics-panel").hidden = store.mode === "missed";
+
+    const pool = poolFor(store.mode);
+    const n = sessionLength(pool.length);
+    const startBtn = $("start");
+    startBtn.disabled = n === 0;
+    startBtn.textContent = store.mode === "exam" ? `Start exam (${n} questions)` : store.mode === "missed" ? `Retry ${n} missed` : `Start practice (${n} questions)`;
+    $("start-note").textContent = n === 0 ? "Select at least one topic." :
+      store.mode === "exam" ? (pool.length < EXAM_LEN ? `Only ${pool.length} questions in the selected topics. Select more topics for a full 65-question exam.` : `Questions are drawn at random from ${store.topics.length} selected topic${store.topics.length === 1 ? "" : "s"}. The timer runs for ${EXAM_MIN} minutes.`) :
+      `${pool.length} questions available. Answer order is shuffled every time.`;
+
+    const ids = Object.keys(store.stats).filter(id => QB.some(q => q.id === id));
+    const answered = ids.length;
+    const lastRight = ids.filter(id => store.stats[id].last === 1).length;
+    $("statline").innerHTML =
+      `<div><b>${answered}<small style="font-size:13px;color:var(--muted)">/${QB.length}</small></b><span>questions seen</span></div>` +
+      `<div><b>${answered ? pct(lastRight, answered) + "%" : "—"}</b><span>correct on last try</span></div>` +
+      `<div><b>${missed}</b><span>still to fix</span></div>`;
+  }
+
+  function poolFor(mode) {
+    if (mode === "missed") return missedList();
+    return QB.filter(q => store.topics.includes(q.t));
+  }
+  function sessionLength(poolLen) {
+    if (store.mode === "exam") return Math.min(EXAM_LEN, poolLen);
+    if (store.mode === "missed" || store.len === "all") return poolLen;
+    return Math.min(parseInt(store.len, 10), poolLen);
+  }
+
+  $("modes").addEventListener("click", e => {
+    const b = e.target.closest(".mode"); if (!b || b.disabled) return;
+    store.mode = b.dataset.mode; persist(); renderHome();
+  });
+  $("lengths").addEventListener("click", e => {
+    const b = e.target.closest(".pill"); if (!b) return;
+    store.len = b.dataset.len; persist(); renderHome();
+  });
+  $("topics").addEventListener("click", e => {
+    const b = e.target.closest(".chip"); if (!b) return;
+    const k = b.dataset.topic;
+    store.topics = store.topics.includes(k) ? store.topics.filter(t => t !== k) : store.topics.concat(k);
+    persist(); renderHome();
+    const again = $("topic-" + k); if (again) again.focus();
+  });
+  $("sel-all").onclick = () => { store.topics = Object.keys(TOPICS); persist(); renderHome(); };
+  $("sel-none").onclick = () => { store.topics = []; persist(); renderHome(); };
+  $("reset").onclick = () => { $("reset-confirm").hidden = false; };
+  $("reset-no").onclick = () => { $("reset-confirm").hidden = true; };
+  $("reset-yes").onclick = () => { store.stats = {}; persist(); $("reset-confirm").hidden = true; if (store.mode === "missed") store.mode = "practice"; renderHome(); };
+  $("start").onclick = () => startSession(store.mode, poolFor(store.mode));
+
+  // ---------- session ----------
+  let S = null, tick = null;
+
+  function startSession(mode, pool, label) {
+    const n = mode === "exam" ? Math.min(EXAM_LEN, pool.length) : (mode === "missed" || store.len === "all" || label) ? pool.length : Math.min(parseInt(store.len, 10), pool.length);
+    if (!n) return;
+    let picked;
+    if (mode === "exam") {
+      // Weight the draw like the real exam (Domain 4, billing, is out of scope here, so its share is spread across the other three).
+      const W = { 1: 0.28, 2: 0.33, 3: 0.39 };
+      const byD = { 1: [], 2: [], 3: [] };
+      shuffle(pool).forEach(q => byD[TOPICS[q.t].d].push(q));
+      picked = [];
+      for (const d of [1, 2, 3]) picked.push(...byD[d].splice(0, Math.round(n * W[d])));
+      const rest = shuffle([].concat(byD[1], byD[2], byD[3]));
+      while (picked.length < n && rest.length) picked.push(rest.pop());
+      picked = shuffle(picked.slice(0, n));
+    } else picked = shuffle(pool).slice(0, n);
+    const deck = picked.map(q => ({ q, order: shuffle([0, 1, 2, 3]) }));
+    S = { mode: mode === "exam" ? "exam" : "practice", label: label || (mode === "exam" ? "Exam simulation" : mode === "missed" ? "Missed questions" : "Practice"),
+          deck, i: 0, picks: new Array(n).fill(null), flags: new Array(n).fill(false), done: false,
+          started: Date.now(), deadline: mode === "exam" ? Date.now() + EXAM_MIN * 60000 : null };
+    clearInterval(tick);
+    if (S.mode === "exam") { tick = setInterval(updateTimer, 1000); }
+    show("quiz");
+    renderQuestion();
+  }
+
+  function correctIdx(item) { return item.order.indexOf(0); }
+
+  function renderQuestion() {
+    const item = S.deck[S.i], q = item.q, n = S.deck.length, exam = S.mode === "exam";
+    const pick = S.picks[S.i], answered = pick !== null;
+
+    $("qcount").innerHTML = `Question ${S.i + 1} <span>of ${n}</span>`;
+    const done = S.picks.filter(p => p !== null).length;
+    $("bar").style.width = pct(exam ? done : S.i + (answered ? 1 : 0), n) + "%";
+    if (exam) {
+      $("tally").innerHTML = `<span>${done} answered</span><span style="color:var(--flag)">${S.flags.filter(Boolean).length} flagged</span>`;
+    } else {
+      const right = S.deck.reduce((a, it, k) => a + (S.picks[k] !== null && S.picks[k] === correctIdx(it) ? 1 : 0), 0);
+      const wrong = S.picks.filter(p => p !== null).length - right;
+      $("tally").innerHTML = `<span class="g">✓ ${right}</span><span class="b">✗ ${wrong}</span>`;
+    }
+    $("timer").hidden = !exam; if (exam) updateTimer();
+
+    const t = TOPICS[q.t];
+    $("qmeta").innerHTML = `<span class="tag">Domain ${t.d}</span><span class="tag">${esc(t.name)}</span>` + (q.x ? `<span class="tag extra" title="This topic is on the exam but not in your study notes yet">Not in your notes</span>` : "");
+    $("stem").textContent = q.q;
+
+    const reveal = !exam && answered;
+    const ci = correctIdx(item);
+    $("opts").innerHTML = item.order.map((oi, k) => {
+      let state = "", mark = "";
+      if (reveal) {
+        if (k === ci) { state = "correct"; mark = k === pick ? "✓ Your answer" : "✓ Correct"; }
+        else if (k === pick) { state = "wrong"; mark = "✗ Your answer"; }
+        else state = "dim";
+      } else if (k === pick) state = "selected";
+      return `<li><button class="opt" id="opt-${k}" data-k="${k}" data-state="${state}" ${reveal ? "disabled" : ""} aria-pressed="${k === pick}">` +
+        `<span class="letter">${LETTERS[k]}</span><span class="txt">${esc(q.o[oi][0])}</span><span class="mark">${mark}</span></button></li>`;
+    }).join("");
+
+    const fb = $("feedback");
+    if (reveal) {
+      const ok = pick === ci;
+      fb.hidden = false;
+      fb.className = "feedback";
+      fb.innerHTML =
+        `<div class="fb-head ${ok ? "good" : "bad"}"><strong>${ok ? "Correct" : "Not quite. The answer is " + LETTERS[ci] + "."}</strong>` +
+        `<span>${esc(q.o[0][0])}</span></div>` +
+        `<div class="fb-body"><p>${esc(q.o[0][1])}</p>` +
+        `<div class="why-title">Why the other options are wrong</div><ul class="why">` +
+        item.order.map((oi, k) => oi === 0 ? "" : `<li class="${k === pick ? "is-picked" : ""}"><b>${LETTERS[k]}</b><span><span class="ot">${esc(q.o[oi][0])}.</span> ${esc(q.o[oi][1])}</span></li>`).join("") +
+        `</ul></div>`;
+    } else { fb.hidden = true; fb.innerHTML = ""; }
+
+    // actions
+    $("prev").hidden = !exam;
+    $("prev").disabled = S.i === 0;
+    $("flag").hidden = !exam;
+    $("flag").classList.toggle("flagged", !!S.flags[S.i]);
+    $("flag").textContent = S.flags[S.i] ? "Flagged" : "Flag for review";
+    $("flag").setAttribute("aria-pressed", String(!!S.flags[S.i]));
+    const last = S.i === n - 1;
+    if (exam) { $("next").disabled = false; $("next").textContent = last ? "Review and finish" : "Next →"; }
+    else { $("next").disabled = !answered; $("next").textContent = last ? "See results" : "Next →"; }
+    $("quit").textContent = exam ? "Leave exam" : "End session";
+    $("kbd").textContent = exam ? "Keys: A–D or 1–4 to select · ← → to move · F to flag" : "Keys: A–D or 1–4 to answer · Enter for next";
+    $("navpanel").hidden = !exam;
+    $("quit-confirm").hidden = true;
+    $("finish-confirm").hidden = true;
+    if (exam) renderNav();
+  }
+
+  function renderNav() {
+    $("navgrid").innerHTML = S.deck.map((_, k) =>
+      `<button id="nav-${k}" data-k="${k}" class="${S.picks[k] !== null ? "answered" : ""} ${S.flags[k] ? "flagged" : ""} ${k === S.i ? "current" : ""}" aria-label="Question ${k + 1}${S.picks[k] !== null ? ", answered" : ""}${S.flags[k] ? ", flagged" : ""}">${k + 1}</button>`
+    ).join("");
+  }
+
+  function choose(k) {
+    if (!S || S.done) return;
+    const exam = S.mode === "exam";
+    if (!exam && S.picks[S.i] !== null) return;
+    S.picks[S.i] = k;
+    if (!exam) {
+      const item = S.deck[S.i];
+      record(item.q, k === correctIdx(item)); persist();
+      renderQuestion();
+      const fb = $("feedback");
+      if (fb && fb.getBoundingClientRect().top > window.innerHeight * 0.6) fb.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "nearest" });
+      $("next").focus({ preventScroll: true });
+    } else {
+      renderQuestion();
+    }
+  }
+
+  function go(delta) {
+    const j = S.i + delta;
+    if (j < 0) return;
+    if (j >= S.deck.length) { if (S.mode === "exam") askFinish(); else finish(); return; }
+    S.i = j; renderQuestion(); window.scrollTo(0, 0);
+  }
+
+  function askFinish() {
+    const un = S.picks.filter(p => p === null).length, fl = S.flags.filter(Boolean).length;
+    $("finish-msg").textContent = un || fl
+      ? `You have ${un} unanswered and ${fl} flagged question${fl === 1 ? "" : "s"}. On the real exam, unanswered questions count as wrong and there is no penalty for guessing.`
+      : "All questions are answered. Ready to see your score?";
+    $("finish-confirm").hidden = false;
+    $("finish-yes").focus();
+  }
+
+  function updateTimer() {
+    if (!S || S.mode !== "exam" || S.done) return;
+    const left = Math.max(0, S.deadline - Date.now());
+    const m = Math.floor(left / 60000), s = Math.floor((left % 60000) / 1000);
+    const el = $("timer");
+    el.textContent = `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+    el.classList.toggle("low", left < 5 * 60000);
+    el.setAttribute("aria-label", `${m} minutes ${s} seconds left`);
+    if (left <= 0) finish(true);
+  }
+
+  function finish(timeUp) {
+    if (!S || S.done) return;
+    S.done = true; S.timeUp = !!timeUp; S.ended = Date.now();
+    clearInterval(tick);
+    if (S.mode === "exam") { S.deck.forEach((it, k) => { if (S.picks[k] !== null) record(it.q, S.picks[k] === correctIdx(it)); }); persist(); }
+    renderResults();
+    show("results");
+  }
+
+  $("opts").addEventListener("click", e => { const b = e.target.closest(".opt"); if (b && !b.disabled) choose(+b.dataset.k); });
+  $("next").onclick = () => go(1);
+  $("prev").onclick = () => go(-1);
+  $("flag").onclick = () => { S.flags[S.i] = !S.flags[S.i]; renderQuestion(); };
+  $("navgrid").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; S.i = +b.dataset.k; renderQuestion(); window.scrollTo(0, 0); });
+  $("finish").onclick = askFinish;
+  $("finish-no").onclick = () => { $("finish-confirm").hidden = true; };
+  $("finish-yes").onclick = () => finish(false);
+  $("quit").onclick = () => {
+    const done = S.picks.filter(p => p !== null).length;
+    $("quit-msg").textContent = done
+      ? (S.mode === "exam" ? `End the exam now? The ${done} answered question${done === 1 ? "" : "s"} will be scored and the rest count as unanswered.` : `End this session? You'll see results for the ${done} question${done === 1 ? "" : "s"} you answered.`)
+      : "End this session and go back to the menu?";
+    $("quit-confirm").hidden = false;
+    $("quit-yes").focus();
+  };
+  $("quit-no").onclick = () => { $("quit-confirm").hidden = true; };
+  $("quit-yes").onclick = () => {
+    if (!S.picks.some(p => p !== null)) { clearInterval(tick); S = null; renderHome(); show("home"); return; }
+    if (S.mode === "practice") { const n = S.picks.findIndex(p => p === null); if (n > -1) { S.deck = S.deck.slice(0, n); S.picks = S.picks.slice(0, n); S.flags = S.flags.slice(0, n); } }
+    finish(false);
+  };
+
+  document.addEventListener("keydown", e => {
+    if ($("quiz").hidden || !S || S.done || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (!$("quit-confirm").hidden || !$("finish-confirm").hidden) {
+      if (e.key === "Escape") { $("quit-confirm").hidden = true; $("finish-confirm").hidden = true; }
+      return;
+    }
+    const tag = (e.target.tagName || "").toLowerCase();
+    const k = e.key.toLowerCase();
+    const map = { a: 0, b: 1, c: 2, d: 3, "1": 0, "2": 1, "3": 2, "4": 3 };
+    if (k in map) { e.preventDefault(); choose(map[k]); return; }
+    if (k === "enter" && tag !== "button") { if (!$("next").disabled) { e.preventDefault(); go(1); } return; }
+    if (k === "arrowright" && (S.mode === "exam" || S.picks[S.i] !== null)) { e.preventDefault(); go(1); }
+    if (k === "arrowleft" && S.mode === "exam") { e.preventDefault(); go(-1); }
+    if (k === "f" && S.mode === "exam") { e.preventDefault(); $("flag").click(); }
+  });
+
+  // ---------- results ----------
+  let rfilter = "wrong";
+  function renderResults() {
+    const n = S.deck.length;
+    const right = S.deck.reduce((a, it, k) => a + (S.picks[k] === correctIdx(it) ? 1 : 0), 0);
+    const answered = S.picks.filter(p => p !== null).length;
+    const p = pct(right, n), pass = right / n >= TARGET;
+    const mins = Math.max(1, Math.round((S.ended - S.started) / 60000));
+
+    $("res-mode").textContent = S.label + (S.timeUp ? " · time ran out" : "");
+    const r = 56, C = 2 * Math.PI * r, col = pass ? "var(--good)" : "var(--bad)";
+    $("dial").setAttribute("aria-label", `${p}% correct`);
+    $("dial").innerHTML =
+      `<circle cx="66" cy="66" r="${r}" fill="none" stroke="var(--line)" stroke-width="12"/>` +
+      `<circle cx="66" cy="66" r="${r}" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${(C * p / 100).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 66 66)"/>` +
+      `<text x="66" y="70" text-anchor="middle" font-size="28" font-weight="600">${p}%</text>` +
+      `<text x="66" y="92" text-anchor="middle" font-size="11" style="fill:var(--muted)">${right} / ${n}</text>`;
+    $("verdict").className = "verdict " + (pass ? "good" : "bad");
+    $("verdict").textContent = pass ? "Above the 70% target" : "Below the 70% target";
+    $("res-detail").textContent =
+      `${right} correct, ${answered - right} wrong` + (n - answered ? `, ${n - answered} unanswered` : "") + `. Time: ${mins} min` +
+      (S.mode === "exam" ? ` of ${EXAM_MIN}.` : ".") +
+      " The real exam reports a scaled score from 100 to 1000 and passes at 700. Scoring 70% or more here is a sensible target, 80% or more is comfortable.";
+
+    const wrongItems = S.deck.filter((it, k) => S.picks[k] !== correctIdx(it));
+    $("retry-missed").hidden = wrongItems.length === 0;
+
+    // topic breakdown
+    const by = {};
+    S.deck.forEach((it, k) => { const t = it.q.t; by[t] = by[t] || { n: 0, c: 0 }; by[t].n++; if (S.picks[k] === correctIdx(it)) by[t].c++; });
+    $("tbars").innerHTML = Object.keys(TOPICS).filter(t => by[t]).map(t => {
+      const v = pct(by[t].c, by[t].n);
+      return `<div class="tbar"><span>${esc(TOPICS[t].name)}</span><span class="num">${by[t].c}/${by[t].n}</span>` +
+        `<div class="track"><i style="width:${v}%;background:${v >= 70 ? "var(--good)" : "var(--bad)"}"></i></div></div>`;
+    }).join("");
+
+    document.getElementById("rf-flag").hidden = S.mode !== "exam";
+    rfilter = wrongItems.length ? "wrong" : "all";
+    renderReview();
+  }
+
+  function renderReview() {
+    document.querySelectorAll("#rfilter .pill").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.f === rfilter)));
+    const rows = [];
+    S.deck.forEach((it, k) => {
+      const ci = correctIdx(it), pick = S.picks[k];
+      const ok = pick === ci;
+      if (rfilter === "wrong" && ok) return;
+      if (rfilter === "flag" && !S.flags[k]) return;
+      const cls = pick === null ? "skip" : ok ? "ok" : "no";
+      const q = it.q;
+      rows.push(
+        `<details class="ritem ${cls}"><summary><span class="res">${pick === null ? "–" : ok ? "✓" : "✗"}</span>` +
+        `<span class="s">${k + 1}. ${esc(q.q)}<small>${esc(TOPICS[q.t].name)}${S.flags[k] ? " · flagged" : ""}${q.x ? " · not in your notes" : ""}</small></span></summary>` +
+        `<div class="rbody"><ul class="why">` +
+        it.order.map((oi, j) => `<li class="${j === ci ? "is-correct" : j === pick ? "is-picked" : ""}"><b>${LETTERS[j]}</b><span><span class="ot">${esc(q.o[oi][0])}${j === ci ? " (correct)" : j === pick ? " (your answer)" : ""}.</span> ${esc(q.o[oi][1])}</span></li>`).join("") +
+        `</ul>${pick === null ? `<p class="small" style="margin:0">You didn't answer this one.</p>` : ""}</div></details>`
+      );
+    });
+    $("review").innerHTML = rows.length ? rows.join("") : `<p class="empty">${rfilter === "wrong" ? "No wrong answers in this session." : "No flagged questions."}</p>`;
+  }
+  $("rfilter").addEventListener("click", e => { const b = e.target.closest(".pill"); if (!b) return; rfilter = b.dataset.f; renderReview(); });
+  $("retry-missed").onclick = () => {
+    const wrong = S.deck.filter((it, k) => S.picks[k] !== correctIdx(it)).map(it => it.q);
+    startSession("practice", wrong, "Retry of missed questions");
+  };
+  $("to-home").onclick = () => { S = null; renderHome(); show("home"); };
+
+  window.addEventListener("beforeunload", e => { if (S && !S.done && S.mode === "exam") { e.preventDefault(); e.returnValue = ""; } });
+
+  renderHome();
+  show("home");
+})();
+</script>

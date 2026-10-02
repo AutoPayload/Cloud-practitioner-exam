@@ -1,0 +1,270 @@
+
+<article class="chapter" id="t-infra" hidden>
+  <header class="ch-head">
+    <h2>Global infrastructure</h2>
+    <p class="small"><span class="tag good">Must know</span> Read the whole chapter.</p>
+    <p class="lede">AWS is built from Regions, and each Region contains several Availability Zones. Edge locations around the world bring content close to users. Local Zones, Wavelength and Outposts extend AWS closer to cities, 5G networks and your own data center.</p>
+  </header>
+  <figure class="diagram" style="margin:0">
+    <svg viewBox="0 0 720 270" role="img" aria-labelledby="gi-t">
+      <title id="gi-t">A Region with three Availability Zones, and edge options outside the Region</title>
+      <rect x="10" y="10" width="480" height="250" rx="10" class="dg-aws"/>
+      <text x="26" y="34" class="dg-accent-text">REGION · e.g. eu-west-1 (Ireland)</text>
+      <rect x="26" y="50" width="140" height="160" rx="8" class="dg-box"/>
+      <rect x="180" y="50" width="140" height="160" rx="8" class="dg-box"/>
+      <rect x="334" y="50" width="140" height="160" rx="8" class="dg-box"/>
+      <text x="96" y="74" text-anchor="middle" class="dg-head">AZ a</text>
+      <text x="250" y="74" text-anchor="middle" class="dg-head">AZ b</text>
+      <text x="404" y="74" text-anchor="middle" class="dg-head">AZ c</text>
+      <rect x="40" y="90" width="52" height="40" rx="4" class="dg-d3"/><rect x="100" y="90" width="52" height="40" rx="4" class="dg-d3"/>
+      <rect x="194" y="90" width="52" height="40" rx="4" class="dg-d3"/><rect x="254" y="90" width="52" height="40" rx="4" class="dg-d3"/>
+      <rect x="348" y="90" width="52" height="40" rx="4" class="dg-d3"/><rect x="408" y="90" width="52" height="40" rx="4" class="dg-d3"/>
+      <text x="96" y="152" text-anchor="middle" class="dg-small">DATA CENTERS</text>
+      <text x="250" y="152" text-anchor="middle" class="dg-small">DATA CENTERS</text>
+      <text x="404" y="152" text-anchor="middle" class="dg-small">DATA CENTERS</text>
+      <text x="96" y="176" text-anchor="middle" class="dg-text">own power</text><text x="96" y="194" text-anchor="middle" class="dg-text">and network</text>
+      <text x="250" y="176" text-anchor="middle" class="dg-text">own power</text><text x="250" y="194" text-anchor="middle" class="dg-text">and network</text>
+      <text x="404" y="176" text-anchor="middle" class="dg-text">own power</text><text x="404" y="194" text-anchor="middle" class="dg-text">and network</text>
+      <path d="M166 130 H180 M320 130 H334" class="dg-line"/>
+      <text x="250" y="240" text-anchor="middle" class="dg-text">AZs are linked by fast, low-latency private networking</text>
+      <text x="520" y="34" class="dg-small">OUTSIDE THE REGION</text>
+      <rect x="510" y="46" width="200" height="54" rx="8" class="dg-d1"/>
+      <text x="610" y="68" text-anchor="middle" class="dg-head">Edge locations</text>
+      <text x="610" y="88" text-anchor="middle" class="dg-small">400+ · CLOUDFRONT, ROUTE 53</text>
+      <rect x="510" y="110" width="200" height="44" rx="8" class="dg-box"/>
+      <text x="610" y="130" text-anchor="middle" class="dg-text">Local Zone</text><text x="610" y="146" text-anchor="middle" class="dg-small">NEAR A BIG CITY</text>
+      <rect x="510" y="162" width="200" height="44" rx="8" class="dg-box"/>
+      <text x="610" y="182" text-anchor="middle" class="dg-text">Wavelength Zone</text><text x="610" y="198" text-anchor="middle" class="dg-small">INSIDE A 5G NETWORK</text>
+      <rect x="510" y="214" width="200" height="46" rx="8" class="dg-cust"/>
+      <text x="610" y="234" text-anchor="middle" class="dg-text">Outposts rack</text><text x="610" y="250" text-anchor="middle" class="dg-small">IN YOUR DATA CENTER</text>
+    </svg>
+  </figure>
+  <section class="blk">
+    <h3>Key facts</h3>
+    <ul>
+      <li><strong>Region:</strong> a geographic area with a cluster of data centers, named like <code>us-east-1</code>. Most services are Regional. Your data never leaves a Region unless you move it.</li>
+      <li><strong>Choosing a Region:</strong> (1) compliance and data residency, (2) latency to your users, (3) which services are available there, (4) price.</li>
+      <li><strong>Availability Zone (AZ):</strong> one or more separate data centers with their own power and networking. A Region usually has 3 (minimum 3, maximum 6). Running in <strong>two or more AZs</strong> gives high availability.</li>
+      <li><strong>Edge locations (points of presence):</strong> 400+ sites that cache content (CloudFront) and answer DNS (Route 53) close to users.</li>
+      <li><strong>Global services:</strong> IAM, Route 53, CloudFront, WAF (for CloudFront). Everything else you create in a Region.</li>
+      <li><strong>AWS Local Zones:</strong> AWS compute and storage placed near a large city for single-digit millisecond latency. They extend a Region.</li>
+      <li><strong>AWS Wavelength:</strong> AWS compute inside telecom 5G networks for ultra-low latency to mobile devices.</li>
+      <li><strong>AWS Outposts:</strong> AWS-managed racks installed in <em>your</em> data center, with the same APIs and tools. You handle the rack's physical security.</li>
+    </ul>
+  </section>
+  <section class="blk">
+    <h3>Designing for failure</h3>
+    <div class="tbl wide"><table><thead><tr><th>Architecture</th><th>Survives</th><th>Trade-off</th></tr></thead><tbody>
+      <tr><td>One Region, one AZ</td><td>Nothing: a data center failure stops the app</td><td>Simplest and cheapest</td></tr>
+      <tr><td>One Region, multiple AZs</td><td>Loss of a data center or AZ</td><td>The standard for high availability</td></tr>
+      <tr><td>Multiple Regions, active-passive</td><td>Loss of a whole Region (failover)</td><td>More cost; writes go to one Region</td></tr>
+      <tr><td>Multiple Regions, active-active</td><td>Region loss, with low latency everywhere</td><td>Most complex and expensive</td></tr>
+    </tbody></table></div>
+    <p><strong>Disaster recovery strategies</strong>, from cheapest and slowest to most expensive and fastest: <strong>Backup and restore</strong> → <strong>Pilot light</strong> (core pieces running, like a live database copy) → <strong>Warm standby</strong> (a full copy running at small size) → <strong>Multi-site active-active</strong> (full size in two Regions). <strong>RPO</strong> is how much data you can lose; <strong>RTO</strong> is how long you can be down.</p>
+  </section>
+  <section class="blk">
+    <h3>How the exam asks about it</h3>
+    <div class="tbl"><table class="cues"><thead><tr><th>If the question says</th><th>Think</th></tr></thead><tbody>
+      <tr><td>data must stay in our country</td><td>Choose a Region in that country (compliance first)</td></tr>
+      <tr><td>highly available within a Region</td><td>Multiple AZs</td></tr>
+      <tr><td>survive the loss of an entire Region</td><td>Multiple Regions</td></tr>
+      <tr><td>AWS infrastructure in our own data center</td><td>AWS Outposts</td></tr>
+      <tr><td>ultra-low latency for 5G mobile devices</td><td>AWS Wavelength</td></tr>
+      <tr><td>single-digit millisecond latency near a big city</td><td>AWS Local Zones</td></tr>
+      <tr><td>lowest-cost DR, hours of downtime acceptable</td><td>Backup and restore</td></tr>
+      <tr><td>DR with a scaled-down full copy always running</td><td>Warm standby</td></tr>
+    </tbody></table></div>
+  </section>
+  <div class="callout hook"><span class="ct">Memory hook</span><p><strong>Outposts</strong> = AWS comes to <em>your</em> post (your building). <strong>Wavelength</strong> = radio waves, 5G. <strong>Local Zones</strong> = a local branch of a Region in your city.</p></div>
+</article>
+
+<article class="chapter" id="t-edge" hidden>
+  <header class="ch-head">
+    <h2>DNS, content delivery and edge</h2>
+    <p class="small"><span class="tag skim">Skim</span> Read the “How the exam asks” table first. Read the rest only if something there surprises you.</p>
+    <p class="lede">These services make a global application fast and resilient. Route 53 tells users where to go. CloudFront caches content near them. Global Accelerator routes their traffic over the AWS network.</p>
+  </header>
+  <section class="blk">
+    <h3>Amazon Route 53 (DNS)</h3>
+    <ul>
+      <li>Managed DNS and domain registration. Translates names like <code>app.example.com</code> into IP addresses. It is a global service with health checks.</li>
+      <li><strong>Routing policies:</strong> Simple, <strong>Weighted</strong> (split traffic 70/30), <strong>Latency-based</strong> (send users to the fastest Region), <strong>Failover</strong> (health check fails → go to the backup), plus Geolocation, Geoproximity and Multivalue.</li>
+    </ul>
+  </section>
+  <section class="blk">
+    <h3>Amazon CloudFront (CDN)</h3>
+    <ul>
+      <li>Caches content at 400+ edge locations so users download it from nearby. It is good for images, video, static sites and APIs.</li>
+      <li><strong>Origins:</strong> an S3 bucket (protected with <strong>Origin Access Control</strong> so only CloudFront can read it), a load balancer, EC2, or any HTTP server.</li>
+      <li>Integrates with <strong>Shield</strong> (DDoS) and <strong>WAF</strong> at the edge, and with ACM for HTTPS.</li>
+      <li>CloudFront vs S3 Cross-Region Replication: CloudFront caches everywhere for a set time (TTL); CRR keeps a full, near real-time copy in a few chosen Regions.</li>
+    </ul>
+  </section>
+  <section class="blk">
+    <h3>AWS Global Accelerator and S3 Transfer Acceleration</h3>
+    <ul>
+      <li><strong>Global Accelerator:</strong> gives your app <strong>2 static anycast IP addresses</strong>. User traffic enters AWS at the nearest edge and travels on the private AWS network to your app in one or more Regions. It does <strong>not cache</strong>. It works for any TCP or UDP app and gives fast Regional failover.</li>
+      <li><strong>S3 Transfer Acceleration:</strong> speeds up long-distance <em>uploads</em> to one S3 bucket through edge locations.</li>
+    </ul>
+  </section>
+  <section class="blk">
+    <h3>How the exam asks about it</h3>
+    <div class="tbl"><table class="cues"><thead><tr><th>If the question says</th><th>Think</th></tr></thead><tbody>
+      <tr><td>register a domain, DNS, route to the healthy Region</td><td>Route 53</td></tr>
+      <tr><td>send 10% of traffic to the new version</td><td>Route 53 weighted routing</td></tr>
+      <tr><td>send users to the Region with the lowest latency</td><td>Route 53 latency routing</td></tr>
+      <tr><td>cache static and video content close to users worldwide</td><td>CloudFront</td></tr>
+      <tr><td>static IP addresses, TCP/UDP, non-HTTP game traffic</td><td>Global Accelerator</td></tr>
+      <tr><td>faster uploads from far away into one bucket</td><td>S3 Transfer Acceleration</td></tr>
+    </tbody></table></div>
+  </section>
+  <div class="callout trap"><span class="ct">Don't confuse</span><p><strong>CloudFront vs Global Accelerator.</strong> Both use edge locations. CloudFront <strong>caches</strong> content (HTTP). Global Accelerator <strong>doesn't cache</strong>; it gives static IPs and a fast path for any TCP/UDP traffic.</p></div>
+</article>
+
+<article class="chapter" id="t-ec2" hidden>
+  <header class="ch-head">
+    <h2>EC2 and purchasing options</h2>
+    <p class="small"><span class="tag good">Must know</span> Read the whole chapter.</p>
+    <p class="lede">Amazon EC2 rents you virtual servers (instances). You choose the operating system, the size, the storage and the firewall. It is IaaS, so you manage the OS. Choosing the right pricing option for a workload is one of the most tested skills.</p>
+  </header>
+  <section class="blk">
+    <h3>Building an instance</h3>
+    <ul>
+      <li><strong>AMI (Amazon Machine Image):</strong> the template with the OS and software. It can come from AWS, from you, or from AWS Marketplace. <strong>EC2 Image Builder</strong> automates creating and testing AMIs.</li>
+      <li><strong>Families:</strong> General purpose (balanced, web servers) · Compute optimized (batch, gaming, HPC, transcoding) · Memory optimized (in-memory databases, big caches) · Storage optimized (high local disk I/O, data warehouses, OLTP) · Accelerated computing (GPUs for ML).</li>
+      <li><strong>User Data:</strong> a script that runs <strong>once at first boot as root</strong> to install software.</li>
+      <li><strong>Security groups:</strong> the instance firewall. Allow rules only; stateful.</li>
+      <li><strong>Ports:</strong> 22 SSH (Linux) · 3389 RDP (Windows) · 80 HTTP · 443 HTTPS.</li>
+      <li><strong>Session Manager</strong> (part of Systems Manager) gives a shell on the instance with no open ports and no SSH keys. EC2 Instance Connect is SSH from the browser, so port 22 must be open.</li>
+      <li><strong>Elastic IP:</strong> a fixed public IPv4 address you keep across stop and start.</li>
+    </ul>
+  </section>
+  <section class="blk">
+    <h3>Purchasing options</h3>
+    <div class="tbl wide"><table><thead><tr><th>Option</th><th>Discount</th><th>Commitment</th><th>Best for</th></tr></thead><tbody>
+      <tr><td>On-Demand</td><td class="num">none</td><td>None; per second (Linux/Windows)</td><td>Short, unpredictable workloads that can't be interrupted</td></tr>
+      <tr><td>Reserved Instances (Standard)</td><td class="num">up to 72%</td><td>1 or 3 years; specific type, Region, OS</td><td>Steady workloads such as a database running 24/7</td></tr>
+      <tr><td>Convertible RI</td><td class="num">up to 66%</td><td>1 or 3 years; can change family and OS</td><td>Long workloads that may change</td></tr>
+      <tr><td>Savings Plans</td><td class="num">up to 72%</td><td>$ per hour for 1 or 3 years</td><td>Flexible long-term use (Compute SP also covers Fargate and Lambda)</td></tr>
+      <tr><td>Spot Instances</td><td class="num">up to 90%</td><td>None, but AWS can reclaim them with 2 minutes' notice</td><td>Fault-tolerant batch jobs, data analysis, image processing, CI</td></tr>
+      <tr><td>Dedicated Host</td><td class="num">most expensive</td><td>On-Demand or reserved</td><td>Server-bound licenses (BYOL per socket or core), strict compliance</td></tr>
+      <tr><td>Dedicated Instance</td><td class="num">premium</td><td>None</td><td>Hardware not shared with other customers, no placement control</td></tr>
+      <tr><td>Capacity Reservation</td><td class="num">none</td><td>Any duration, pay even if unused</td><td>Guaranteed capacity in one AZ for a short event</td></tr>
+    </tbody></table></div>
+    <p class="small">Exact percentages are rarely tested. Know the order: Spot is cheapest, then Savings Plans and RIs, then On-Demand. Dedicated Host costs the most.</p>
+  </section>
+  <section class="blk">
+    <h3>How the exam asks about it</h3>
+    <div class="tbl"><table class="cues"><thead><tr><th>If the question says</th><th>Think</th></tr></thead><tbody>
+      <tr><td>can be interrupted, flexible start time, cheapest</td><td>Spot Instances</td></tr>
+      <tr><td>steady state for 3 years, lowest cost</td><td>Reserved Instances or Savings Plans (3-year, all upfront)</td></tr>
+      <tr><td>short-term, can't be interrupted, no commitment</td><td>On-Demand</td></tr>
+      <tr><td>per-socket or per-core licenses, compliance</td><td>Dedicated Host</td></tr>
+      <tr><td>guarantee capacity in one AZ next week</td><td>On-Demand Capacity Reservation</td></tr>
+      <tr><td>install software automatically at first boot</td><td>User Data</td></tr>
+      <tr><td>same configuration on many instances, fast boot</td><td>Custom AMI</td></tr>
+    </tbody></table></div>
+  </section>
+  <div class="callout hook"><span class="ct">Memory hook</span><p>Think of a hotel. <strong>On-Demand</strong> = walk in, full price. <strong>Reserved / Savings Plans</strong> = book a long stay in advance, big discount. <strong>Spot</strong> = last-minute empty rooms, very cheap, but they can ask you to leave. <strong>Dedicated Host</strong> = rent the whole building. <strong>Capacity Reservation</strong> = pay for the room even if you don't come.</p></div>
+</article>
+
+<article class="chapter" id="t-elb" hidden>
+  <header class="ch-head">
+    <h2>Load balancing and Auto Scaling</h2>
+    <p class="small"><span class="tag skim">Skim</span> Read the “How the exam asks” table first. Read the rest only if something there surprises you.</p>
+    <p class="lede">A load balancer spreads traffic across many instances and skips unhealthy ones. An Auto Scaling group adds and removes instances as demand changes. Together, across several AZs, they give you high availability and elasticity.</p>
+  </header>
+  <figure class="diagram" style="margin:0">
+    <svg viewBox="0 0 720 250" role="img" aria-labelledby="tt-t">
+      <title id="tt-t">Three-tier web application across two Availability Zones</title>
+      <rect x="10" y="100" width="90" height="50" rx="8" class="dg-box"/><text x="55" y="130" text-anchor="middle" class="dg-text">Users</text>
+      <path d="M100 125 H140" class="dg-line"/><path d="M140 125 l-7 -4 v8 z" class="dg-arrow"/>
+      <rect x="140" y="95" width="120" height="60" rx="8" class="dg-d1"/><text x="200" y="120" text-anchor="middle" class="dg-head">ALB</text><text x="200" y="140" text-anchor="middle" class="dg-small">MULTI-AZ</text>
+      <path d="M260 125 H300" class="dg-line"/><path d="M300 125 l-7 -4 v8 z" class="dg-arrow"/>
+      <rect x="300" y="20" width="200" height="210" rx="10" class="dg-dash"/>
+      <text x="400" y="40" text-anchor="middle" class="dg-small">AUTO SCALING GROUP</text>
+      <rect x="320" y="56" width="160" height="70" rx="8" class="dg-box"/><text x="400" y="84" text-anchor="middle" class="dg-text">EC2 instances</text><text x="400" y="104" text-anchor="middle" class="dg-small">AZ A</text>
+      <rect x="320" y="140" width="160" height="70" rx="8" class="dg-box"/><text x="400" y="168" text-anchor="middle" class="dg-text">EC2 instances</text><text x="400" y="188" text-anchor="middle" class="dg-small">AZ B</text>
+      <path d="M500 125 H540" class="dg-line"/><path d="M540 125 l-7 -4 v8 z" class="dg-arrow"/>
+      <rect x="540" y="20" width="170" height="60" rx="8" class="dg-d4"/><text x="625" y="46" text-anchor="middle" class="dg-text">ElastiCache</text><text x="625" y="64" text-anchor="middle" class="dg-small">SESSIONS, CACHE</text>
+      <rect x="540" y="95" width="170" height="60" rx="8" class="dg-d3"/><text x="625" y="121" text-anchor="middle" class="dg-text">RDS primary</text><text x="625" y="139" text-anchor="middle" class="dg-small">AZ A</text>
+      <rect x="540" y="170" width="170" height="60" rx="8" class="dg-box"/><text x="625" y="196" text-anchor="middle" class="dg-text">RDS standby</text><text x="625" y="214" text-anchor="middle" class="dg-small">AZ B · MULTI-AZ</text>
+      <path d="M625 155 V170" class="dg-line"/>
+    </svg>
+    <figcaption>The classic three-tier web app: a load balancer, an Auto Scaling group across two AZs, a cache, and a Multi-AZ database.</figcaption>
+  </figure>
+  <section class="blk">
+    <h3>Elastic Load Balancing</h3>
+    <div class="tbl wide"><table><thead><tr><th>Type</th><th>Layer</th><th>Use it for</th></tr></thead><tbody>
+      <tr><td>Application Load Balancer (ALB)</td><td>7</td><td>HTTP, HTTPS, gRPC. Routing by URL path or host name. Works with WAF.</td></tr>
+      <tr><td>Network Load Balancer (NLB)</td><td>4</td><td>TCP and UDP, millions of requests per second, ultra-low latency, static IP.</td></tr>
+      <tr><td>Gateway Load Balancer (GWLB)</td><td>3</td><td>Sending traffic through third-party firewalls and inspection appliances.</td></tr>
+      <tr><td>Classic Load Balancer</td><td>4 and 7</td><td>Previous generation. Don't pick it for new workloads.</td></tr>
+    </tbody></table></div>
+    <p><strong>Why use ELB:</strong> one DNS name for users, health checks, spreads load across AZs, HTTPS termination with ACM certificates, and AWS manages it (upgrades, scaling, availability).</p>
+  </section>
+  <section class="blk">
+    <h3>Auto Scaling groups</h3>
+    <ul>
+      <li>Keep the instance count between a <strong>minimum</strong> and a <strong>maximum</strong>, around the <strong>desired</strong> capacity. Replace unhealthy instances automatically.</li>
+      <li><strong>Scaling policies:</strong> <strong>target tracking</strong> (keep average CPU at 40%) · <strong>scheduled</strong> (every Friday at 5 PM) · <strong>predictive</strong> (ML forecasts daily and weekly patterns) · manual.</li>
+    </ul>
+  </section>
+  <section class="blk">
+    <h3>How the exam asks about it</h3>
+    <div class="tbl"><table class="cues"><thead><tr><th>If the question says</th><th>Think</th></tr></thead><tbody>
+      <tr><td>route by URL path, HTTP/HTTPS</td><td>Application Load Balancer</td></tr>
+      <tr><td>TCP/UDP, extreme performance, static IP</td><td>Network Load Balancer</td></tr>
+      <tr><td>third-party firewall appliances inline</td><td>Gateway Load Balancer</td></tr>
+      <tr><td>replace unhealthy instances, scale with demand</td><td>Auto Scaling group</td></tr>
+      <tr><td>known traffic peak at a set time</td><td>Scheduled scaling</td></tr>
+      <tr><td>keep a metric at a target value</td><td>Target tracking</td></tr>
+    </tbody></table></div>
+  </section>
+  <div class="callout trap"><span class="ct">Don't confuse</span><p>A load balancer <strong>spreads</strong> traffic but never adds instances. Auto Scaling <strong>adds and removes</strong> instances but doesn't spread traffic. You need both for an elastic, highly available web app.</p></div>
+</article>
+
+<article class="chapter" id="t-containers" hidden>
+  <header class="ch-head">
+    <h2>Containers and serverless</h2>
+    <p class="small"><span class="tag good">Must know</span> Read the whole chapter.</p>
+    <p class="lede">Containers package an app with everything it needs so it runs the same everywhere. Serverless means you run code or containers without managing any servers, and you pay only while they run.</p>
+  </header>
+  <section class="blk">
+    <h3>Containers on AWS</h3>
+    <div class="tbl wide"><table><thead><tr><th>Service</th><th>What it does</th></tr></thead><tbody>
+      <tr><td>Amazon ECS</td><td>AWS's own service to run Docker containers. With the EC2 launch type you manage the instances.</td></tr>
+      <tr><td>AWS Fargate</td><td>Runs containers <strong>serverless</strong>: you set CPU and memory, AWS runs the infrastructure. Works with ECS and EKS.</td></tr>
+      <tr><td>Amazon EKS</td><td>Managed <strong>Kubernetes</strong>, the open-source orchestrator. Pick it when a company already uses Kubernetes or wants portability.</td></tr>
+      <tr><td>Amazon ECR</td><td>Private registry to store your container images.</td></tr>
+    </tbody></table></div>
+  </section>
+  <section class="blk">
+    <h3>Serverless compute</h3>
+    <ul>
+      <li><strong>AWS Lambda:</strong> runs functions in response to events (an S3 upload, an API call, a schedule). Scales automatically. Max <strong>15 minutes</strong> per run, up to <strong>10 GB</strong> memory. You pay per request and per millisecond of run time; the free tier includes 1 million requests per month.</li>
+      <li><strong>Amazon API Gateway:</strong> create, publish and secure APIs (REST, WebSocket). The classic serverless pattern is API Gateway → Lambda → DynamoDB.</li>
+      <li><strong>Serverless examples:</strong> Lambda, Fargate, S3, DynamoDB, API Gateway, SQS, SNS, Aurora Serverless.</li>
+    </ul>
+  </section>
+  <section class="blk">
+    <h3>Other compute</h3>
+    <ul>
+      <li><strong>AWS Batch:</strong> runs large numbers of batch jobs (with a start and an end), no time limit, on EC2 or Spot, packaged as containers.</li>
+      <li><strong>Amazon Lightsail:</strong> simple virtual servers, databases and networking with low, predictable monthly prices. For people with little cloud experience, such as a small WordPress site. No auto scaling.</li>
+    </ul>
+  </section>
+  <section class="blk">
+    <h3>How the exam asks about it</h3>
+    <div class="tbl"><table class="cues"><thead><tr><th>If the question says</th><th>Think</th></tr></thead><tbody>
+      <tr><td>run code on an event, no servers, pay per use</td><td>AWS Lambda</td></tr>
+      <tr><td>run containers without managing servers</td><td>AWS Fargate</td></tr>
+      <tr><td>we already use Kubernetes</td><td>Amazon EKS</td></tr>
+      <tr><td>store Docker images privately</td><td>Amazon ECR</td></tr>
+      <tr><td>thousands of batch jobs, no time limit</td><td>AWS Batch</td></tr>
+      <tr><td>simple server with a fixed monthly price, beginners</td><td>Amazon Lightsail</td></tr>
+      <tr><td>expose a REST API in front of Lambda</td><td>Amazon API Gateway</td></tr>
+    </tbody></table></div>
+  </section>
+  <div class="callout trap"><span class="ct">Don't confuse</span><p><strong>ECS vs EKS:</strong> both run containers; EKS is Kubernetes. <strong>ECS/EKS vs Fargate:</strong> Fargate isn't a separate orchestrator. It is the serverless way to run ECS or EKS containers. <strong>Lambda vs Batch:</strong> Lambda has a 15-minute limit.</p></div>
+</article>
