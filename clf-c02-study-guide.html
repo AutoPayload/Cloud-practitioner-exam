@@ -83,7 +83,7 @@ strong { font-weight: 700; }
 .brand { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
 .brand b { font-family: var(--font-display); font-stretch: 85%; font-size: 19px; font-weight: 800; }
 .brand span { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
-@media (max-width: 520px) { .brand span { display: none; } }
+@media (max-width: 520px) { .brand span:not(.sync) { display: none; } }
 .nav { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; margin-inline: -16px; padding-inline: 12px; }
 .nav::-webkit-scrollbar { display: none; }
 .nav a { flex: none; padding: 9px 12px 11px; text-decoration: none; color: var(--muted); font-weight: 600; font-size: 14.5px; border-bottom: 3px solid transparent; white-space: nowrap; }
@@ -402,6 +402,18 @@ table.cues td:first-child::after { content: "”"; }
 .legend-hl { display: flex; flex-wrap: wrap; gap: 8px; font-size: 13px; }
 .legend-hl span { padding: 2px 8px; }
 
+/* ---------- sync + team ---------- */
+.sync { font-family: var(--font-mono); font-size: 11.5px; color: var(--muted); display: inline-flex; align-items: center; gap: 6px; }
+.sync::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--line); flex: none; }
+.sync[data-s="synced"]::before { background: var(--good); }
+.sync[data-s="saving"]::before { background: var(--accent); }
+.sync[data-s="denied"]::before, .sync[data-s="error"]::before { background: var(--flag); }
+.team-name { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+.team-name img { width: 24px; height: 24px; border-radius: 50%; flex: none; }
+.team-you { font-family: var(--font-mono); font-size: 11px; color: var(--accent); font-weight: 600; }
+.toggle { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; font-size: 15px; }
+.toggle input { width: 18px; height: 18px; margin: 3px 0 0; accent-color: var(--accent); }
+
 /* ---------- compare ---------- */
 .cmp { display: grid; gap: 10px; }
 .cmp > h3 { font-size: 19px; }
@@ -436,7 +448,7 @@ table.cues td:first-child::after { content: "”"; }
 
 <header class="topbar">
   <div class="topbar-in">
-    <div class="brand"><b>CLF-C02 Study Guide</b><span>AWS Certified Cloud Practitioner</span></div>
+    <div class="brand"><b>CLF-C02 Study Guide</b><span>AWS Certified Cloud Practitioner</span><span class="sync" id="sync-status" data-s="local" role="status">Saved in this browser</span></div>
     <nav class="nav" id="nav" aria-label="Guide sections">
       <a href="#home" data-view="home">Start</a>
       <a href="#method" data-view="method">Study plan</a>
@@ -447,6 +459,7 @@ table.cues td:first-child::after { content: "”"; }
       <a href="#cards" data-view="cards">Flashcards</a>
       <a href="#practice" data-view="practice">Practice exam</a>
       <a href="#cheat" data-view="cheat">Cheat sheet</a>
+      <a href="#team" data-view="team">Team</a>
     </nav>
   </div>
 </header>
@@ -457,7 +470,7 @@ table.cues td:first-child::after { content: "”"; }
     <div class="hero">
       <span class="eyebrow">AWS Certified Cloud Practitioner · exam code CLF-C02</span>
       <h1 id="home-title">Everything you need to pass, in one place</h1>
-      <p class="lede">This guide covers every topic on the exam, shows how the questions are written, and gives you a proven study method. It has <b data-count="chapters">27</b> chapters, <b data-count="questions">400</b> practice questions, <b data-count="cards">300</b> flashcards and a decoder for <b data-count="services">180</b> AWS services. Your progress is saved in this browser.</p>
+      <p class="lede">This guide covers every topic on the exam, shows how the questions are written, and gives you a proven study method. It has <b data-count="chapters">27</b> chapters, <b data-count="questions">400</b> practice questions, <b data-count="cards">300</b> flashcards and a decoder for <b data-count="services">180</b> AWS services. When you are signed in to claude.ai, your progress is saved to your account, so it follows you to any device.</p>
     <div class="callout tip"><span class="ct">Short on time? Start here</span><p>Follow the <a href="#method">10-day fast track</a>: about 75 minutes a day. Read chapters marked <span class="tag good">Must know</span> fully. In chapters marked <span class="tag skim">Skim</span>, read the “How the exam asks” table.</p></div>
     </div>
 
@@ -2626,6 +2639,21 @@ table.cues td:first-child::after { content: "”"; }
     </div>
   </section>
 
+
+  <section class="view" id="v-team" hidden aria-labelledby="team-title">
+    <div class="read" style="max-width:1000px">
+      <div class="stack">
+        <span class="eyebrow">Everyone studying with this guide</span>
+        <h1 id="team-title">Team progress</h1>
+        <p class="lede">Each person's progress is saved to their own claude.ai account. This board shows a summary for everyone who chose to appear on it: chapters understood, questions answered, flashcards mastered and exam simulation scores.</p>
+      </div>
+      <div class="panel">
+        <label class="toggle" for="team-optin"><input type="checkbox" id="team-optin" checked><span><b>Show my progress on the team board</b><br><span class="small">Only the summary below is shared. Your answers and flashcards stay private to your account.</span></span></label>
+        <p class="small" id="team-me"></p>
+      </div>
+      <div id="team-list" class="stack"></div>
+    </div>
+  </section>
 </div>
 
 <script>
@@ -5339,7 +5367,7 @@ C("support", "What does the Concierge Support Team help with?", "Billing and acc
     support:     { d: 4, name: "Support plans and resources" }
   };
   const ORDER = Object.keys(TOPICS);
-  const VIEWS = ["home", "method", "skills", "topics", "decoder", "compare", "cards", "practice", "cheat"];
+  const VIEWS = ["home", "method", "skills", "topics", "decoder", "compare", "cards", "practice", "cheat", "team"];
   const EXAM_LEN = 65, EXAM_MIN = 90, TARGET = 0.7, LETTERS = ["A", "B", "C", "D", "E"];
   const NUMW = { 2: "TWO", 3: "THREE" };
   const KEY = "clf-c02-guide-v1";
@@ -5360,7 +5388,7 @@ C("support", "What does the Concierge Support Team help with?", "Billing and acc
   let saved = null;
   try { saved = JSON.parse(localStorage.getItem(KEY) || "null"); } catch (e) {}
   saved = saved && typeof saved === "object" ? saved : {};
-  const store = {
+  function fromSaved(saved) { return {
     stats: saved.stats || {},
     understood: saved.understood || {},
     cards: saved.cards || {},
@@ -5371,13 +5399,113 @@ C("support", "What does the Concierge Support Team help with?", "Billing and acc
     pLen: ["10", "20", "40", "all"].includes(saved.pLen) ? saved.pLen : "20",
     fcDomains: Array.isArray(saved.fcDomains) ? saved.fcDomains.filter(d => DOMAINS[d]) : [1, 2, 3, 4],
     fcNew: [10, 20, 40].includes(saved.fcNew) ? saved.fcNew : 20,
-    lastTopic: TOPICS[saved.lastTopic] ? saved.lastTopic : null
-  };
-  if (!store.pTopics.length) store.pTopics = ORDER.slice();
-  if (!store.fcDomains.length) store.fcDomains = [1, 2, 3, 4];
+    lastTopic: TOPICS[saved.lastTopic] ? saved.lastTopic : null,
+    board: saved.board !== false,
+    updatedAt: typeof saved.updatedAt === "number" ? saved.updatedAt : 0
+  }; }
+  const store = fromSaved(saved);
+  function fixStore() {
+    if (!store.pTopics.length) store.pTopics = ORDER.slice();
+    if (!store.fcDomains.length) store.fcDomains = [1, 2, 3, 4];
+  }
+  fixStore();
   let storageOK = true;
   try { localStorage.setItem(KEY + "-t", "1"); localStorage.removeItem(KEY + "-t"); } catch (e) { storageOK = false; }
-  function persist() { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} }
+  function saveLocal() { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} }
+  // While the account copy is loading, local writes (like the last opened chapter) must not look newer than it.
+  function persist() { if (!cloud.booting) store.updatedAt = Date.now(); saveLocal(); scheduleCloud(); }
+
+  // ---------- account sync (db capability) ----------
+  // Each signed-in person's full progress lives in their private data/users/<id>/progress document.
+  // A small summary goes to board/<id> for the shared Team page, unless the person opts out.
+  const cloud = { booting: true, user: null, db: null, uid: null, ref: null, boardRef: null, board: null, status: "local", saving: false, dirty: false, timer: null, lastBoard: null, boardLive: null };
+  const SYNC_TEXT = { local: "Saved in this browser", saving: "Saving to your account…", synced: "Saved to your account", denied: "Your access can't save · saved in this browser", error: "Couldn't reach your account · saved in this browser" };
+  function setSync(s) {
+    cloud.status = s;
+    const el = $("sync-status");
+    if (el) { el.dataset.s = s; el.textContent = SYNC_TEXT[s] || ""; }
+  }
+  function scheduleCloud() {
+    if (!cloud.ref) return;
+    cloud.dirty = true; setSync("saving");
+    clearTimeout(cloud.timer); cloud.timer = setTimeout(flushCloud, 1500);
+  }
+  function summary() {
+    const ids = Object.keys(store.stats).filter(id => QB_IDS.has(id));
+    const ex = store.exams.map(x => x.p);
+    const last3 = ex.slice(-3);
+    return {
+      chapters: ORDER.filter(k => store.understood[k]).length,
+      answered: ids.length,
+      right: ids.filter(id => store.stats[id].last === 1).length,
+      mastered: CARDS.filter(c => store.cards[c.id] && store.cards[c.id].box >= 4).length,
+      exams: ex.length,
+      last: ex.length ? ex[ex.length - 1] : null,
+      best: ex.length ? Math.max.apply(null, ex) : null,
+      ready: last3.length === 3 && last3.every(p => p >= 80)
+    };
+  }
+  async function writeBoard() {
+    if (!cloud.boardRef) return;
+    try {
+      if (!store.board) { if (cloud.boardLive !== false) { await cloud.boardRef.delete(); cloud.boardLive = false; cloud.lastBoard = null; } return; }
+      const s = summary(), key = JSON.stringify(s);
+      if (key === cloud.lastBoard) return;
+      await cloud.boardRef.set(Object.assign({}, s, { at: Date.now() }));
+      cloud.lastBoard = key; cloud.boardLive = true;
+    } catch (e) { /* the summary is optional; private progress is what matters */ }
+  }
+  async function flushCloud() {
+    if (!cloud.ref || cloud.saving || !cloud.dirty) return;
+    cloud.saving = true; cloud.dirty = false;
+    try {
+      await cloud.ref.set({ v: 1, state: JSON.parse(JSON.stringify(store)) });
+      await writeBoard();
+      setSync("synced");
+    } catch (e) {
+      if (e && e.code === "invalid_argument") { cloud.ref = null; cloud.boardRef = null; setSync("denied"); }
+      else { setSync("error"); cloud.dirty = true; clearTimeout(cloud.timer); cloud.timer = setTimeout(flushCloud, 8000 + Math.random() * 4000); }
+    } finally {
+      cloud.saving = false;
+      if (cloud.dirty && cloud.status !== "error") flushCloud();
+    }
+  }
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") { clearTimeout(cloud.timer); flushCloud(); } });
+  function refreshView() {
+    const y = window.scrollY;
+    if (current === "home") renderHome();
+    else if (current === "practice" && !S) renderPracticeHome();
+    else if (current === "cards" && !FC) renderCardsSetup();
+    else if (current === "method") renderPlan();
+    else if (current === "team") renderTeam();
+    else if (current === "topics" && store.lastTopic) { $("toc-side").innerHTML = tocHTML(store.lastTopic); $("toc-m").innerHTML = tocHTML(store.lastTopic); const el = $("t-" + store.lastTopic); if (el) updateMark(el, store.lastTopic); }
+    window.scrollTo(0, y);
+  }
+  async function initCloud() {
+    try { await loadCloud(); } finally { cloud.booting = false; }
+  }
+  async function loadCloud() {
+    if (!window.claude || typeof window.claude.use !== "function") return;
+    const [user, db] = await Promise.all([window.claude.use("user"), window.claude.use("db")]);
+    cloud.user = user;
+    if (!user || !db) { if (current === "team") renderTeam(); return; }
+    const uid = await user.id();
+    if (!uid) { if (current === "team") renderTeam(); return; }
+    cloud.db = db; cloud.uid = uid;
+    const ref = db.doc("data/users/" + uid + "/progress");
+    let snap;
+    try { snap = await ref.get(); } catch (e) { setSync("error"); return; }
+    cloud.ref = ref; cloud.boardRef = db.doc("board/" + uid);
+    const remote = snap.exists && snap.data() && typeof snap.data().state === "object" ? snap.data().state : null;
+    if (remote && (remote.updatedAt || 0) >= (store.updatedAt || 0)) {
+      Object.assign(store, fromSaved(remote)); fixStore(); saveLocal();
+      setSync("synced"); refreshView();
+    } else if (store.updatedAt) {
+      cloud.dirty = true; setSync("saving"); flushCloud();   // progress made on this device before signing in
+    } else setSync("synced");
+    db.collection("board").onSnapshot(s => { cloud.board = s.docs; if (current === "team") renderTeam(); }, () => { cloud.board = cloud.board || []; });
+  }
+  const QB_IDS = new Set();
   function record(q, ok) {
     const s = store.stats[q.id] || { n: 0, c: 0, last: null };
     s.n++; if (ok) s.c++; s.last = ok ? 1 : 0;
@@ -5404,6 +5532,7 @@ C("support", "What does the Concierge Support Team help with?", "Billing and acc
     if (view === "cards" && !FC) renderCardsSetup();
     if (view === "method") renderPlan();
     if (view === "decoder") renderDecoder();
+    if (view === "team") renderTeam();
     if (current !== view || view === "topics") window.scrollTo(0, 0);
     current = view;
   }
@@ -5587,7 +5716,7 @@ C("support", "What does the Concierge Support Team help with?", "Billing and acc
       (nextTopic ? `<a class="btn primary" href="#t-${nextTopic}">Continue: ${esc(TOPICS[nextTopic].name)}</a>` : `<a class="btn primary" href="#practice">Take a full exam simulation</a>`) +
       (due ? `<a class="btn" href="#cards">Review ${due} due flashcards</a>` : `<a class="btn" href="#cards">Flashcards</a>`) + `</div>`;
     html += `<p class="small">${readiness()}</p>`;
-    if (!storageOK) html += `<p class="small" style="color:var(--flag)">This browser is blocking site storage, so your progress will be lost when you close the page.</p>`;
+    if (!storageOK && !cloud.ref) html += `<p class="small" style="color:var(--flag)">This browser is blocking site storage, so your progress will be lost when you close the page.</p>`;
     el.innerHTML = html;
   }
   function readiness() {
@@ -6047,7 +6176,65 @@ C("support", "What does the Concierge Support Team help with?", "Billing and acc
     el.textContent = k === "questions" ? QB.length : k === "cards" ? CARDS.length : k === "services" ? DEC.length : k === "chapters" ? ORDER.length : k === "multi" ? QB.filter(q => q.n > 1).length : "";
   });
 
+  // ---------- team board ----------
+  const num = v => (typeof v === "number" && isFinite(v) ? v : null);
+  function ago(t) {
+    const m = Math.round((Date.now() - t) / 60000);
+    if (!isFinite(m) || m < 0) return "";
+    if (m < 2) return "just now"; if (m < 60) return m + " min ago";
+    const h = Math.round(m / 60); if (h < 24) return h + " h ago";
+    const d = Math.round(h / 24); return d === 1 ? "yesterday" : d + " days ago";
+  }
+  let teamRenderN = 0;
+  async function renderTeam() {
+    const n = ++teamRenderN;
+    const list = $("team-list"), me = $("team-me"), opt = $("team-optin");
+    opt.checked = !!store.board;
+    opt.disabled = !cloud.ref;
+    if (!cloud.db) {
+      me.textContent = "";
+      list.innerHTML = `<p class="empty">The team board needs you to open this page signed in to claude.ai, with access to save progress. Right now your progress is saved in this browser only.</p>`;
+      return;
+    }
+    me.textContent = cloud.ref ? "Your progress is saved to your account." : "Your access to this page is view-only, so your progress can't be saved to your account. Ask the owner for Editor access.";
+    if (!cloud.board) { list.innerHTML = `<p class="empty">Loading the team board…</p>`; return; }
+    const docs = cloud.board.filter(d => d.exists && d.data());
+    if (!docs.length) { list.innerHTML = `<p class="empty">Nobody is on the board yet. Answer a question or review a flashcard and you will appear here.</p>`; return; }
+    const ps = await cloud.user.profiles(docs.map(d => d.id));
+    if (n !== teamRenderN) return;
+    const rows = docs.map(d => { const v = d.data(); return { id: d.id, chapters: num(v.chapters) || 0, answered: num(v.answered) || 0, right: num(v.right) || 0, mastered: num(v.mastered) || 0, exams: num(v.exams) || 0, last: num(v.last), best: num(v.best), ready: v.ready === true, at: num(v.at) || 0 }; })
+      .sort((a, b) => (b.best || -1) - (a.best || -1) || b.answered - a.answered);
+    const wrap = document.createElement("div"); wrap.className = "tbl wide";
+    const t = document.createElement("table");
+    t.innerHTML = `<thead><tr><th>Person</th><th>Chapters</th><th>Questions</th><th>Right</th><th>Flashcards</th><th>Exams (best · last)</th><th>Last active</th></tr></thead>`;
+    const tb = document.createElement("tbody");
+    rows.forEach(r => {
+      const tr = document.createElement("tr"), p = ps[r.id] || {};
+      const c0 = document.createElement("td"), nm = document.createElement("div"); nm.className = "team-name";
+      if (p.avatarUrl) { const img = document.createElement("img"); img.src = p.avatarUrl; img.alt = ""; nm.appendChild(img); }
+      const s = document.createElement("span"); s.textContent = p.name || "Someone"; nm.appendChild(s);
+      if (r.id === cloud.uid) { const y = document.createElement("span"); y.className = "team-you"; y.textContent = "YOU"; nm.appendChild(y); }
+      if (r.ready) { const g = document.createElement("span"); g.className = "tag good"; g.textContent = "Ready"; nm.appendChild(g); }
+      c0.appendChild(nm); tr.appendChild(c0);
+      const cell = (txt) => { const td = document.createElement("td"); td.className = "num"; td.textContent = txt; tr.appendChild(td); };
+      cell(r.chapters + "/" + ORDER.length);
+      cell(String(r.answered));
+      cell(r.answered ? pct(r.right, r.answered) + "%" : "—");
+      cell(r.mastered + "/" + CARDS.length);
+      cell(r.exams ? (r.best + "% · " + r.last + "%") : "—");
+      cell(ago(r.at));
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb); wrap.appendChild(t);
+    list.replaceChildren(wrap);
+    const note = document.createElement("p"); note.className = "small"; note.textContent = "Ready = three exam simulations in a row at 80% or more.";
+    list.appendChild(note);
+  }
+  $("team-optin").addEventListener("change", e => { store.board = e.target.checked; persist(); });
+
+  QB.forEach(q => QB_IDS.add(q.id));
   route();
+  initCloud();
 })();
 </script>
 
